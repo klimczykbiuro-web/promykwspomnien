@@ -1,10 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Separator } from "@/components/ui/separator";
+import { useMemo, useState } from "react";
 
 type GuestbookEntry = {
   id: string;
@@ -13,204 +9,147 @@ type GuestbookEntry = {
   created_at: string;
 };
 
-function formatDatePL(dateString: string) {
-  return new Intl.DateTimeFormat("pl-PL", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  }).format(new Date(dateString));
+function formatDate(dateString: string) {
+  try {
+    return new Intl.DateTimeFormat("pl-PL", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    }).format(new Date(dateString));
+  } catch {
+    return dateString;
+  }
 }
 
-export default function GuestbookSection({ slug }: { slug: string }) {
-  const [entries, setEntries] = useState<GuestbookEntry[]>([]);
+export default function GuestbookSection({
+  slug,
+  initialEntries,
+}: {
+  slug: string;
+  initialEntries: GuestbookEntry[];
+}) {
+  const [entries, setEntries] = useState<GuestbookEntry[]>(initialEntries);
   const [authorName, setAuthorName] = useState("");
   const [message, setMessage] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [status, setStatus] = useState<"idle" | "saving" | "success" | "error">("idle");
   const [errorText, setErrorText] = useState("");
-  const [successText, setSuccessText] = useState("");
 
-  useEffect(() => {
-    let isMounted = true;
+  const entryCountLabel = useMemo(() => {
+    return `${entries.length} ${entries.length === 1 ? "wpis" : "wpisów"}`;
+  }, [entries.length]);
 
-    async function loadEntries() {
-      try {
-        setIsLoading(true);
-        setErrorText("");
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
 
-        const res = await fetch(`/api/profiles/${slug}/guestbook`, {
-          cache: "no-store",
-        });
-
-        if (!res.ok) {
-          throw new Error("Nie udało się pobrać wpisów.");
-        }
-
-        const data = (await res.json()) as { entries: GuestbookEntry[] };
-
-        if (isMounted) {
-          setEntries(data.entries ?? []);
-        }
-      } catch (error) {
-        console.error(error);
-        if (isMounted) {
-          setErrorText("Nie udało się pobrać księgi gości.");
-        }
-      } finally {
-        if (isMounted) {
-          setIsLoading(false);
-        }
-      }
+    if (!authorName.trim() || !message.trim()) {
+      setStatus("error");
+      setErrorText("Wpisz imię oraz treść wspomnienia.");
+      return;
     }
 
-    void loadEntries();
+    setStatus("saving");
+    setErrorText("");
 
-    return () => {
-      isMounted = false;
-    };
-  }, [slug]);
-
-  const entriesCount = useMemo(() => entries.length, [entries]);
-
-  async function handleSubmit() {
     try {
-      setIsSubmitting(true);
-      setErrorText("");
-      setSuccessText("");
-
       const res = await fetch(`/api/profiles/${slug}/guestbook`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          authorName,
-          message,
+          authorName: authorName.trim(),
+          message: message.trim(),
         }),
       });
 
-      const data = (await res.json()) as {
-        error?: string;
-        entry?: GuestbookEntry;
-      };
-
       if (!res.ok) {
-        throw new Error(data.error || "Nie udało się dodać wpisu.");
+        throw new Error("Nie udało się zapisać wpisu.");
       }
 
-      if (data.entry) {
-        setEntries((prev) => [data.entry, ...prev]);
-      }
+      const data = await res.json();
 
+      setEntries((prev) => [data.entry, ...prev]);
       setAuthorName("");
       setMessage("");
-      setSuccessText("Wpis został dodany.");
+      setStatus("success");
     } catch (error) {
-      console.error(error);
-      setErrorText(
-        error instanceof Error ? error.message : "Nie udało się dodać wpisu.",
-      );
-    } finally {
-      setIsSubmitting(false);
+      setStatus("error");
+      setErrorText("Nie udało się dodać wpisu. Spróbuj ponownie.");
     }
   }
 
   return (
-    <div className="rounded-[32px] bg-white p-6 shadow-sm md:p-8">
-      <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+    <section className="mt-8 rounded-[32px] bg-white p-6 shadow-sm">
+      <div className="mb-6 flex items-center justify-between gap-4">
         <div>
           <p className="text-sm text-stone-500">Księga gości</p>
-          <h2 className="mt-1 text-3xl font-semibold text-stone-900">
-            Wspomnienia i wpisy bliskich
-          </h2>
-        </div>
-        <div className="rounded-full bg-stone-100 px-4 py-2 text-sm text-stone-700">
-          Liczba wpisów: <span className="font-medium">{entriesCount}</span>
+          <h2 className="text-2xl font-semibold text-stone-900">{entryCountLabel}</h2>
         </div>
       </div>
 
-      <div className="mt-6 grid gap-8 lg:grid-cols-[0.95fr_1.05fr]">
-        <div className="space-y-4">
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-stone-700">
-              Twoje imię
-            </label>
-            <Input
-              value={authorName}
-              onChange={(e) => setAuthorName(e.target.value)}
-              placeholder="Np. Anna"
-              className="rounded-2xl"
-            />
-          </div>
+      <form onSubmit={handleSubmit} className="mb-8 space-y-4 rounded-[28px] bg-stone-50 p-5">
+        <div className="space-y-2">
+          <label htmlFor="guestbook-name" className="block text-sm font-medium text-stone-700">
+            Twoje imię
+          </label>
+          <input
+            id="guestbook-name"
+            value={authorName}
+            onChange={(e) => setAuthorName(e.target.value)}
+            placeholder="Np. Anna"
+            className="h-12 w-full rounded-2xl border border-stone-200 bg-white px-4 text-stone-900 outline-none transition focus:border-stone-400"
+          />
+        </div>
 
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-stone-700">
-              Treść wpisu
-            </label>
-            <Textarea
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              placeholder="Napisz kilka słów pamięci..."
-              className="min-h-32 rounded-2xl"
-            />
-          </div>
+        <div className="space-y-2">
+          <label htmlFor="guestbook-message" className="block text-sm font-medium text-stone-700">
+            Wspomnienie
+          </label>
+          <textarea
+            id="guestbook-message"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            placeholder="Napisz kilka słów wspomnienia..."
+            className="min-h-32 w-full rounded-2xl border border-stone-200 bg-white px-4 py-3 text-stone-900 outline-none transition focus:border-stone-400"
+          />
+        </div>
 
-          <Button
-            className="h-11 rounded-2xl"
-            onClick={() => void handleSubmit()}
-            disabled={isSubmitting}
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+          <button
+            type="submit"
+            disabled={status === "saving"}
+            className="inline-flex h-12 items-center justify-center rounded-2xl bg-stone-900 px-5 text-sm font-medium text-white transition hover:bg-stone-800 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {isSubmitting ? "Zapisywanie..." : "Dodaj wpis"}
-          </Button>
+            {status === "saving" ? "Zapisywanie..." : "Dodaj wpis"}
+          </button>
 
-          {successText ? (
-            <p className="text-sm text-emerald-700">{successText}</p>
+          {status === "success" ? (
+            <p className="text-sm text-emerald-700">Wpis został dodany.</p>
           ) : null}
 
-          {errorText ? (
+          {status === "error" ? (
             <p className="text-sm text-red-600">{errorText}</p>
           ) : null}
         </div>
+      </form>
 
-        <div>
-          {isLoading ? (
-            <div className="rounded-2xl bg-stone-50 p-4 text-sm text-stone-600">
-              Ładowanie wpisów...
-            </div>
-          ) : null}
-
-          {!isLoading && entries.length === 0 ? (
-            <div className="rounded-2xl bg-stone-50 p-4 text-sm text-stone-600">
-              Nie ma jeszcze żadnych wpisów.
-            </div>
-          ) : null}
-
-          {!isLoading && entries.length > 0 ? (
-            <div className="space-y-4">
-              {entries.map((entry, index) => (
-                <div key={entry.id}>
-                  <div className="rounded-2xl bg-stone-50 p-4">
-                    <div className="mb-2 flex items-center justify-between gap-3">
-                      <span className="font-medium text-stone-900">
-                        {entry.author_name}
-                      </span>
-                      <span className="text-xs text-stone-500">
-                        {formatDatePL(entry.created_at)}
-                      </span>
-                    </div>
-                    <p className="whitespace-pre-line text-sm leading-7 text-stone-700">
-                      {entry.message}
-                    </p>
-                  </div>
-                  {index < entries.length - 1 ? (
-                    <Separator className="my-4" />
-                  ) : null}
-                </div>
-              ))}
-            </div>
-          ) : null}
-        </div>
+      <div className="space-y-4 border-t border-stone-200 pt-6">
+        {entries.length === 0 ? (
+          <div className="rounded-2xl bg-stone-50 p-4 text-sm text-stone-600">
+            Nie ma jeszcze wpisów w księdze gości.
+          </div>
+        ) : (
+          entries.map((entry) => (
+            <article key={entry.id} className="rounded-2xl bg-stone-50 p-4">
+              <div className="mb-2 flex items-center justify-between gap-3">
+                <h3 className="font-medium text-stone-900">{entry.author_name}</h3>
+                <span className="text-xs text-stone-500">{formatDate(entry.created_at)}</span>
+              </div>
+              <p className="whitespace-pre-line text-sm leading-7 text-stone-700">{entry.message}</p>
+            </article>
+          ))
+        )}
       </div>
-    </div>
+    </section>
   );
 }
