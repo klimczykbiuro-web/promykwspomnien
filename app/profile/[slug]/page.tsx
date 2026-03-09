@@ -1,3 +1,6 @@
+import { pool } from "@/lib/db";
+import GuestbookSection from "@/components/profile/guestbook-section";
+
 type Profile = {
   id: string;
   slug: string;
@@ -12,16 +15,31 @@ type Profile = {
 };
 
 async function getProfile(slug: string): Promise<Profile | null> {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  const result = await pool.query<Profile>(
+    `
+    SELECT
+      id,
+      slug,
+      full_name,
+      birth_year,
+      death_year,
+      quote,
+      biography,
+      hero_image_url,
+      expires_at,
+      qr_token
+    FROM profiles
+    WHERE slug = $1
+    LIMIT 1
+    `,
+    [slug],
+  );
 
-  const res = await fetch(`${baseUrl}/api/profiles/${slug}`, {
-    cache: "no-store",
-  });
+  if (result.rowCount === 0) {
+    return null;
+  }
 
-  if (res.status === 404) return null;
-  if (!res.ok) throw new Error("Failed to fetch profile");
-
-  return res.json();
+  return result.rows[0];
 }
 
 export default async function ProfilePage({
@@ -46,40 +64,44 @@ export default async function ProfilePage({
   }
 
   return (
-    <div className="min-h-screen bg-[#f7f2ec] px-6 py-16 text-stone-900">
-      <div className="mx-auto max-w-4xl rounded-[32px] bg-white p-8 shadow-sm">
-        <div className="grid gap-8 md:grid-cols-[220px_1fr]">
-          <div>
-            <img
-              src={
-                profile.hero_image_url ||
-                "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=600&q=80"
-              }
-              alt={profile.full_name}
-              className="h-72 w-full rounded-[28px] object-cover"
-            />
-          </div>
+    <div className="min-h-screen bg-[#f7f2ec] px-6 py-10 text-stone-900 md:px-8">
+      <div className="mx-auto max-w-5xl space-y-8">
+        <div className="rounded-[36px] bg-white p-6 shadow-sm md:p-8">
+          <div className="grid gap-8 md:grid-cols-[280px_1fr] md:items-start">
+            <div>
+              <img
+                src={
+                  profile.hero_image_url ||
+                  "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=600&q=80"
+                }
+                alt={profile.full_name}
+                className="h-80 w-full rounded-[28px] object-cover"
+              />
+            </div>
 
-          <div>
-            <p className="text-sm text-stone-500">Profil pamięci</p>
-            <h1 className="mt-2 text-4xl font-semibold">{profile.full_name}</h1>
-            <p className="mt-2 text-stone-600">
-              {profile.birth_year ?? "—"} — {profile.death_year ?? "—"}
-            </p>
-
-            {profile.quote ? (
-              <p className="mt-6 text-lg italic text-stone-700">
-                „{profile.quote}”
+            <div>
+              <p className="text-sm text-stone-500">Profil pamięci</p>
+              <h1 className="mt-2 text-4xl font-semibold">{profile.full_name}</h1>
+              <p className="mt-2 text-lg text-stone-600">
+                {profile.birth_year ?? "—"} — {profile.death_year ?? "—"}
               </p>
-            ) : null}
 
-            {profile.biography ? (
-              <p className="mt-6 whitespace-pre-line leading-8 text-stone-700">
-                {profile.biography}
-              </p>
-            ) : null}
+              {profile.quote ? (
+                <p className="mt-6 text-xl italic text-stone-700">
+                  „{profile.quote}”
+                </p>
+              ) : null}
+
+              {profile.biography ? (
+                <p className="mt-6 whitespace-pre-line leading-8 text-stone-700">
+                  {profile.biography}
+                </p>
+              ) : null}
+            </div>
           </div>
         </div>
+
+        <GuestbookSection slug={profile.slug} />
       </div>
     </div>
   );
