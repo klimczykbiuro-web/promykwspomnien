@@ -1,0 +1,36 @@
+DOCZELOWA LEKKA STRUKTURA PROJEKTU
+
+app/
+  page.tsx
+  layout.tsx
+  demo/
+    page.tsx
+  profile/
+    [slug]/
+      page.tsx
+  api/
+    profiles/
+      [slug]/
+        route.ts
+        guestbook/
+          route.ts
+
+components/
+  profile/
+    guestbook-section.tsx
+
+lib/
+  db.ts
+  payments/
+    stripe.ts
+
+types/
+  pg.d.ts
+
+sql/
+  guestbook_entries.sql
+
+docs/
+  README-CLEANUP-V2.txt
+  REMOVE-LIST.txt
+  PROJECT-STRUCTURE-V2.txt
