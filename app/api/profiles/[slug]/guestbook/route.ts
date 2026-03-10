@@ -15,7 +15,7 @@ export async function GET(
   try {
     const { slug } = await context.params;
 
-    const result = await pool.query<GuestbookRow>(
+    const result = await pool.query(
       `
       SELECT
         ge.id,
@@ -32,7 +32,7 @@ export async function GET(
     );
 
     return NextResponse.json({
-      entries: result.rows,
+      entries: (result.rows ?? []) as GuestbookRow[],
     });
   } catch (error) {
     console.error("GET /api/profiles/[slug]/guestbook error:", error);
@@ -85,7 +85,7 @@ export async function POST(
       );
     }
 
-    const profileResult = await pool.query<{ id: string }>(
+    const profileResult = await pool.query(
       `
       SELECT id
       FROM profiles
@@ -102,9 +102,9 @@ export async function POST(
       );
     }
 
-    const profileId = profileResult.rows[0].id;
+    const profileId = (profileResult.rows[0] as { id: string }).id;
 
-    const inserted = await pool.query<GuestbookRow>(
+    const inserted = await pool.query(
       `
       INSERT INTO guestbook_entries (
         profile_id,
@@ -119,7 +119,7 @@ export async function POST(
     );
 
     return NextResponse.json(
-      { entry: inserted.rows[0] },
+      { entry: inserted.rows[0] as GuestbookRow },
       { status: 201 },
     );
   } catch (error) {

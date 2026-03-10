@@ -1,3 +1,5 @@
+import GuestbookSection from "@/components/profile/guestbook-section";
+
 type Profile = {
   id: string;
   slug: string;
@@ -23,8 +25,6 @@ async function getProfile(slug: string): Promise<Profile | null> {
 
   return res.json();
 }
-
-import GuestbookSection from "@/components/profile/guestbook-section";
 
 export default async function ProfilePage({
   params,
