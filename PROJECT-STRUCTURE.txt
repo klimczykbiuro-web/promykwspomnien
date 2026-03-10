@@ -1,0 +1,23 @@
+DOCZELOWY PODZIAŁ PROJEKTU
+
+app/
+  layout.tsx
+  page.tsx
+  profile/[slug]/page.tsx
+  api/profiles/[slug]/route.ts
+  api/profiles/[slug]/guestbook/route.ts
+
+components/
+  profile/guestbook-section.tsx
+
+lib/
+  db.ts
+  payments/stripe.ts
+
+sql/
+  guestbook_entries.sql
+
+types/
+  pg.d.ts
+
+To wystarczy na obecny etap produkcyjny.
