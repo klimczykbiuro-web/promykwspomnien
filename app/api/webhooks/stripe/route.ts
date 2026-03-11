@@ -1,43 +1,62 @@
-import { headers } from "next/headers";
+import Stripe from "stripe";
 import { NextResponse } from "next/server";
 import { stripe } from "@/lib/payments/stripe";
-import { prisma } from "@/lib/prisma";
-import { applyExtension } from "@/lib/extensions/apply-extension";
+import {
+  insertWebhookEventIfNew,
+  markPaymentPaid,
+} from "@/lib/payments/repository";
+
+export const runtime = "nodejs";
 
 export async function POST(req: Request) {
   if (!stripe || !process.env.STRIPE_WEBHOOK_SECRET) {
     return NextResponse.json({ error: "Stripe is not configured." }, { status: 500 });
   }
 
-  const payload = await req.text();
-  const signature = (await headers()).get("stripe-signature");
-
+  const signature = req.headers.get("stripe-signature");
   if (!signature) {
     return NextResponse.json({ error: "Missing stripe-signature header." }, { status: 400 });
   }
 
+  const rawBody = await req.text();
+
+  let event: Stripe.Event;
   try {
-    const event = await stripe.webhooks.constructEventAsync(payload, signature, process.env.STRIPE_WEBHOOK_SECRET);
-
-    if (event.type === "checkout.session.completed") {
-      const session = event.data.object;
-      const paymentId = session.metadata?.paymentId;
-
-      if (paymentId) {
-        await prisma.payment.update({
-          where: { id: paymentId },
-          data: {
-            status: "paid",
-            providerPaymentId: session.id,
-          },
-        });
-        await applyExtension(paymentId);
-      }
-    }
-
-    return NextResponse.json({ ok: true, provider: "stripe" });
+    event = stripe.webhooks.constructEvent(
+      rawBody,
+      signature,
+      process.env.STRIPE_WEBHOOK_SECRET,
+    );
   } catch (error) {
     const message = error instanceof Error ? error.message : "Webhook error";
     return NextResponse.json({ error: message }, { status: 400 });
   }
+
+  const isNewEvent = await insertWebhookEventIfNew({
+    provider: "stripe",
+    providerEventId: event.id,
+    eventType: event.type,
+    payload: event,
+  });
+
+  if (!isNewEvent) {
+    return NextResponse.json({ ok: true, duplicate: true });
+  }
+
+  switch (event.type) {
+    case "checkout.session.completed":
+    case "checkout.session.async_payment_succeeded": {
+      const session = event.data.object as Stripe.Checkout.Session;
+      const paymentId = session.metadata?.payment_id ?? session.client_reference_id;
+
+      if (paymentId) {
+        await markPaymentPaid(paymentId, session.id);
+      }
+      break;
+    }
+    default:
+      break;
+  }
+
+  return NextResponse.json({ ok: true, provider: "stripe" });
 }
