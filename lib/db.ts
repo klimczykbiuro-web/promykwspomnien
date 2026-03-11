@@ -50,12 +50,30 @@ function createPool() {
   });
 }
 
+type PgPool = ReturnType<typeof createPool>;
+
 const globalForDb = globalThis as typeof globalThis & {
-  __pgPool?: Pool;
+  __pgPool?: PgPool;
 };
 
-export const pool = globalForDb.__pgPool ?? createPool();
+function getPool(): PgPool {
+  if (globalForDb.__pgPool) {
+    return globalForDb.__pgPool;
+  }
 
-if (process.env.NODE_ENV !== "production") {
-  globalForDb.__pgPool = pool;
+  const created = createPool();
+
+  if (process.env.NODE_ENV !== "production") {
+    globalForDb.__pgPool = created;
+  }
+
+  return created;
 }
+
+export const pool = new Proxy({} as PgPool, {
+  get(_target, prop) {
+    const realPool = getPool();
+    const value = (realPool as any)[prop];
+    return typeof value === "function" ? value.bind(realPool) : value;
+  },
+});
