@@ -5,6 +5,7 @@ import {
   insertWebhookEventIfNew,
   markPaymentPaid,
 } from "@/lib/payments/repository";
+import { applyExtensionForPayment } from "@/lib/extensions/apply-extension";
 
 export const runtime = "nodejs";
 
@@ -51,7 +52,9 @@ export async function POST(req: Request) {
 
       if (paymentId) {
         await markPaymentPaid(paymentId, session.id);
+        await applyExtensionForPayment(paymentId);
       }
+
       break;
     }
     default:
