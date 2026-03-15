@@ -11,14 +11,23 @@ export async function GET(
     const { slug } = await context.params;
 
     const result = await pool.query(
-      `
-      SELECT *
-      FROM profiles
-      WHERE slug = $1
-      LIMIT 1
-      `,
-      [slug]
-    );
+  `
+  SELECT
+    id,
+    slug,
+    full_name,
+    birth_year,
+    death_year,
+    quote,
+    biography,
+    hero_image_url,
+    expires_at
+  FROM profiles
+  WHERE slug = $1
+  LIMIT 1
+  `,
+  [slug]
+);
 
     if (result.rowCount === 0) {
       return NextResponse.json({ error: "Profile not found" }, { status: 404 });

@@ -1,4 +1,4 @@
-import GuestbookSection from "@/components/profile/guestbook-section";
+
 
 type Profile = {
   id: string;
@@ -83,7 +83,6 @@ export default async function ProfilePage({
           </div>
         </div>
 
-        <GuestbookSection slug={profile.slug} initialEntries={[]} />
       </div>
     </div>
   );
