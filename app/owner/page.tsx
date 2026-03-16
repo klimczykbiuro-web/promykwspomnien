@@ -6,8 +6,8 @@ import {
   getOwnerDashboard,
   getOwnerSessionByToken,
 } from "@/lib/owner/repository";
-import styles from "./owner.module.css";
 import ExtendProfileForm from "./extend-profile-form";
+import styles from "./owner.module.css";
 
 function formatDate(dateString: string | null) {
   if (!dateString) return "—";
@@ -60,9 +60,8 @@ export default async function OwnerDashboardPage() {
                 </h1>
 
                 <p className={styles.heroDescription}>
-                  To najważniejsza informacja w panelu właściciela. Gdy termin
-                  będzie się zbliżał, tutaj od razu będzie widać do kiedy profil
-                  jest aktywny i gdzie kliknąć, żeby go przedłużyć.
+                  Tutaj możesz szybko sprawdzić do kiedy profil jest aktywny i w
+                  razie potrzeby przedłużyć go na kolejny okres.
                 </p>
               </div>
 
@@ -94,40 +93,46 @@ export default async function OwnerDashboardPage() {
           </section>
 
           <div className={styles.columns}>
-         <section id="przedluzenia" className={styles.card}>
-  <p className={styles.sectionLabel}>Przedłużenia</p>
-  <h2 className={styles.sectionTitle}>Przedłuż profil</h2>
+            <section id="przedluzenia" className={styles.card}>
+              <p className={styles.sectionLabel}>Przedłużenie</p>
+              <h2 className={styles.sectionTitle}>Przedłuż profil</h2>
+              <p className={styles.sectionIntro}>Wybierz okres przedłużenia</p>
 
-  <div style={{ marginTop: 22 }}>
-    <ExtendProfileForm slug={dashboard.profile.slug} />
-  </div>
+              <div className={styles.formWrap}>
+                <ExtendProfileForm slug={dashboard.profile.slug} />
+              </div>
 
-  <div className={styles.list} style={{ marginTop: 28 }}>
-    {dashboard.extensions.length === 0 ? (
-      <div className={styles.empty}>Brak historii przedłużeń.</div>
-    ) : (
-      dashboard.extensions.map((extension) => (
-        <article key={extension.id} className={styles.item}>
-          <div className={styles.itemHeader}>
-            <strong className={styles.itemStrong}>
-              +{extension.years_added} rok/lata
-            </strong>
-            <span className={styles.itemDate}>
-              {formatDate(extension.created_at)}
-            </span>
-          </div>
+              <div className={styles.listAfterForm}>
+                <p className={styles.sectionLabel}>Historia przedłużeń</p>
 
-          <p className={styles.itemText}>
-            Poprzednio: {formatDate(extension.previous_expires_at)}
-          </p>
-          <p className={styles.itemText}>
-            Nowa data: {formatDate(extension.new_expires_at)}
-          </p>
-        </article>
-      ))
-    )}
-  </div>
-</section>
+                <div className={styles.list}>
+                  {dashboard.extensions.length === 0 ? (
+                    <div className={styles.empty}>Brak historii przedłużeń.</div>
+                  ) : (
+                    dashboard.extensions.map((extension) => (
+                      <article key={extension.id} className={styles.item}>
+                        <div className={styles.itemHeader}>
+                          <strong className={styles.itemStrong}>
+                            +{extension.years_added} rok/lata
+                          </strong>
+                          <span className={styles.itemDate}>
+                            {formatDate(extension.created_at)}
+                          </span>
+                        </div>
+
+                        <p className={styles.itemText}>
+                          Poprzednio:{" "}
+                          {formatDate(extension.previous_expires_at)}
+                        </p>
+                        <p className={styles.itemText}>
+                          Nowa data: {formatDate(extension.new_expires_at)}
+                        </p>
+                      </article>
+                    ))
+                  )}
+                </div>
+              </div>
+            </section>
 
             <section className={styles.card}>
               <p className={styles.sectionLabel}>Płatności</p>

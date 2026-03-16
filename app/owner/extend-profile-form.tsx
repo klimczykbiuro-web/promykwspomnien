@@ -11,31 +11,37 @@ type PlanId = "plan_1y" | "plan_5y" | "plan_20y";
 
 const planOptions: {
   id: PlanId;
-  title: string;
+  period: string;
+  subtitle: string;
+  price: string;
   badge?: string;
-  description: string;
-  hint: string;
 }[] = [
   {
     id: "plan_1y",
-    title: "1 rok",
-    description: "Najprostsza opcja, jeśli chcesz przedłużyć profil na najbliższy czas.",
-    hint: "Dobra, gdy chcesz odnowić profil teraz i wrócić do tematu później.",
+    period: "1 rok",
+    subtitle: "Na teraz",
+    price: "10 zł",
   },
   {
     id: "plan_5y",
-    title: "5 lat",
-    badge: "Najczęściej wybierane",
-    description: "Wygodna opcja na dłużej, bez potrzeby szybkiego ponownego przedłużania.",
-    hint: "Najlepszy wybór, jeśli chcesz mieć spokój na kilka lat.",
+    period: "5 lat",
+    subtitle: "Najczęściej wybierane",
+    price: "45 zł",
+    badge: "Polecane",
   },
   {
     id: "plan_20y",
-    title: "20 lat",
-    description: "Opcja na bardzo długi czas, żeby nie zajmować się tym ponownie przez wiele lat.",
-    hint: "Dobra, jeśli chcesz załatwić temat raz i na długo.",
+    period: "20 lat",
+    subtitle: "Spokój na wiele lat",
+    price: "150 zł",
   },
 ];
+
+function getPlanThemeClass(planId: PlanId, stylesObj: typeof styles) {
+  if (planId === "plan_1y") return stylesObj.planCard1Y;
+  if (planId === "plan_5y") return stylesObj.planCard5Y;
+  return stylesObj.planCard20Y;
+}
 
 export default function ExtendProfileForm({ slug }: Props) {
   const [planId, setPlanId] = useState<PlanId>("plan_5y");
@@ -83,7 +89,7 @@ export default function ExtendProfileForm({ slug }: Props) {
   return (
     <form onSubmit={handleSubmit} className={styles.formStack}>
       <fieldset className={styles.formGroup}>
-        <legend className={styles.formLegend}>Wybierz okres przedłużenia</legend>
+        <legend className={styles.formLegend}>Wybierz plan</legend>
 
         <div className={styles.planGrid}>
           {planOptions.map((plan) => {
@@ -99,24 +105,33 @@ export default function ExtendProfileForm({ slug }: Props) {
                   value={plan.id}
                   checked={isActive}
                   onChange={() => setPlanId(plan.id)}
-                  className={styles.visuallyHidden}
+                  className={styles.planInput}
                 />
 
                 <label
                   htmlFor={inputId}
-                  className={`${styles.planCard} ${
-                    isActive ? styles.planCardActive : ""
-                  }`}
+                  className={[
+                    styles.planCard,
+                    getPlanThemeClass(plan.id, styles),
+                    isActive ? styles.planCardActive : "",
+                  ]
+                    .filter(Boolean)
+                    .join(" ")}
                 >
-                  <div className={styles.planTitleRow}>
-                    <span className={styles.planTitle}>{plan.title}</span>
+                  <div className={styles.planTopRow}>
+                    <span className={styles.planPeriod}>{plan.period}</span>
+
                     {plan.badge ? (
                       <span className={styles.planBadge}>{plan.badge}</span>
                     ) : null}
                   </div>
 
-                  <p className={styles.planDescription}>{plan.description}</p>
-                  <p className={styles.planHint}>{plan.hint}</p>
+                  <p className={styles.planSubtitle}>{plan.subtitle}</p>
+                  <p className={styles.planPrice}>{plan.price}</p>
+
+                  {isActive ? (
+                    <span className={styles.planSelected}>Wybrano</span>
+                  ) : null}
                 </label>
               </div>
             );
