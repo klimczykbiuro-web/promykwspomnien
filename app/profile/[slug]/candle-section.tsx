@@ -50,6 +50,8 @@ export default function CandleSection({
       setAlreadyLit(true);
       setCount(typeof data.count === "number" ? data.count : count + 1);
       setMessage(data.message || "Dziękujemy. Znicz został zapalony.");
+
+      window.dispatchEvent(new CustomEvent("memorial:candle-lit"));
     } catch (error) {
       setMessage(
         error instanceof Error

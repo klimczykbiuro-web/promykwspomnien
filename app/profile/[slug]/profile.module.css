@@ -24,7 +24,10 @@
 }
 
 .imageWrap {
+  position: relative;
   width: 100%;
+  overflow: hidden;
+  border-radius: 28px;
 }
 
 .image {
@@ -86,6 +89,137 @@
   font-style: italic;
   color: #40372f;
 }
+
+/* FLAME ANIMATION */
+
+.flameBurst {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+  animation: flameBurstFade 1.7s ease forwards;
+}
+
+.flameShape {
+  position: absolute;
+  left: 50%;
+  top: 48%;
+  width: 128px;
+  height: 170px;
+  transform: translate(-50%, -50%);
+  animation: flameTravel 1.7s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+.flameGlow {
+  position: absolute;
+  inset: auto;
+  left: 50%;
+  top: 50%;
+  width: 180px;
+  height: 180px;
+  transform: translate(-50%, -50%);
+  border-radius: 999px;
+  background: radial-gradient(
+    circle,
+    rgba(255, 194, 92, 0.45) 0%,
+    rgba(255, 166, 0, 0.22) 38%,
+    rgba(255, 166, 0, 0.06) 62%,
+    transparent 72%
+  );
+  animation: flameGlowPulse 0.9s ease-in-out infinite;
+}
+
+.flameOuter {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 88px;
+  height: 132px;
+  transform: translateX(-50%);
+  border-radius: 60% 60% 58% 58% / 78% 78% 28% 28%;
+  background: linear-gradient(180deg, #ffd784 0%, #ff9f2f 58%, #df5f14 100%);
+  box-shadow: 0 0 24px rgba(255, 153, 0, 0.4);
+  animation: flameFlickerOuter 0.65s ease-in-out infinite alternate;
+}
+
+.flameOuter::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -24px;
+  width: 42px;
+  height: 64px;
+  transform: translateX(-50%);
+  border-radius: 60% 60% 52% 52% / 84% 84% 24% 24%;
+  background: linear-gradient(180deg, #fff1b8 0%, #ffc95a 100%);
+}
+
+.flameInner {
+  position: absolute;
+  left: 50%;
+  bottom: 18px;
+  width: 40px;
+  height: 72px;
+  transform: translateX(-50%);
+  border-radius: 60% 60% 52% 52% / 84% 84% 24% 24%;
+  background: linear-gradient(180deg, #fff9db 0%, #fff1a1 42%, #ffd14d 100%);
+  animation: flameFlickerInner 0.5s ease-in-out infinite alternate;
+}
+
+.photoFlameBadge {
+  position: absolute;
+  right: 14px;
+  bottom: 14px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: rgba(36, 23, 15, 0.86);
+  color: white;
+  box-shadow: 0 10px 24px rgba(23, 13, 7, 0.28);
+  backdrop-filter: blur(6px);
+}
+
+.photoFlameIcon {
+  position: relative;
+  width: 18px;
+  height: 24px;
+  flex: 0 0 18px;
+}
+
+.photoFlameOuter {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 18px;
+  height: 24px;
+  transform: translateX(-50%);
+  border-radius: 60% 60% 58% 58% / 78% 78% 28% 28%;
+  background: linear-gradient(180deg, #ffd784 0%, #ff9f2f 58%, #df5f14 100%);
+  animation: flameFlickerOuter 0.8s ease-in-out infinite alternate;
+}
+
+.photoFlameInner {
+  position: absolute;
+  left: 50%;
+  bottom: 4px;
+  width: 8px;
+  height: 14px;
+  transform: translateX(-50%);
+  border-radius: 60% 60% 52% 52% / 84% 84% 24% 24%;
+  background: linear-gradient(180deg, #fff9db 0%, #fff1a1 42%, #ffd14d 100%);
+  animation: flameFlickerInner 0.6s ease-in-out infinite alternate;
+}
+
+.photoFlameLabel {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+/* CANDLE SECTION */
 
 .candleCard {
   background: linear-gradient(180deg, #fff9f1 0%, #f9efe0 100%);
@@ -162,7 +296,7 @@
 }
 
 .candleButtonDone {
-  background: #82644d;
+  background: #8f6b4e;
   cursor: default;
 }
 
@@ -227,6 +361,68 @@
   color: var(--muted);
 }
 
+/* KEYFRAMES */
+
+@keyframes flameGlowPulse {
+  0% {
+    transform: translate(-50%, -50%) scale(0.92);
+    opacity: 0.75;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1.08);
+    opacity: 1;
+  }
+}
+
+@keyframes flameFlickerOuter {
+  0% {
+    transform: translateX(-50%) rotate(-2deg) scaleY(0.96);
+  }
+  100% {
+    transform: translateX(-50%) rotate(2deg) scaleY(1.04);
+  }
+}
+
+@keyframes flameFlickerInner {
+  0% {
+    transform: translateX(-50%) rotate(2deg) scaleY(0.95);
+  }
+  100% {
+    transform: translateX(-50%) rotate(-2deg) scaleY(1.06);
+  }
+}
+
+@keyframes flameTravel {
+  0% {
+    transform: translate(-50%, -50%) scale(0.45);
+    opacity: 0;
+  }
+  18% {
+    transform: translate(-50%, -50%) scale(1.1);
+    opacity: 1;
+  }
+  48% {
+    transform: translate(-50%, -50%) scale(1.28);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(78%, 92%) scale(0.2);
+    opacity: 0;
+  }
+}
+
+@keyframes flameBurstFade {
+  0% {
+    opacity: 1;
+  }
+  82% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
 @media (max-width: 980px) {
   .heroGrid {
     grid-template-columns: 1fr;
@@ -279,6 +475,7 @@
     border-radius: 24px;
   }
 
+  .imageWrap,
   .image,
   .imagePlaceholder {
     border-radius: 22px;
@@ -321,5 +518,20 @@
   .biography {
     font-size: 18px;
     line-height: 1.75;
+  }
+
+  .photoFlameBadge {
+    right: 10px;
+    bottom: 10px;
+    padding: 8px 12px;
+  }
+
+  .photoFlameLabel {
+    font-size: 12px;
+  }
+
+  .flameShape {
+    width: 110px;
+    height: 150px;
   }
 }

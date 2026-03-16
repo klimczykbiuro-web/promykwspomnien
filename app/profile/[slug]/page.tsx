@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 import CandleSection from "./candle-section";
+import PhotoFlameBadge from "./photo-flame-badge";
 import styles from "./profile.module.css";
 import { getCandleCountBySlug } from "@/lib/profile/candles";
 
@@ -85,6 +86,8 @@ export default async function ProfilePage({
                     </span>
                   </div>
                 )}
+
+                <PhotoFlameBadge initialAlreadyLit={initialAlreadyLit} />
               </div>
 
               <div className={styles.heroContent}>
