@@ -111,15 +111,17 @@ export default async function ProfilePage({
           />
 
           <section className={styles.contentCard}>
-            <h2 className={styles.sectionTitle}>Wspomnienie</h2>
+            <div className={styles.contentInner}>
+              <h2 className={styles.sectionTitle}>Wspomnienie</h2>
 
-            {profile.biography ? (
-              <div className={styles.biography}>{profile.biography}</div>
-            ) : (
-              <p className={styles.emptyText}>
-                Biografia nie została jeszcze uzupełniona.
-              </p>
-            )}
+              {profile.biography ? (
+                <div className={styles.biography}>{profile.biography}</div>
+              ) : (
+                <p className={styles.emptyText}>
+                  Wspomnienie nie zostało jeszcze uzupełnione.
+                </p>
+              )}
+            </div>
           </section>
         </div>
       </div>

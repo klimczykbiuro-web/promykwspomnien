@@ -167,10 +167,10 @@
 
 .photoFlameBadge {
   position: absolute;
-  right: 14px;
-  bottom: 14px;
-  width: 34px;
-  height: 34px;
+  right: 20px;
+  bottom: 22px;
+  width: 28px;
+  height: 28px;
   z-index: 2;
   pointer-events: none;
 }
@@ -192,8 +192,8 @@
   position: absolute;
   left: 50%;
   top: 50%;
-  width: 14px;
-  height: 20px;
+  width: 11px;
+  height: 16px;
   transform: translate(-50%, -50%);
 }
 
@@ -201,8 +201,8 @@
   position: absolute;
   left: 50%;
   bottom: 0;
-  width: 14px;
-  height: 20px;
+  width: 11px;
+  height: 16px;
   transform: translateX(-50%);
   border-radius: 60% 60% 58% 58% / 80% 80% 26% 26%;
   background: linear-gradient(180deg, #ffe3a0 0%, #ffab37 56%, #d9651b 100%);
@@ -212,9 +212,9 @@
 .photoFlameInner {
   position: absolute;
   left: 50%;
-  bottom: 3px;
-  width: 6px;
-  height: 11px;
+  bottom: 2px;
+  width: 5px;
+  height: 9px;
   transform: translateX(-50%);
   border-radius: 60% 60% 52% 52% / 84% 84% 24% 24%;
   background: linear-gradient(180deg, #fffdf0 0%, #fff3b3 50%, #ffd25a 100%);
@@ -314,25 +314,29 @@
   border: 1px solid var(--border);
   border-radius: 32px;
   box-shadow: 0 8px 30px rgba(43, 33, 24, 0.06);
-  padding: 28px;
+  padding: 32px 28px;
+}
+
+.contentInner {
+  max-width: 820px;
 }
 
 .sectionTitle {
   margin: 0;
-  font-size: 34px;
-  line-height: 1.15;
+  font-size: 42px;
+  line-height: 1.1;
 }
 
 .biography {
-  margin-top: 20px;
+  margin-top: 26px;
   white-space: pre-line;
-  font-size: 21px;
-  line-height: 1.9;
+  font-size: 22px;
+  line-height: 1.95;
   color: #3f3832;
 }
 
 .emptyText {
-  margin-top: 20px;
+  margin-top: 22px;
   font-size: 18px;
   color: var(--muted);
 }
@@ -458,9 +462,17 @@
     min-width: 0;
   }
 
+  .contentInner {
+    max-width: none;
+  }
+
+  .sectionTitle {
+    font-size: 36px;
+  }
+
   .biography {
-    font-size: 19px;
-    line-height: 1.8;
+    font-size: 20px;
+    line-height: 1.85;
   }
 }
 
@@ -514,19 +526,19 @@
   }
 
   .sectionTitle {
-    font-size: 28px;
+    font-size: 30px;
   }
 
   .biography {
-    font-size: 18px;
-    line-height: 1.75;
+    font-size: 19px;
+    line-height: 1.8;
   }
 
   .photoFlameBadge {
-    right: 10px;
-    bottom: 10px;
-    width: 30px;
-    height: 30px;
+    right: 14px;
+    bottom: 16px;
+    width: 24px;
+    height: 24px;
   }
 
   .flameShape {
