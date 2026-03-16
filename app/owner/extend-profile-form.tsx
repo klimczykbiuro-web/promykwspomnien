@@ -120,14 +120,13 @@ export default function ExtendProfileForm({ slug }: Props) {
                 >
                   <div className={styles.planTopRow}>
                     <span className={styles.planPeriod}>{plan.period}</span>
-
                     {plan.badge ? (
                       <span className={styles.planBadge}>{plan.badge}</span>
                     ) : null}
                   </div>
 
-                  <p className={styles.planSubtitle}>{plan.subtitle}</p>
                   <p className={styles.planPrice}>{plan.price}</p>
+                  <p className={styles.planSubtitle}>{plan.subtitle}</p>
 
                   {isActive ? (
                     <span className={styles.planSelected}>Wybrano</span>
@@ -139,34 +138,36 @@ export default function ExtendProfileForm({ slug }: Props) {
         </div>
       </fieldset>
 
-      <div className={styles.formField}>
-        <label htmlFor="buyerName" className={styles.formLabel}>
-          Imię i nazwisko
-        </label>
-        <input
-          id="buyerName"
-          className={`input ${styles.formInput}`}
-          type="text"
-          value={buyerName}
-          onChange={(e) => setBuyerName(e.target.value)}
-          placeholder="Np. Jan Kowalski"
-          required
-        />
-      </div>
+      <div className={styles.formFieldsGrid}>
+        <div className={styles.formField}>
+          <label htmlFor="buyerName" className={styles.formLabel}>
+            Imię i nazwisko
+          </label>
+          <input
+            id="buyerName"
+            className={`input ${styles.formInput}`}
+            type="text"
+            value={buyerName}
+            onChange={(e) => setBuyerName(e.target.value)}
+            placeholder="Np. Jan Kowalski"
+            required
+          />
+        </div>
 
-      <div className={styles.formField}>
-        <label htmlFor="buyerEmail" className={styles.formLabel}>
-          Adres e-mail
-        </label>
-        <input
-          id="buyerEmail"
-          className={`input ${styles.formInput}`}
-          type="email"
-          value={buyerEmail}
-          onChange={(e) => setBuyerEmail(e.target.value)}
-          placeholder="Np. jan@example.com"
-          required
-        />
+        <div className={styles.formField}>
+          <label htmlFor="buyerEmail" className={styles.formLabel}>
+            Adres e-mail
+          </label>
+          <input
+            id="buyerEmail"
+            className={`input ${styles.formInput}`}
+            type="email"
+            value={buyerEmail}
+            onChange={(e) => setBuyerEmail(e.target.value)}
+            placeholder="Np. jan@example.com"
+            required
+          />
+        </div>
       </div>
 
       {error ? (

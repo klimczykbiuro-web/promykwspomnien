@@ -92,45 +92,46 @@ export default async function OwnerDashboardPage() {
             </div>
           </section>
 
-          <div className={styles.columns}>
-            <section id="przedluzenia" className={styles.card}>
-              <p className={styles.sectionLabel}>Przedłużenie</p>
-              <h2 className={styles.sectionTitle}>Przedłuż profil</h2>
-              <p className={styles.sectionIntro}>Wybierz okres przedłużenia</p>
+          <section id="przedluzenia" className={styles.card}>
+            <p className={styles.sectionLabel}>Przedłużenie</p>
+            <h2 className={styles.sectionTitle}>Przedłuż profil</h2>
+            <p className={styles.sectionIntro}>Wybierz okres przedłużenia</p>
 
-              <div className={styles.formWrap}>
-                <ExtendProfileForm slug={dashboard.profile.slug} />
-              </div>
+            <div className={styles.formWrap}>
+              <ExtendProfileForm slug={dashboard.profile.slug} />
+            </div>
+          </section>
 
-              <div className={styles.listAfterForm}>
-                <p className={styles.sectionLabel}>Historia przedłużeń</p>
+          <div className={styles.historyGrid}>
+            <section className={styles.card}>
+              <p className={styles.sectionLabel}>Historia przedłużeń</p>
+              <h2 className={styles.sectionTitle}>Ostatnie 10</h2>
 
-                <div className={styles.list}>
-                  {dashboard.extensions.length === 0 ? (
-                    <div className={styles.empty}>Brak historii przedłużeń.</div>
-                  ) : (
-                    dashboard.extensions.map((extension) => (
-                      <article key={extension.id} className={styles.item}>
-                        <div className={styles.itemHeader}>
-                          <strong className={styles.itemStrong}>
-                            +{extension.years_added} rok/lata
-                          </strong>
-                          <span className={styles.itemDate}>
-                            {formatDate(extension.created_at)}
-                          </span>
-                        </div>
+              <div className={styles.list}>
+                {dashboard.extensions.length === 0 ? (
+                  <div className={styles.empty}>Brak historii przedłużeń.</div>
+                ) : (
+                  dashboard.extensions.map((extension) => (
+                    <article key={extension.id} className={styles.item}>
+                      <div className={styles.itemHeader}>
+                        <strong className={styles.itemStrong}>
+                          +{extension.years_added} rok/lata
+                        </strong>
+                        <span className={styles.itemDate}>
+                          {formatDate(extension.created_at)}
+                        </span>
+                      </div>
 
-                        <p className={styles.itemText}>
-                          Poprzednio:{" "}
-                          {formatDate(extension.previous_expires_at)}
-                        </p>
-                        <p className={styles.itemText}>
-                          Nowa data: {formatDate(extension.new_expires_at)}
-                        </p>
-                      </article>
-                    ))
-                  )}
-                </div>
+                      <p className={styles.itemText}>
+                        Poprzednio:{" "}
+                        {formatDate(extension.previous_expires_at)}
+                      </p>
+                      <p className={styles.itemText}>
+                        Nowa data: {formatDate(extension.new_expires_at)}
+                      </p>
+                    </article>
+                  ))
+                )}
               </div>
             </section>
 
