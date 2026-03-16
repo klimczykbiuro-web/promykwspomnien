@@ -95,7 +95,6 @@ export default async function OwnerDashboardPage() {
           <section id="przedluzenia" className={styles.card}>
             <p className={styles.sectionLabel}>Przedłużenie</p>
             <h2 className={styles.sectionTitle}>Przedłuż profil</h2>
-            <p className={styles.sectionIntro}>Wybierz okres przedłużenia</p>
 
             <div className={styles.formWrap}>
               <ExtendProfileForm slug={dashboard.profile.slug} />

@@ -127,10 +127,6 @@ export default function ExtendProfileForm({ slug }: Props) {
 
                   <p className={styles.planPrice}>{plan.price}</p>
                   <p className={styles.planSubtitle}>{plan.subtitle}</p>
-
-                  {isActive ? (
-                    <span className={styles.planSelected}>Wybrano</span>
-                  ) : null}
                 </label>
               </div>
             );
