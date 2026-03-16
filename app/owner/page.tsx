@@ -7,6 +7,7 @@ import {
   getOwnerSessionByToken,
 } from "@/lib/owner/repository";
 import styles from "./owner.module.css";
+import ExtendProfileForm from "./extend-profile-form";
 
 function formatDate(dateString: string | null) {
   if (!dateString) return "—";
@@ -93,36 +94,40 @@ export default async function OwnerDashboardPage() {
           </section>
 
           <div className={styles.columns}>
-            <section id="przedluzenia" className={styles.card}>
-              <p className={styles.sectionLabel}>Przedłużenia</p>
-              <h2 className={styles.sectionTitle}>Ostatnie 10</h2>
+         <section id="przedluzenia" className={styles.card}>
+  <p className={styles.sectionLabel}>Przedłużenia</p>
+  <h2 className={styles.sectionTitle}>Przedłuż profil</h2>
 
-              <div className={styles.list}>
-                {dashboard.extensions.length === 0 ? (
-                  <div className={styles.empty}>Brak historii przedłużeń.</div>
-                ) : (
-                  dashboard.extensions.map((extension) => (
-                    <article key={extension.id} className={styles.item}>
-                      <div className={styles.itemHeader}>
-                        <strong className={styles.itemStrong}>
-                          +{extension.years_added} rok/lata
-                        </strong>
-                        <span className={styles.itemDate}>
-                          {formatDate(extension.created_at)}
-                        </span>
-                      </div>
+  <div style={{ marginTop: 22 }}>
+    <ExtendProfileForm slug={dashboard.profile.slug} />
+  </div>
 
-                      <p className={styles.itemText}>
-                        Poprzednio: {formatDate(extension.previous_expires_at)}
-                      </p>
-                      <p className={styles.itemText}>
-                        Nowa data: {formatDate(extension.new_expires_at)}
-                      </p>
-                    </article>
-                  ))
-                )}
-              </div>
-            </section>
+  <div className={styles.list} style={{ marginTop: 28 }}>
+    {dashboard.extensions.length === 0 ? (
+      <div className={styles.empty}>Brak historii przedłużeń.</div>
+    ) : (
+      dashboard.extensions.map((extension) => (
+        <article key={extension.id} className={styles.item}>
+          <div className={styles.itemHeader}>
+            <strong className={styles.itemStrong}>
+              +{extension.years_added} rok/lata
+            </strong>
+            <span className={styles.itemDate}>
+              {formatDate(extension.created_at)}
+            </span>
+          </div>
+
+          <p className={styles.itemText}>
+            Poprzednio: {formatDate(extension.previous_expires_at)}
+          </p>
+          <p className={styles.itemText}>
+            Nowa data: {formatDate(extension.new_expires_at)}
+          </p>
+        </article>
+      ))
+    )}
+  </div>
+</section>
 
             <section className={styles.card}>
               <p className={styles.sectionLabel}>Płatności</p>
