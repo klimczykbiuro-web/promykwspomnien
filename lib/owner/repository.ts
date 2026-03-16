@@ -333,7 +333,15 @@ export async function getOwnerDashboard(profileId: string) {
   const [profileResult, paymentsResult, extensionsResult] = await Promise.all([
     pool.query(
       `
-      SELECT id, slug, full_name, expires_at, owner_claimed_at
+      SELECT
+        id,
+        slug,
+        full_name,
+        expires_at,
+        owner_claimed_at,
+        hero_image_url,
+        quote,
+        biography
       FROM profiles
       WHERE id = $1
       LIMIT 1
@@ -373,6 +381,9 @@ export async function getOwnerDashboard(profileId: string) {
       full_name: string;
       expires_at: string | null;
       owner_claimed_at: string | null;
+      hero_image_url: string | null;
+      quote: string | null;
+      biography: string | null;
     },
     payments: paymentsResult.rows as Array<{
       id: string;
@@ -392,5 +403,48 @@ export async function getOwnerDashboard(profileId: string) {
       new_expires_at: string;
       created_at: string;
     }>,
+  };
+}
+
+type UpdateOwnerProfileInput = {
+  heroImageUrl: string | null;
+  quote: string | null;
+  biography: string | null;
+};
+
+export async function updateOwnerProfileContent(
+  profileId: string,
+  input: UpdateOwnerProfileInput
+) {
+  const result = await pool.query(
+    `
+    UPDATE profiles
+    SET
+      hero_image_url = $2,
+      quote = $3,
+      biography = $4
+    WHERE id = $1
+    RETURNING
+      id,
+      slug,
+      full_name,
+      hero_image_url,
+      quote,
+      biography
+    `,
+    [profileId, input.heroImageUrl, input.quote, input.biography]
+  );
+
+  if (result.rowCount === 0) {
+    return null;
+  }
+
+  return result.rows[0] as {
+    id: string;
+    slug: string;
+    full_name: string;
+    hero_image_url: string | null;
+    quote: string | null;
+    biography: string | null;
   };
 }
