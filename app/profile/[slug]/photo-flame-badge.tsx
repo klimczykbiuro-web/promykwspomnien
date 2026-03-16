@@ -18,7 +18,7 @@ export default function PhotoFlameBadge({ initialAlreadyLit }: Props) {
 
       const timeout = window.setTimeout(() => {
         setIsBursting(false);
-      }, 1700);
+      }, 1400);
 
       return () => window.clearTimeout(timeout);
     }
@@ -43,12 +43,12 @@ export default function PhotoFlameBadge({ initialAlreadyLit }: Props) {
       ) : null}
 
       {isLit ? (
-        <div className={styles.photoFlameBadge}>
+        <div className={styles.photoFlameBadge} aria-hidden="true">
+          <div className={styles.photoFlameHalo}></div>
           <div className={styles.photoFlameIcon}>
             <span className={styles.photoFlameOuter}></span>
             <span className={styles.photoFlameInner}></span>
           </div>
-          <span className={styles.photoFlameLabel}>Znicz pamięci</span>
         </div>
       ) : null}
     </>

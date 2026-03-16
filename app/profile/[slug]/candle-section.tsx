@@ -91,7 +91,7 @@ export default function CandleSection({
         {isLoading
           ? "Trwa zapalanie..."
           : alreadyLit
-          ? "Znicz został zapalony"
+          ? "Znicz płonie"
           : "🕯️ Zapal znicz"}
       </button>
 
