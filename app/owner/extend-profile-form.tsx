@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import styles from "./owner.module.css";
 
 type Props = {
   slug: string;
@@ -8,14 +9,36 @@ type Props = {
 
 type PlanId = "plan_1y" | "plan_5y" | "plan_20y";
 
-const planOptions: { id: PlanId; label: string }[] = [
-  { id: "plan_1y", label: "1 rok" },
-  { id: "plan_5y", label: "5 lat" },
-  { id: "plan_20y", label: "20 lat" },
+const planOptions: {
+  id: PlanId;
+  title: string;
+  badge?: string;
+  description: string;
+  hint: string;
+}[] = [
+  {
+    id: "plan_1y",
+    title: "1 rok",
+    description: "Najprostsza opcja, jeśli chcesz przedłużyć profil na najbliższy czas.",
+    hint: "Dobra, gdy chcesz odnowić profil teraz i wrócić do tematu później.",
+  },
+  {
+    id: "plan_5y",
+    title: "5 lat",
+    badge: "Najczęściej wybierane",
+    description: "Wygodna opcja na dłużej, bez potrzeby szybkiego ponownego przedłużania.",
+    hint: "Najlepszy wybór, jeśli chcesz mieć spokój na kilka lat.",
+  },
+  {
+    id: "plan_20y",
+    title: "20 lat",
+    description: "Opcja na bardzo długi czas, żeby nie zajmować się tym ponownie przez wiele lat.",
+    hint: "Dobra, jeśli chcesz załatwić temat raz i na długo.",
+  },
 ];
 
 export default function ExtendProfileForm({ slug }: Props) {
-  const [planId, setPlanId] = useState<PlanId>("plan_1y");
+  const [planId, setPlanId] = useState<PlanId>("plan_5y");
   const [buyerName, setBuyerName] = useState("");
   const [buyerEmail, setBuyerEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -58,32 +81,56 @@ export default function ExtendProfileForm({ slug }: Props) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="grid" style={{ gap: 16 }}>
-      <div>
-        <label htmlFor="planId" style={{ display: "block", marginBottom: 8 }}>
-          Wybierz okres przedłużenia
-        </label>
-        <select
-          id="planId"
-          className="select"
-          value={planId}
-          onChange={(e) => setPlanId(e.target.value as PlanId)}
-        >
-          {planOptions.map((plan) => (
-            <option key={plan.id} value={plan.id}>
-              {plan.label}
-            </option>
-          ))}
-        </select>
-      </div>
+    <form onSubmit={handleSubmit} className={styles.formStack}>
+      <fieldset className={styles.formGroup}>
+        <legend className={styles.formLegend}>Wybierz okres przedłużenia</legend>
 
-      <div>
-        <label htmlFor="buyerName" style={{ display: "block", marginBottom: 8 }}>
+        <div className={styles.planGrid}>
+          {planOptions.map((plan) => {
+            const inputId = `plan-${plan.id}`;
+            const isActive = planId === plan.id;
+
+            return (
+              <div key={plan.id}>
+                <input
+                  id={inputId}
+                  name="planId"
+                  type="radio"
+                  value={plan.id}
+                  checked={isActive}
+                  onChange={() => setPlanId(plan.id)}
+                  className={styles.visuallyHidden}
+                />
+
+                <label
+                  htmlFor={inputId}
+                  className={`${styles.planCard} ${
+                    isActive ? styles.planCardActive : ""
+                  }`}
+                >
+                  <div className={styles.planTitleRow}>
+                    <span className={styles.planTitle}>{plan.title}</span>
+                    {plan.badge ? (
+                      <span className={styles.planBadge}>{plan.badge}</span>
+                    ) : null}
+                  </div>
+
+                  <p className={styles.planDescription}>{plan.description}</p>
+                  <p className={styles.planHint}>{plan.hint}</p>
+                </label>
+              </div>
+            );
+          })}
+        </div>
+      </fieldset>
+
+      <div className={styles.formField}>
+        <label htmlFor="buyerName" className={styles.formLabel}>
           Imię i nazwisko
         </label>
         <input
           id="buyerName"
-          className="input"
+          className={`input ${styles.formInput}`}
           type="text"
           value={buyerName}
           onChange={(e) => setBuyerName(e.target.value)}
@@ -92,13 +139,13 @@ export default function ExtendProfileForm({ slug }: Props) {
         />
       </div>
 
-      <div>
-        <label htmlFor="buyerEmail" style={{ display: "block", marginBottom: 8 }}>
+      <div className={styles.formField}>
+        <label htmlFor="buyerEmail" className={styles.formLabel}>
           Adres e-mail
         </label>
         <input
           id="buyerEmail"
-          className="input"
+          className={`input ${styles.formInput}`}
           type="email"
           value={buyerEmail}
           onChange={(e) => setBuyerEmail(e.target.value)}
@@ -108,20 +155,12 @@ export default function ExtendProfileForm({ slug }: Props) {
       </div>
 
       {error ? (
-        <div
-          style={{
-            borderRadius: 18,
-            padding: 14,
-            background: "#fff1f1",
-            border: "1px solid #f0caca",
-            color: "#8a2d2d",
-          }}
-        >
+        <div className={styles.formError} aria-live="polite">
           {error}
         </div>
       ) : null}
 
-      <button type="submit" className="button" disabled={isLoading}>
+      <button type="submit" className={styles.formSubmit} disabled={isLoading}>
         {isLoading ? "Przekierowanie..." : "Przejdź do płatności"}
       </button>
     </form>

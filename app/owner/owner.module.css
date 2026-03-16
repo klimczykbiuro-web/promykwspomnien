@@ -177,4 +177,163 @@
   .sectionTitle {
     font-size: 30px;
   }
+.formStack {
+  display: grid;
+  gap: 18px;
+}
+
+.formGroup {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.formLegend {
+  margin: 0 0 12px;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.planGrid {
+  display: grid;
+  gap: 14px;
+}
+
+.visuallyHidden {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.planCard {
+  display: block;
+  border: 2px solid var(--border);
+  border-radius: 24px;
+  background: #faf6f1;
+  padding: 20px 22px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.planCard:hover {
+  border-color: #cdbba8;
+}
+
+.planCardActive {
+  border-color: var(--accent);
+  background: #fffdfb;
+  box-shadow: 0 8px 30px rgba(43, 33, 24, 0.08);
+}
+
+.planTitleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.planTitle {
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.planBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  padding: 8px 14px;
+  background: #1f1a17;
+  color: white;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.planDescription {
+  margin: 12px 0 0;
+  font-size: 19px;
+  line-height: 1.5;
+}
+
+.planHint {
+  margin: 10px 0 0;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+.formField {
+  display: grid;
+  gap: 8px;
+}
+
+.formLabel {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.formInput {
+  min-height: 60px;
+  font-size: 20px;
+  padding: 16px 18px;
+}
+
+.formError {
+  border-radius: 20px;
+  padding: 16px 18px;
+  background: #fff1f1;
+  border: 1px solid #f0caca;
+  color: #8a2d2d;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.formSubmit {
+  display: inline-flex;
+  width: 100%;
+  min-height: 68px;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 22px;
+  padding: 16px 24px;
+  background: var(--accent);
+  color: white;
+  cursor: pointer;
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.formSubmit:disabled {
+  opacity: 0.72;
+  cursor: wait;
+}
+
+@media (max-width: 900px) {
+  .planTitle {
+    font-size: 28px;
+  }
+
+  .planDescription {
+    font-size: 18px;
+  }
+
+  .planHint {
+    font-size: 15px;
+  }
+
+  .formLabel {
+    font-size: 17px;
+  }
+
+  .formInput {
+    font-size: 18px;
+  }
+
+  .formSubmit {
+    font-size: 24px;
+  }
+}
 }
