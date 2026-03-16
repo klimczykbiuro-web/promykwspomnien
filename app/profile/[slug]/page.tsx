@@ -1,4 +1,7 @@
+import { cookies } from "next/headers";
+import CandleSection from "./candle-section";
 import styles from "./profile.module.css";
+import { getCandleCountBySlug } from "@/lib/profile/candles";
 
 type Profile = {
   id: string;
@@ -56,6 +59,11 @@ export default async function ProfilePage({
   }
 
   const yearsLabel = getYearsLabel(profile);
+  const candleCount = (await getCandleCountBySlug(slug)) ?? 0;
+
+  const cookieStore = await cookies();
+  const initialAlreadyLit =
+    cookieStore.get(`memorial_candle_${slug}`)?.value === "1";
 
   return (
     <main className={styles.wrapper}>
@@ -92,6 +100,12 @@ export default async function ProfilePage({
               </div>
             </div>
           </section>
+
+          <CandleSection
+            slug={profile.slug}
+            initialCount={candleCount}
+            initialAlreadyLit={initialAlreadyLit}
+          />
 
           <section className={styles.contentCard}>
             <h2 className={styles.sectionTitle}>Wspomnienie</h2>

@@ -87,6 +87,92 @@
   color: #40372f;
 }
 
+.candleCard {
+  background: linear-gradient(180deg, #fff9f1 0%, #f9efe0 100%);
+  border: 1px solid #e8d8c0;
+  border-radius: 32px;
+  box-shadow: 0 8px 30px rgba(43, 33, 24, 0.06);
+  padding: 28px;
+}
+
+.candleHeader {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 22px;
+}
+
+.candleEyebrow {
+  margin: 0;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.candleTitle {
+  margin: 10px 0 0;
+  font-size: 36px;
+  line-height: 1.1;
+}
+
+.candleDescription {
+  margin: 12px 0 0;
+  font-size: 19px;
+  line-height: 1.6;
+  color: #5a5149;
+}
+
+.candleCountBox {
+  min-width: 220px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid #eadbc6;
+  padding: 18px 20px;
+  text-align: center;
+}
+
+.candleCountLabel {
+  display: block;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.candleCountValue {
+  display: block;
+  margin-top: 8px;
+  font-size: 42px;
+  line-height: 1;
+}
+
+.candleButton {
+  width: 100%;
+  min-height: 72px;
+  border: 0;
+  border-radius: 24px;
+  background: #3a2415;
+  color: white;
+  font-size: 28px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.candleButton:hover {
+  transform: translateY(-1px);
+}
+
+.candleButtonDone {
+  background: #82644d;
+  cursor: default;
+}
+
+.candleMessage {
+  margin: 14px 0 0;
+  font-size: 17px;
+  line-height: 1.6;
+  color: #5a5149;
+}
+
 .contentCard {
   background: var(--card);
   border: 1px solid var(--border);
@@ -165,6 +251,15 @@
     font-size: 22px;
   }
 
+  .candleHeader {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .candleCountBox {
+    min-width: 0;
+  }
+
   .biography {
     font-size: 19px;
     line-height: 1.8;
@@ -177,6 +272,7 @@
   }
 
   .heroCard,
+  .candleCard,
   .contentCard,
   .notFoundCard {
     padding: 20px;
@@ -199,6 +295,23 @@
   .quote {
     font-size: 20px;
     padding: 18px;
+  }
+
+  .candleTitle {
+    font-size: 30px;
+  }
+
+  .candleDescription {
+    font-size: 17px;
+  }
+
+  .candleCountValue {
+    font-size: 36px;
+  }
+
+  .candleButton {
+    min-height: 66px;
+    font-size: 24px;
   }
 
   .sectionTitle {
