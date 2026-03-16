@@ -396,4 +396,118 @@
   .formSubmit {
     font-size: 24px;
   }
+.editorForm {
+  display: grid;
+  gap: 22px;
+}
+
+.editorField {
+  display: grid;
+  gap: 8px;
+}
+
+.editorLabel {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.editorInput {
+  min-height: 58px;
+  font-size: 18px;
+}
+
+.editorTextareaShort {
+  min-height: 110px;
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+.editorTextareaLong {
+  min-height: 280px;
+  font-size: 18px;
+  line-height: 1.7;
+}
+
+.editorHint {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+.editorLink {
+  display: inline-flex;
+  margin-top: 4px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.editorActions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.editorSubmit {
+  display: inline-flex;
+  min-height: 56px;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 18px;
+  padding: 14px 22px;
+  background: var(--accent);
+  color: white;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.editorSubmit:disabled {
+  opacity: 0.72;
+  cursor: wait;
+}
+
+.editorSuccess {
+  margin: 0;
+  border-radius: 18px;
+  padding: 14px 16px;
+  background: #edf7ef;
+  border: 1px solid #cfe5d4;
+  color: #235734;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.editorError {
+  margin: 0;
+  border-radius: 18px;
+  padding: 14px 16px;
+  background: #fff1f1;
+  border: 1px solid #f0caca;
+  color: #8a2d2d;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+@media (max-width: 900px) {
+  .editorLabel {
+    font-size: 17px;
+  }
+
+  .editorInput,
+  .editorTextareaShort,
+  .editorTextareaLong {
+    font-size: 17px;
+  }
+
+  .editorTextareaLong {
+    min-height: 220px;
+  }
+
+  .editorSubmit {
+    width: 100%;
+  }
+}
 }

@@ -7,6 +7,7 @@ import {
   getOwnerSessionByToken,
 } from "@/lib/owner/repository";
 import ExtendProfileForm from "./extend-profile-form";
+import OwnerProfileForm from "./owner-profile-form";
 import styles from "./owner.module.css";
 
 function formatDate(dateString: string | null) {
@@ -89,6 +90,23 @@ export default async function OwnerDashboardPage() {
                   Wyloguj się
                 </button>
               </form>
+            </div>
+          </section>
+
+          <section className={styles.card}>
+            <p className={styles.sectionLabel}>Edycja</p>
+            <h2 className={styles.sectionTitle}>Edytuj profil</h2>
+            <p className={styles.sectionIntro}>
+              Tutaj zmienisz zdjęcie, cytat i wspomnienie widoczne na publicznym
+              profilu.
+            </p>
+
+            <div className={styles.formWrap}>
+              <OwnerProfileForm
+                initialHeroImageUrl={dashboard.profile.hero_image_url}
+                initialQuote={dashboard.profile.quote}
+                initialBiography={dashboard.profile.biography}
+              />
             </div>
           </section>
 
