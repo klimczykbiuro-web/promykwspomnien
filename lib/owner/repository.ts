@@ -330,9 +330,10 @@ export async function deleteOwnerSession(rawSessionToken: string) {
 }
 
 export async function getOwnerDashboard(profileId: string) {
-  const [profileResult, paymentsResult, extensionsResult] = await Promise.all([
-    pool.query(
-      `
+  const [profileResult, paymentsResult, extensionsResult, galleryResult] =
+    await Promise.all([
+      pool.query(
+        `
       SELECT
         id,
         slug,
@@ -346,29 +347,38 @@ export async function getOwnerDashboard(profileId: string) {
       WHERE id = $1
       LIMIT 1
       `,
-      [profileId]
-    ),
-    pool.query(
-      `
+        [profileId]
+      ),
+      pool.query(
+        `
       SELECT id, status, amount, currency, years_to_add, provider, created_at, paid_at
       FROM payments
       WHERE profile_id = $1
       ORDER BY created_at DESC
       LIMIT 10
       `,
-      [profileId]
-    ),
-    pool.query(
-      `
+        [profileId]
+      ),
+      pool.query(
+        `
       SELECT id, payment_id, years_added, previous_expires_at, new_expires_at, created_at
       FROM extensions
       WHERE profile_id = $1
       ORDER BY created_at DESC
       LIMIT 10
       `,
-      [profileId]
-    ),
-  ]);
+        [profileId]
+      ),
+      pool.query(
+        `
+      SELECT id, image_url, sort_order
+      FROM profile_gallery_images
+      WHERE profile_id = $1
+      ORDER BY sort_order ASC
+      `,
+        [profileId]
+      ),
+    ]);
 
   if (profileResult.rowCount === 0) {
     return null;
@@ -403,6 +413,11 @@ export async function getOwnerDashboard(profileId: string) {
       new_expires_at: string;
       created_at: string;
     }>,
+    galleryImages: galleryResult.rows as Array<{
+      id: string;
+      image_url: string;
+      sort_order: number;
+    }>,
   };
 }
 
@@ -410,41 +425,97 @@ type UpdateOwnerProfileInput = {
   heroImageUrl: string | null;
   quote: string | null;
   biography: string | null;
+  galleryImages: string[];
 };
 
 export async function updateOwnerProfileContent(
   profileId: string,
   input: UpdateOwnerProfileInput
 ) {
-  const result = await pool.query(
-    `
-    UPDATE profiles
-    SET
-      hero_image_url = $2,
-      quote = $3,
-      biography = $4
-    WHERE id = $1
-    RETURNING
-      id,
-      slug,
-      full_name,
-      hero_image_url,
-      quote,
-      biography
-    `,
-    [profileId, input.heroImageUrl, input.quote, input.biography]
-  );
+  const client = await pool.connect();
 
-  if (result.rowCount === 0) {
-    return null;
+  try {
+    await client.query("BEGIN");
+
+    const profileResult = await client.query(
+      `
+      UPDATE profiles
+      SET
+        hero_image_url = $2,
+        quote = $3,
+        biography = $4
+      WHERE id = $1
+      RETURNING
+        id,
+        slug,
+        full_name,
+        hero_image_url,
+        quote,
+        biography
+      `,
+      [profileId, input.heroImageUrl, input.quote, input.biography]
+    );
+
+    if (profileResult.rowCount === 0) {
+      await client.query("ROLLBACK");
+      return null;
+    }
+
+    await client.query(
+      `
+      DELETE FROM profile_gallery_images
+      WHERE profile_id = $1
+      `,
+      [profileId]
+    );
+
+    for (let index = 0; index < input.galleryImages.length; index += 1) {
+      await client.query(
+        `
+        INSERT INTO profile_gallery_images (
+          id,
+          profile_id,
+          image_url,
+          sort_order,
+          created_at
+        )
+        VALUES ($1, $2, $3, $4, NOW())
+        `,
+        [randomUUID(), profileId, input.galleryImages[index], index + 1]
+      );
+    }
+
+    const galleryResult = await client.query(
+      `
+      SELECT id, image_url, sort_order
+      FROM profile_gallery_images
+      WHERE profile_id = $1
+      ORDER BY sort_order ASC
+      `,
+      [profileId]
+    );
+
+    await client.query("COMMIT");
+
+    return {
+      profile: profileResult.rows[0] as {
+        id: string;
+        slug: string;
+        full_name: string;
+        hero_image_url: string | null;
+        quote: string | null;
+        biography: string | null;
+      },
+      galleryImages: galleryResult.rows as Array<{
+        id: string;
+        image_url: string;
+        sort_order: number;
+      }>,
+    };
+  } catch (error) {
+    await client.query("ROLLBACK");
+    throw error;
+  } finally {
+    client.release();
   }
-
-  return result.rows[0] as {
-    id: string;
-    slug: string;
-    full_name: string;
-    hero_image_url: string | null;
-    quote: string | null;
-    biography: string | null;
-  };
 }

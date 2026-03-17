@@ -14,6 +14,7 @@ type Profile = {
   biography: string | null;
   hero_image_url: string | null;
   expires_at: string | null;
+  galleryImages: string[];
 };
 
 async function getProfile(slug: string): Promise<Profile | null> {
@@ -123,6 +124,25 @@ export default async function ProfilePage({
               )}
             </div>
           </section>
+
+          {profile.galleryImages.length > 0 ? (
+            <section className={styles.galleryCard}>
+              <div className={styles.contentInner}>
+                <h2 className={styles.sectionTitle}>Zdjęcia</h2>
+                <div className={styles.galleryGrid}>
+                  {profile.galleryImages.map((imageUrl, index) => (
+                    <div key={`${imageUrl}-${index}`} className={styles.galleryItem}>
+                      <img
+                        src={imageUrl}
+                        alt={`${profile.full_name} – zdjęcie ${index + 1}`}
+                        className={styles.galleryImage}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </section>
+          ) : null}
         </div>
       </div>
     </main>

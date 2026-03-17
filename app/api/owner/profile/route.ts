@@ -8,25 +8,32 @@ import {
 
 export const runtime = "nodejs";
 
+const imageField = z
+  .string()
+  .trim()
+  .max(1000)
+  .refine(
+    (value) =>
+      value === "" ||
+      value.startsWith("http://") ||
+      value.startsWith("https://"),
+    "Adres zdjęcia musi zaczynać się od http:// lub https://"
+  );
+
 const schema = z.object({
-  heroImageUrl: z
-    .string()
-    .trim()
-    .max(1000)
-    .refine(
-      (value) =>
-        value === "" ||
-        value.startsWith("http://") ||
-        value.startsWith("https://"),
-      "Adres zdjęcia musi zaczynać się od http:// lub https://"
-    ),
+  heroImageUrl: imageField,
   quote: z.string().trim().max(240),
   biography: z.string().trim().max(6000),
+  galleryImages: z.array(imageField).max(10),
 });
 
 function normalizeOptional(value: string) {
   const trimmed = value.trim();
   return trimmed === "" ? null : trimmed;
+}
+
+function normalizeGallery(values: string[]) {
+  return values.map((value) => value.trim()).filter(Boolean);
 }
 
 export async function POST(request: NextRequest) {
@@ -53,6 +60,7 @@ export async function POST(request: NextRequest) {
       heroImageUrl: normalizeOptional(payload.heroImageUrl),
       quote: normalizeOptional(payload.quote),
       biography: normalizeOptional(payload.biography),
+      galleryImages: normalizeGallery(payload.galleryImages),
     });
 
     if (!updated) {
@@ -64,7 +72,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       ok: true,
-      profile: updated,
+      data: updated,
       message: "Zapisano zmiany.",
     });
   } catch (error) {

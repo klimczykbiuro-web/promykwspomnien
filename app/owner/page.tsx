@@ -47,6 +47,13 @@ export default async function OwnerDashboardPage() {
   const expiresAtLabel = formatDate(dashboard.profile.expires_at);
   const claimedAtLabel = formatDate(dashboard.profile.owner_claimed_at);
 
+  const gallerySlots = Array.from({ length: 10 }, (_, index) => {
+    const found = dashboard.galleryImages.find(
+      (image) => image.sort_order === index + 1
+    );
+    return found?.image_url ?? "";
+  });
+
   return (
     <main className={styles.wrapper}>
       <div className="container">
@@ -97,8 +104,8 @@ export default async function OwnerDashboardPage() {
             <p className={styles.sectionLabel}>Edycja</p>
             <h2 className={styles.sectionTitle}>Edytuj profil</h2>
             <p className={styles.sectionIntro}>
-              Tutaj zmienisz zdjęcie, cytat i wspomnienie widoczne na publicznym
-              profilu.
+              Tutaj zmienisz zdjęcie główne, cytat, wspomnienie i galerię zdjęć
+              widoczną na publicznym profilu.
             </p>
 
             <div className={styles.formWrap}>
@@ -106,6 +113,7 @@ export default async function OwnerDashboardPage() {
                 initialHeroImageUrl={dashboard.profile.hero_image_url}
                 initialQuote={dashboard.profile.quote}
                 initialBiography={dashboard.profile.biography}
+                initialGalleryImages={gallerySlots}
               />
             </div>
           </section>
