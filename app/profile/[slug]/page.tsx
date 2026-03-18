@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import CandleSection from "./candle-section";
 import PhotoFlameBadge from "./photo-flame-badge";
+import GallerySection from "./gallery-section";
 import styles from "./profile.module.css";
 import { getCandleCountBySlug } from "@/lib/profile/candles";
 
@@ -126,22 +127,10 @@ export default async function ProfilePage({
           </section>
 
           {profile.galleryImages.length > 0 ? (
-            <section className={styles.galleryCard}>
-              <div className={styles.contentInner}>
-                <h2 className={styles.sectionTitle}>Zdjęcia</h2>
-                <div className={styles.galleryGrid}>
-                  {profile.galleryImages.map((imageUrl, index) => (
-                    <div key={`${imageUrl}-${index}`} className={styles.galleryItem}>
-                      <img
-                        src={imageUrl}
-                        alt={`${profile.full_name} – zdjęcie ${index + 1}`}
-                        className={styles.galleryImage}
-                      />
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </section>
+            <GallerySection
+              fullName={profile.full_name}
+              images={profile.galleryImages}
+            />
           ) : null}
         </div>
       </div>
