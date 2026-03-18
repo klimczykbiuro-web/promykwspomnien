@@ -11,12 +11,37 @@ type Props = {
 export default function GallerySection({ fullName, images }: Props) {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
+  const hasActiveImage = activeIndex !== null;
+  const activeImage = hasActiveImage ? images[activeIndex] : null;
+
+  function closeLightbox() {
+    setActiveIndex(null);
+  }
+
+  function goNext() {
+    if (activeIndex === null) return;
+    setActiveIndex((activeIndex + 1) % images.length);
+  }
+
+  function goPrev() {
+    if (activeIndex === null) return;
+    setActiveIndex((activeIndex - 1 + images.length) % images.length);
+  }
+
   useEffect(() => {
     if (activeIndex === null) return;
 
     function handleKeyDown(event: KeyboardEvent) {
       if (event.key === "Escape") {
-        setActiveIndex(null);
+        closeLightbox();
+      }
+
+      if (event.key === "ArrowRight") {
+        goNext();
+      }
+
+      if (event.key === "ArrowLeft") {
+        goPrev();
       }
     }
 
@@ -28,7 +53,7 @@ export default function GallerySection({ fullName, images }: Props) {
       document.removeEventListener("keydown", handleKeyDown);
       document.body.style.overflow = previousOverflow;
     };
-  }, [activeIndex]);
+  }, [activeIndex, images.length]);
 
   return (
     <>
@@ -57,10 +82,10 @@ export default function GallerySection({ fullName, images }: Props) {
         </div>
       </section>
 
-      {activeIndex !== null ? (
+      {hasActiveImage && activeImage ? (
         <div
           className={styles.galleryLightbox}
-          onClick={() => setActiveIndex(null)}
+          onClick={closeLightbox}
           role="dialog"
           aria-modal="true"
           aria-label="Powiększone zdjęcie"
@@ -72,17 +97,43 @@ export default function GallerySection({ fullName, images }: Props) {
             <button
               type="button"
               className={styles.galleryLightboxClose}
-              onClick={() => setActiveIndex(null)}
+              onClick={closeLightbox}
               aria-label="Zamknij"
             >
               ×
             </button>
 
+            {images.length > 1 ? (
+              <>
+                <button
+                  type="button"
+                  className={`${styles.galleryNavButton} ${styles.galleryNavPrev}`}
+                  onClick={goPrev}
+                  aria-label="Poprzednie zdjęcie"
+                >
+                  ‹
+                </button>
+
+                <button
+                  type="button"
+                  className={`${styles.galleryNavButton} ${styles.galleryNavNext}`}
+                  onClick={goNext}
+                  aria-label="Następne zdjęcie"
+                >
+                  ›
+                </button>
+              </>
+            ) : null}
+
             <img
-              src={images[activeIndex]}
+              src={activeImage}
               alt={`${fullName} – zdjęcie ${activeIndex + 1}`}
               className={styles.galleryLightboxImage}
             />
+
+            <div className={styles.galleryLightboxFooter}>
+              Zdjęcie {activeIndex + 1} z {images.length}
+            </div>
           </div>
         </div>
       ) : null}
