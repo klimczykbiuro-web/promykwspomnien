@@ -1,0 +1,2 @@
+run_code,run_name,lot_code,qr_code_id,token_prefix,activation_url,sheet_no,sheet_row,sheet_col,single_svg_path,sheet_svg_path
+PVZUCD69,test-1,TBQC,5203682b-631c-4301-8303-a4728b3fe798,ZrENWbG6,http://localhost:3000/q/ZrENWbG6XkCPX7dOnuJxvSm4IKOWPFPN,1,1,1,output/qr/PVZUCD69/single/TBQC-sheet-001-r1-c1.svg,output/qr/PVZUCD69/sheets/sheet-001.svg

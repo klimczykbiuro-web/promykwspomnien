@@ -1,4 +1,5 @@
 import { cookies } from "next/headers";
+import Link from "next/link";
 import CandleSection from "./candle-section";
 import PhotoFlameBadge from "./photo-flame-badge";
 import GallerySection from "./gallery-section";
@@ -132,6 +133,25 @@ export default async function ProfilePage({
               images={profile.galleryImages}
             />
           ) : null}
+
+          <section className={styles.renewCard}>
+            <div className={styles.renewInner}>
+              <p className={styles.renewEyebrow}>Przedłużenie profilu</p>
+              <h2 className={styles.renewTitle}>
+                Chcesz zachować profil aktywny?
+              </h2>
+              <p className={styles.renewText}>
+                Każda osoba może opłacić przedłużenie ważności tego profilu.
+              </p>
+
+              <Link
+                href={`/przedluz/${profile.slug}`}
+                className={styles.renewButton}
+              >
+                Przedłuż profil
+              </Link>
+            </div>
+          </section>
         </div>
       </div>
     </main>

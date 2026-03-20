@@ -499,6 +499,59 @@
   white-space: nowrap;
 }
 
+/* RENEW CTA */
+
+.renewCard {
+  background: linear-gradient(180deg, #fff9f1 0%, #f8eee1 100%);
+  border: 1px solid #e8d8c0;
+  border-radius: 32px;
+  box-shadow: 0 8px 30px rgba(43, 33, 24, 0.06);
+  padding: 32px 28px;
+}
+
+.renewInner {
+  max-width: 760px;
+}
+
+.renewEyebrow {
+  margin: 0;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.renewTitle {
+  margin: 12px 0 0;
+  font-size: 40px;
+  line-height: 1.1;
+}
+
+.renewText {
+  margin: 16px 0 0;
+  font-size: 19px;
+  line-height: 1.7;
+  color: #5a5149;
+}
+
+.renewButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 24px;
+  min-height: 60px;
+  padding: 0 28px;
+  border-radius: 18px;
+  background: #3a2415;
+  color: #fff;
+  font-size: 20px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.renewButton:hover {
+  transform: translateY(-1px);
+}
+
 /* KEYFRAMES */
 
 @keyframes flameGlowPulse {
@@ -594,7 +647,8 @@
     min-width: 0;
   }
 
-  .contentInner {
+  .contentInner,
+  .renewInner {
     max-width: none;
   }
 
@@ -609,6 +663,10 @@
 
   .galleryGrid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .renewTitle {
+    font-size: 34px;
   }
 }
 
@@ -637,7 +695,8 @@
   .candleCard,
   .contentCard,
   .notFoundCard,
-  .galleryCard {
+  .galleryCard,
+  .renewCard {
     padding: 20px;
     border-radius: 24px;
   }
@@ -737,5 +796,19 @@
   .galleryLightboxFooter {
     bottom: -36px;
     font-size: 13px;
+  }
+
+  .renewTitle {
+    font-size: 28px;
+  }
+
+  .renewText {
+    font-size: 17px;
+  }
+
+  .renewButton {
+    width: 100%;
+    min-height: 56px;
+    font-size: 18px;
   }
 }

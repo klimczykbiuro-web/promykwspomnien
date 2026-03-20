@@ -11,8 +11,7 @@ type Props = {
 };
 
 function createGallerySlots(images: string[]) {
-  const slots = Array.from({ length: 10 }, (_, index) => images[index] ?? "");
-  return slots;
+  return Array.from({ length: 10 }, (_, index) => images[index] ?? "");
 }
 
 export default function OwnerProfileForm({
@@ -92,43 +91,51 @@ export default function OwnerProfileForm({
           </div>
         </div>
 
-        <div className={styles.editorField}>
-          <label htmlFor="heroImageUrl" className={styles.editorLabel}>
-            Adres zdjęcia
-          </label>
-          <input
-            id="heroImageUrl"
-            type="text"
-            className={`input ${styles.editorInput}`}
-            value={heroImageUrl}
-            onChange={(e) => setHeroImageUrl(e.target.value)}
-            placeholder="https://..."
-          />
-          <p className={styles.editorHint}>
-            Najlepiej sprawdzają się spokojne, pionowe fotografie.
-          </p>
-        </div>
-
-        {heroImageUrl.trim() ? (
-          <div className={styles.heroPreviewWrap}>
-            <img
-              src={heroImageUrl}
-              alt="Podgląd zdjęcia głównego"
-              className={styles.heroPreviewImage}
+        <div className={styles.editorHeroGrid}>
+          <div className={styles.editorField}>
+            <label htmlFor="heroImageUrl" className={styles.editorLabel}>
+              Adres zdjęcia
+            </label>
+            <input
+              id="heroImageUrl"
+              type="text"
+              className={`input ${styles.editorInput}`}
+              value={heroImageUrl}
+              onChange={(e) => setHeroImageUrl(e.target.value)}
+              placeholder="https://..."
             />
+            <p className={styles.editorHint}>
+              Najlepiej sprawdzają się spokojne, pionowe fotografie.
+            </p>
           </div>
-        ) : (
-          <div className={styles.heroPreviewEmpty}>
-            Tu pojawi się podgląd zdjęcia głównego.
+
+          <div>
+            {heroImageUrl.trim() ? (
+              <div className={styles.heroPreviewWrap}>
+                <img
+                  src={heroImageUrl}
+                  alt="Podgląd zdjęcia głównego"
+                  className={styles.heroPreviewImage}
+                />
+              </div>
+            ) : (
+              <div className={styles.heroPreviewEmpty}>
+                Tu pojawi się podgląd zdjęcia głównego.
+              </div>
+            )}
           </div>
-        )}
+        </div>
       </section>
 
       <section className={styles.editorSection}>
-        <h3 className={styles.editorSectionTitle}>Cytat</h3>
-        <p className={styles.editorSectionText}>
-          Krótkie zdanie lub myśl widoczna pod imieniem i nazwiskiem.
-        </p>
+        <div className={styles.editorSectionHeader}>
+          <div>
+            <h3 className={styles.editorSectionTitle}>Cytat</h3>
+            <p className={styles.editorSectionText}>
+              Krótkie zdanie lub myśl widoczna pod imieniem i nazwiskiem.
+            </p>
+          </div>
+        </div>
 
         <div className={styles.editorField}>
           <textarea
@@ -142,11 +149,15 @@ export default function OwnerProfileForm({
       </section>
 
       <section className={styles.editorSection}>
-        <h3 className={styles.editorSectionTitle}>Wspomnienie</h3>
-        <p className={styles.editorSectionText}>
-          Najlepiej pisać krótszymi akapitami. Dzięki temu tekst będzie
-          czytelniejszy na telefonie i komputerze.
-        </p>
+        <div className={styles.editorSectionHeader}>
+          <div>
+            <h3 className={styles.editorSectionTitle}>Wspomnienie</h3>
+            <p className={styles.editorSectionText}>
+              Najlepiej pisać krótszymi akapitami. Dzięki temu tekst będzie
+              czytelniejszy na telefonie i komputerze.
+            </p>
+          </div>
+        </div>
 
         <div className={styles.editorField}>
           <textarea
@@ -181,12 +192,20 @@ Pozostawiła po sobie miłość, wdzięczność i wspomnienia, które zostaną z
         <div className={styles.galleryEditorGrid}>
           {galleryImages.map((value, index) => (
             <div key={index} className={styles.galleryEditorCard}>
-              <label
-                htmlFor={`gallery-${index}`}
-                className={styles.editorLabel}
-              >
-                Zdjęcie {index + 1}
-              </label>
+              <div className={styles.galleryEditorCardHeader}>
+                <strong className={styles.galleryEditorCardTitle}>
+                  Zdjęcie {index + 1}
+                </strong>
+                {value.trim() ? (
+                  <span className={styles.galleryEditorCardStateFilled}>
+                    Dodane
+                  </span>
+                ) : (
+                  <span className={styles.galleryEditorCardStateEmpty}>
+                    Puste
+                  </span>
+                )}
+              </div>
 
               <input
                 id={`gallery-${index}`}
@@ -206,9 +225,7 @@ Pozostawiła po sobie miłość, wdzięczność i wspomnienia, które zostaną z
                   />
                 </div>
               ) : (
-                <div className={styles.galleryPreviewEmpty}>
-                  Brak zdjęcia
-                </div>
+                <div className={styles.galleryPreviewEmpty}>Brak zdjęcia</div>
               )}
             </div>
           ))}
