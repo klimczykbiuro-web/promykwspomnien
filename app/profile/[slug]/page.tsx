@@ -38,6 +38,24 @@ function getYearsLabel(profile: Profile) {
   return `${birth} — ${death}`;
 }
 
+function formatExpiryLabel(expiresAt: string | null) {
+  if (!expiresAt) {
+    return "termin nieustalony";
+  }
+
+  const date = new Date(expiresAt);
+
+  if (Number.isNaN(date.getTime())) {
+    return "termin nieustalony";
+  }
+
+  return new Intl.DateTimeFormat("pl-PL", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  }).format(date);
+}
+
 export default async function ProfilePage({
   params,
 }: {
@@ -64,6 +82,7 @@ export default async function ProfilePage({
 
   const yearsLabel = getYearsLabel(profile);
   const candleCount = (await getCandleCountBySlug(slug)) ?? 0;
+  const expiryLabel = formatExpiryLabel(profile.expires_at);
 
   const cookieStore = await cookies();
   const initialAlreadyLit =
@@ -148,7 +167,10 @@ export default async function ProfilePage({
                 href={`/przedluz/${profile.slug}`}
                 className={styles.renewButton}
               >
-                Przedłuż profil
+                <span className={styles.renewButtonMain}>Przedłuż profil</span>
+                <span className={styles.renewButtonMeta}>
+                  ważny do {expiryLabel}
+                </span>
               </Link>
             </div>
           </section>
