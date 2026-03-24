@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import styles from "./owner.module.css";
 
 type Props = {
@@ -10,8 +10,61 @@ type Props = {
   initialGalleryImages: string[];
 };
 
+type UploadKind = "hero" | "gallery";
+
 function createGallerySlots(images: string[]) {
   return Array.from({ length: 10 }, (_, index) => images[index] ?? "");
+}
+
+function isAllowedFile(file: File) {
+  return (
+    file.type === "image/jpeg" ||
+    file.type === "image/png" ||
+    file.type === "image/webp"
+  );
+}
+
+async function uploadFileToR2(input: {
+  kind: UploadKind;
+  file: File;
+}) {
+  const signResponse = await fetch("/api/uploads/r2/sign", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      kind: input.kind,
+      fileName: input.file.name,
+      contentType: input.file.type,
+      fileSize: input.file.size,
+    }),
+  });
+
+  const signData = (await signResponse.json()) as {
+    ok?: boolean;
+    error?: string;
+    uploadUrl?: string;
+    publicUrl?: string;
+  };
+
+  if (!signResponse.ok || !signData.uploadUrl || !signData.publicUrl) {
+    throw new Error(signData.error || "Nie udało się przygotować uploadu.");
+  }
+
+  const uploadResponse = await fetch(signData.uploadUrl, {
+    method: "PUT",
+    headers: {
+      "Content-Type": input.file.type,
+    },
+    body: input.file,
+  });
+
+  if (!uploadResponse.ok) {
+    throw new Error("Nie udało się wgrać pliku do storage.");
+  }
+
+  return signData.publicUrl;
 }
 
 export default function OwnerProfileForm({
@@ -27,8 +80,15 @@ export default function OwnerProfileForm({
     createGallerySlots(initialGalleryImages)
   );
   const [isSaving, setIsSaving] = useState(false);
+  const [isUploadingHero, setIsUploadingHero] = useState(false);
+  const [uploadingGalleryIndex, setUploadingGalleryIndex] = useState<
+    number | null
+  >(null);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+
+  const heroInputRef = useRef<HTMLInputElement | null>(null);
+  const galleryInputRefs = useRef<Array<HTMLInputElement | null>>([]);
 
   const filledGalleryCount = useMemo(
     () => galleryImages.filter((item) => item.trim() !== "").length,
@@ -41,6 +101,98 @@ export default function OwnerProfileForm({
       next[index] = value;
       return next;
     });
+  }
+
+  function clearGalleryImage(index: number) {
+    updateGalleryImage(index, "");
+  }
+
+  async function handleHeroFileChange(
+    event: React.ChangeEvent<HTMLInputElement>
+  ) {
+    const file = event.target.files?.[0];
+
+    if (!file) {
+      return;
+    }
+
+    setError("");
+    setMessage("");
+
+    if (!isAllowedFile(file)) {
+      setError("Dozwolone są tylko pliki JPG, PNG i WEBP.");
+      event.target.value = "";
+      return;
+    }
+
+    if (file.size > 10 * 1024 * 1024) {
+      setError("Maksymalny rozmiar zdjęcia to 10 MB.");
+      event.target.value = "";
+      return;
+    }
+
+    try {
+      setIsUploadingHero(true);
+      const publicUrl = await uploadFileToR2({
+        kind: "hero",
+        file,
+      });
+
+      setHeroImageUrl(publicUrl);
+      setMessage("Zdjęcie główne zostało wgrane. Kliknij „Zapisz zmiany”.");
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "Nie udało się wgrać zdjęcia."
+      );
+    } finally {
+      setIsUploadingHero(false);
+      event.target.value = "";
+    }
+  }
+
+  async function handleGalleryFileChange(
+    index: number,
+    event: React.ChangeEvent<HTMLInputElement>
+  ) {
+    const file = event.target.files?.[0];
+
+    if (!file) {
+      return;
+    }
+
+    setError("");
+    setMessage("");
+
+    if (!isAllowedFile(file)) {
+      setError("Dozwolone są tylko pliki JPG, PNG i WEBP.");
+      event.target.value = "";
+      return;
+    }
+
+    if (file.size > 10 * 1024 * 1024) {
+      setError("Maksymalny rozmiar zdjęcia to 10 MB.");
+      event.target.value = "";
+      return;
+    }
+
+    try {
+      setUploadingGalleryIndex(index);
+
+      const publicUrl = await uploadFileToR2({
+        kind: "gallery",
+        file,
+      });
+
+      updateGalleryImage(index, publicUrl);
+      setMessage("Zdjęcie galerii zostało wgrane. Kliknij „Zapisz zmiany”.");
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "Nie udało się wgrać zdjęcia."
+      );
+    } finally {
+      setUploadingGalleryIndex(null);
+      event.target.value = "";
+    }
   }
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -86,27 +238,71 @@ export default function OwnerProfileForm({
           <div>
             <h3 className={styles.editorSectionTitle}>Zdjęcie główne</h3>
             <p className={styles.editorSectionText}>
-              To zdjęcie będzie widoczne na górze publicznego profilu.
+              Wybierz zdjęcie z telefonu lub komputera. Obsługiwane formaty:
+              JPG, PNG, WEBP. Maksymalnie 10 MB.
             </p>
           </div>
         </div>
 
         <div className={styles.editorHeroGrid}>
           <div className={styles.editorField}>
-            <label htmlFor="heroImageUrl" className={styles.editorLabel}>
-              Adres zdjęcia
-            </label>
+            <label className={styles.editorLabel}>Plik zdjęcia</label>
+
+            <div
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                gap: 12,
+                alignItems: "center",
+              }}
+            >
+              <button
+                type="button"
+                className="button"
+                onClick={() => heroInputRef.current?.click()}
+                disabled={isUploadingHero || isSaving}
+              >
+                {isUploadingHero ? "Wgrywanie..." : "Wybierz zdjęcie"}
+              </button>
+
+              <button
+                type="button"
+                className="button outline"
+                onClick={() => setHeroImageUrl("")}
+                disabled={isUploadingHero || isSaving || !heroImageUrl.trim()}
+              >
+                Usuń zdjęcie
+              </button>
+            </div>
+
             <input
-              id="heroImageUrl"
-              type="text"
-              className={`input ${styles.editorInput}`}
-              value={heroImageUrl}
-              onChange={(e) => setHeroImageUrl(e.target.value)}
-              placeholder="https://..."
+              ref={heroInputRef}
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              onChange={handleHeroFileChange}
+              style={{ display: "none" }}
             />
+
             <p className={styles.editorHint}>
-              Najlepiej sprawdzają się spokojne, pionowe fotografie.
+              Po wgraniu kliknij „Zapisz zmiany”, aby zapisać zdjęcie w profilu.
             </p>
+
+            {heroImageUrl.trim() ? (
+              <div
+                style={{
+                  marginTop: 8,
+                  borderRadius: 16,
+                  border: "1px solid var(--border)",
+                  background: "#fff",
+                  padding: "10px 12px",
+                  fontSize: 14,
+                  color: "var(--muted)",
+                  wordBreak: "break-all",
+                }}
+              >
+                URL w storage: {heroImageUrl}
+              </div>
+            ) : null}
           </div>
 
           <div>
@@ -190,45 +386,93 @@ Pozostawiła po sobie miłość, wdzięczność i wspomnienia, które zostaną z
         </div>
 
         <div className={styles.galleryEditorGrid}>
-          {galleryImages.map((value, index) => (
-            <div key={index} className={styles.galleryEditorCard}>
-              <div className={styles.galleryEditorCardHeader}>
-                <strong className={styles.galleryEditorCardTitle}>
-                  Zdjęcie {index + 1}
-                </strong>
+          {galleryImages.map((value, index) => {
+            const isUploading = uploadingGalleryIndex === index;
+
+            return (
+              <div key={index} className={styles.galleryEditorCard}>
+                <div className={styles.galleryEditorCardHeader}>
+                  <strong className={styles.galleryEditorCardTitle}>
+                    Zdjęcie {index + 1}
+                  </strong>
+                  {value.trim() ? (
+                    <span className={styles.galleryEditorCardStateFilled}>
+                      Dodane
+                    </span>
+                  ) : (
+                    <span className={styles.galleryEditorCardStateEmpty}>
+                      Puste
+                    </span>
+                  )}
+                </div>
+
+                <div
+                  style={{
+                    display: "flex",
+                    flexWrap: "wrap",
+                    gap: 10,
+                    alignItems: "center",
+                  }}
+                >
+                  <button
+                    type="button"
+                    className="button"
+                    disabled={isUploading || isSaving}
+                    onClick={() => galleryInputRefs.current[index]?.click()}
+                  >
+                    {isUploading ? "Wgrywanie..." : "Wybierz plik"}
+                  </button>
+
+                  <button
+                    type="button"
+                    className="button outline"
+                    disabled={isUploading || isSaving || !value.trim()}
+                    onClick={() => clearGalleryImage(index)}
+                  >
+                    Usuń
+                  </button>
+                </div>
+
+                <input
+                  ref={(element) => {
+                    galleryInputRefs.current[index] = element;
+                  }}
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp"
+                  onChange={(event) => handleGalleryFileChange(index, event)}
+                  style={{ display: "none" }}
+                />
+
                 {value.trim() ? (
-                  <span className={styles.galleryEditorCardStateFilled}>
-                    Dodane
-                  </span>
+                  <>
+                    <div className={styles.galleryPreviewWrap}>
+                      <img
+                        src={value}
+                        alt={`Podgląd zdjęcia ${index + 1}`}
+                        className={styles.galleryPreviewImage}
+                      />
+                    </div>
+
+                    <div
+                      style={{
+                        borderRadius: 14,
+                        border: "1px solid var(--border)",
+                        background: "#fff",
+                        padding: "8px 10px",
+                        fontSize: 12,
+                        color: "var(--muted)",
+                        wordBreak: "break-all",
+                      }}
+                    >
+                      {value}
+                    </div>
+                  </>
                 ) : (
-                  <span className={styles.galleryEditorCardStateEmpty}>
-                    Puste
-                  </span>
+                  <div className={styles.galleryPreviewEmpty}>Brak zdjęcia</div>
                 )}
               </div>
-
-              <input
-                id={`gallery-${index}`}
-                type="text"
-                className={`input ${styles.editorInput}`}
-                value={value}
-                onChange={(e) => updateGalleryImage(index, e.target.value)}
-                placeholder="https://..."
-              />
-
-              {value.trim() ? (
-                <div className={styles.galleryPreviewWrap}>
-                  <img
-                    src={value}
-                    alt={`Podgląd zdjęcia ${index + 1}`}
-                    className={styles.galleryPreviewImage}
-                  />
-                </div>
-              ) : (
-                <div className={styles.galleryPreviewEmpty}>Brak zdjęcia</div>
-              )}
-            </div>
-          ))}
+            );
+          })}
         </div>
       </section>
 
@@ -239,7 +483,7 @@ Pozostawiła po sobie miłość, wdzięczność i wspomnienia, które zostaną z
         <button
           type="submit"
           className={styles.editorSubmit}
-          disabled={isSaving}
+          disabled={isSaving || isUploadingHero || uploadingGalleryIndex !== null}
         >
           {isSaving ? "Zapisywanie..." : "Zapisz zmiany"}
         </button>

@@ -3,6 +3,64 @@ import { pool } from "@/lib/db";
 
 export const runtime = "nodejs";
 
+type ProfileRow = {
+  id: string;
+  slug: string;
+  full_name: string;
+  birth_year: number | null;
+  death_year: number | null;
+  quote: string | null;
+  biography: string | null;
+  hero_image_url: string | null;
+  expires_at: string | null;
+};
+
+function addMonths(date: Date, months: number) {
+  const copy = new Date(date);
+  copy.setMonth(copy.getMonth() + months);
+  return copy;
+}
+
+function getProfileState(expiresAt: string | null) {
+  if (!expiresAt) {
+    return {
+      state: "active" as const,
+      graceUntil: null as string | null,
+    };
+  }
+
+  const expiry = new Date(expiresAt);
+
+  if (Number.isNaN(expiry.getTime())) {
+    return {
+      state: "active" as const,
+      graceUntil: null as string | null,
+    };
+  }
+
+  const now = new Date();
+  const graceUntilDate = addMonths(expiry, 3);
+
+  if (now <= expiry) {
+    return {
+      state: "active" as const,
+      graceUntil: graceUntilDate.toISOString(),
+    };
+  }
+
+  if (now <= graceUntilDate) {
+    return {
+      state: "expired" as const,
+      graceUntil: graceUntilDate.toISOString(),
+    };
+  }
+
+  return {
+    state: "deleted" as const,
+    graceUntil: graceUntilDate.toISOString(),
+  };
+}
+
 export async function GET(
   _request: NextRequest,
   context: { params: Promise<{ slug: string }> }
@@ -33,17 +91,42 @@ export async function GET(
       return NextResponse.json({ error: "Profile not found." }, { status: 404 });
     }
 
-    const profile = profileResult.rows[0] as {
-      id: string;
-      slug: string;
-      full_name: string;
-      birth_year: number | null;
-      death_year: number | null;
-      quote: string | null;
-      biography: string | null;
-      hero_image_url: string | null;
-      expires_at: string | null;
-    };
+    const profile = profileResult.rows[0] as ProfileRow;
+    const profileState = getProfileState(profile.expires_at);
+
+    if (profileState.state === "deleted") {
+      return NextResponse.json({
+        id: profile.id,
+        slug: profile.slug,
+        full_name: profile.full_name,
+        birth_year: profile.birth_year,
+        death_year: profile.death_year,
+        quote: null,
+        biography: null,
+        hero_image_url: null,
+        expires_at: profile.expires_at,
+        grace_until: profileState.graceUntil,
+        visibility_state: "deleted",
+        galleryImages: [],
+      });
+    }
+
+    if (profileState.state === "expired") {
+      return NextResponse.json({
+        id: profile.id,
+        slug: profile.slug,
+        full_name: profile.full_name,
+        birth_year: profile.birth_year,
+        death_year: profile.death_year,
+        quote: null,
+        biography: null,
+        hero_image_url: profile.hero_image_url,
+        expires_at: profile.expires_at,
+        grace_until: profileState.graceUntil,
+        visibility_state: "expired",
+        galleryImages: [],
+      });
+    }
 
     const galleryResult = await pool.query(
       `
@@ -56,17 +139,17 @@ export async function GET(
     );
 
     const galleryImages = (galleryResult.rows as Array<{ image_url: string }>).map(
-  (row) => row.image_url
-);
+      (row) => row.image_url
+    );
 
     return NextResponse.json({
       ...profile,
+      grace_until: profileState.graceUntil,
+      visibility_state: "active",
       galleryImages,
     });
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "Unknown error";
-
+    const message = error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }

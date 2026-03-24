@@ -499,6 +499,71 @@
   white-space: nowrap;
 }
 
+/* EXPIRED / DELETED */
+
+.expiredCard {
+  background: linear-gradient(180deg, #fff8f2 0%, #f8ede4 100%);
+  border: 1px solid #ead7c7;
+  border-radius: 32px;
+  box-shadow: 0 8px 30px rgba(43, 33, 24, 0.06);
+  padding: 32px 28px;
+}
+
+.expiredInner {
+  max-width: 820px;
+}
+
+.expiredEyebrow {
+  margin: 0;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.expiredTitle {
+  margin: 12px 0 0;
+  font-size: 38px;
+  line-height: 1.12;
+}
+
+.expiredText {
+  margin: 18px 0 0;
+  font-size: 19px;
+  line-height: 1.75;
+  color: #4e433b;
+}
+
+.expiredMetaGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.expiredMetaBox {
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid #eadbc6;
+  border-radius: 20px;
+  padding: 18px;
+}
+
+.expiredMetaLabel {
+  display: block;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.expiredMetaValue {
+  display: block;
+  margin-top: 8px;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.expiredRenewButton {
+  margin-top: 26px;
+}
+
 /* RENEW CTA */
 
 .renewCard {
@@ -675,7 +740,8 @@
   }
 
   .contentInner,
-  .renewInner {
+  .renewInner,
+  .expiredInner {
     max-width: none;
   }
 
@@ -692,7 +758,8 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .renewTitle {
+  .renewTitle,
+  .expiredTitle {
     font-size: 34px;
   }
 }
@@ -723,7 +790,8 @@
   .contentCard,
   .notFoundCard,
   .galleryCard,
-  .renewCard {
+  .renewCard,
+  .expiredCard {
     padding: 20px;
     border-radius: 24px;
   }
@@ -825,11 +893,13 @@
     font-size: 13px;
   }
 
-  .renewTitle {
+  .renewTitle,
+  .expiredTitle {
     font-size: 28px;
   }
 
-  .renewText {
+  .renewText,
+  .expiredText {
     font-size: 17px;
   }
 
@@ -850,5 +920,13 @@
 
   .renewButtonSubMeta {
     font-size: 11px;
+  }
+
+  .expiredMetaGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .expiredMetaValue {
+    font-size: 18px;
   }
 }
