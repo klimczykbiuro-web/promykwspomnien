@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 
 export default function ClaimForm({
@@ -13,6 +14,8 @@ export default function ClaimForm({
 }) {
   const [password, setPassword] = useState("");
   const [passwordRepeat, setPasswordRepeat] = useState("");
+  const [acceptedRules, setAcceptedRules] = useState(false);
+  const [acceptedContentRights, setAcceptedContentRights] = useState(false);
   const [status, setStatus] = useState<"idle" | "saving" | "error">("idle");
   const [errorText, setErrorText] = useState("");
 
@@ -28,6 +31,22 @@ export default function ClaimForm({
     if (password !== passwordRepeat) {
       setStatus("error");
       setErrorText("Hasła nie są takie same.");
+      return;
+    }
+
+    if (!acceptedRules) {
+      setStatus("error");
+      setErrorText(
+        "Aby aktywować profil, zaakceptuj Regulamin i Politykę prywatności."
+      );
+      return;
+    }
+
+    if (!acceptedContentRights) {
+      setStatus("error");
+      setErrorText(
+        "Aby aktywować profil, potwierdź odpowiedzialność za dodawane zdjęcia i treści."
+      );
       return;
     }
 
@@ -72,8 +91,9 @@ export default function ClaimForm({
       </h1>
 
       <p className="mt-4 text-sm leading-7 text-stone-700">
-        Ten link możesz otwierać wiele razy i na wielu urządzeniach.
-        Właścicielem zostanie osoba, która jako pierwsza skutecznie ustawi hasło.
+        To pierwszy krok do zarządzania profilem pamięci. Ustaw własne hasło,
+        zapisz je w bezpiecznym miejscu i potwierdź akceptację zasad korzystania
+        z serwisu.
       </p>
 
       <p className="mt-3 rounded-2xl bg-amber-50 px-4 py-3 text-sm text-amber-900">
@@ -108,8 +128,46 @@ export default function ClaimForm({
           />
         </div>
 
+        <div className="space-y-3 rounded-2xl border border-stone-200 bg-stone-50 p-4">
+          <label className="flex items-start gap-3 text-sm leading-6 text-stone-700">
+            <input
+              type="checkbox"
+              checked={acceptedRules}
+              onChange={(e) => setAcceptedRules(e.target.checked)}
+              className="mt-1 h-4 w-4 rounded border-stone-300"
+            />
+            <span>
+              Oświadczam, że zapoznałem/am się z{" "}
+              <Link href="/regulamin" className="underline">
+                Regulaminem
+              </Link>{" "}
+              i{" "}
+              <Link href="/polityka-prywatnosci" className="underline">
+                Polityką prywatności
+              </Link>{" "}
+              oraz akceptuję ich treść.
+            </span>
+          </label>
+
+          <label className="flex items-start gap-3 text-sm leading-6 text-stone-700">
+            <input
+              type="checkbox"
+              checked={acceptedContentRights}
+              onChange={(e) => setAcceptedContentRights(e.target.checked)}
+              className="mt-1 h-4 w-4 rounded border-stone-300"
+            />
+            <span>
+              Oświadczam, że mam prawo do dodawania zdjęć i treści do profilu
+              oraz że nie naruszają one praw osób trzecich, w tym prawa do
+              wizerunku, prywatności i praw autorskich.
+            </span>
+          </label>
+        </div>
+
         {status === "error" ? (
-          <p className="text-sm text-red-600">{errorText}</p>
+          <p className="rounded-2xl bg-red-50 px-4 py-3 text-sm text-red-600">
+            {errorText}
+          </p>
         ) : null}
 
         <button

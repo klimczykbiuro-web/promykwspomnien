@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -11,6 +12,8 @@ export default function ActivateForm({ token }: ActivateFormProps) {
   const router = useRouter();
   const [fullName, setFullName] = useState("");
   const [password, setPassword] = useState("");
+  const [acceptedRules, setAcceptedRules] = useState(false);
+  const [acceptedContentRights, setAcceptedContentRights] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -18,6 +21,28 @@ export default function ActivateForm({ token }: ActivateFormProps) {
     event.preventDefault();
     setSubmitting(true);
     setError(null);
+
+    if (password.length < 8) {
+      setError("Hasło musi mieć co najmniej 8 znaków.");
+      setSubmitting(false);
+      return;
+    }
+
+    if (!acceptedRules) {
+      setError(
+        "Aby aktywować profil, zaakceptuj Regulamin i Politykę prywatności."
+      );
+      setSubmitting(false);
+      return;
+    }
+
+    if (!acceptedContentRights) {
+      setError(
+        "Aby aktywować profil, potwierdź odpowiedzialność za dodawane zdjęcia i treści."
+      );
+      setSubmitting(false);
+      return;
+    }
 
     try {
       const response = await fetch("/api/qr/activate", {
@@ -54,10 +79,25 @@ export default function ActivateForm({ token }: ActivateFormProps) {
       style={{
         display: "grid",
         gap: "14px",
-        maxWidth: "420px",
+        maxWidth: "520px",
         marginTop: "20px",
       }}
     >
+      <div
+        style={{
+          background: "#fff7ed",
+          color: "#9a3412",
+          border: "1px solid #fed7aa",
+          borderRadius: "14px",
+          padding: "14px 16px",
+          fontSize: "14px",
+          lineHeight: 1.6,
+        }}
+      >
+        Ustaw hasło i zapisz je w bezpiecznym miejscu. Będzie potrzebne przy
+        kolejnych zmianach w profilu.
+      </div>
+
       <label style={{ display: "grid", gap: "6px" }}>
         <span>Imię i nazwisko osoby upamiętnionej</span>
         <input
@@ -95,6 +135,66 @@ export default function ActivateForm({ token }: ActivateFormProps) {
           }}
         />
       </label>
+
+      <div
+        style={{
+          display: "grid",
+          gap: "12px",
+          background: "#f8fafc",
+          border: "1px solid #e2e8f0",
+          borderRadius: "14px",
+          padding: "14px 16px",
+        }}
+      >
+        <label
+          style={{
+            display: "flex",
+            alignItems: "flex-start",
+            gap: "10px",
+            fontSize: "14px",
+            lineHeight: 1.6,
+            color: "#334155",
+          }}
+        >
+          <input
+            type="checkbox"
+            checked={acceptedRules}
+            onChange={(event) => setAcceptedRules(event.target.checked)}
+            style={{ marginTop: "4px" }}
+          />
+          <span>
+            Oświadczam, że zapoznałem/am się z{" "}
+            <Link href="/regulamin">Regulaminem</Link> i{" "}
+            <Link href="/polityka-prywatnosci">Polityką prywatności</Link> oraz
+            akceptuję ich treść.
+          </span>
+        </label>
+
+        <label
+          style={{
+            display: "flex",
+            alignItems: "flex-start",
+            gap: "10px",
+            fontSize: "14px",
+            lineHeight: 1.6,
+            color: "#334155",
+          }}
+        >
+          <input
+            type="checkbox"
+            checked={acceptedContentRights}
+            onChange={(event) =>
+              setAcceptedContentRights(event.target.checked)
+            }
+            style={{ marginTop: "4px" }}
+          />
+          <span>
+            Oświadczam, że mam prawo do dodawania zdjęć i treści do profilu oraz
+            że nie naruszają one praw osób trzecich, w tym prawa do wizerunku,
+            prywatności i praw autorskich.
+          </span>
+        </label>
+      </div>
 
       {error ? (
         <div
