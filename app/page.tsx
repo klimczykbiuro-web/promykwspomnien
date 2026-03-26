@@ -1,6 +1,12 @@
 import Link from "next/link";
 import { branding } from "@/lib/domain/branding";
 import styles from "./marketing.module.css";
+import { recordPageView } from "@/lib/analytics/views";
+
+await recordPageView({
+  pageType: "home",
+  path: "/",
+});
 
 const features = [
   {

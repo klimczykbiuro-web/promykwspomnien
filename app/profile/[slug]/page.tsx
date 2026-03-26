@@ -5,6 +5,7 @@ import PhotoFlameBadge from "./photo-flame-badge";
 import GallerySection from "./gallery-section";
 import styles from "./profile.module.css";
 import { getCandleCountBySlug } from "@/lib/profile/candles";
+import { recordPageView } from "@/lib/analytics/views";
 
 type ProfileVisibilityState = "active" | "expired" | "deleted";
 
@@ -127,6 +128,14 @@ export default async function ProfilePage({
 }) {
   const { slug } = await params;
   const profile = await getProfile(slug);
+if (profile) {
+  await recordPageView({
+    pageType: "profile",
+    path: `/profile/${slug}`,
+    profileId: profile.id,
+    profileSlug: slug,
+  });
+}
 
   if (!profile) {
     return (
