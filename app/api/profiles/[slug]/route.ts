@@ -130,17 +130,21 @@ export async function GET(
 
     const galleryResult = await pool.query(
       `
-      SELECT image_url, sort_order
+      SELECT id, image_url, sort_order
       FROM profile_gallery_images
       WHERE profile_id = $1
+        AND moderation_status = 'active'
       ORDER BY sort_order ASC
       `,
       [profile.id]
     );
 
-    const galleryImages = (galleryResult.rows as Array<{ image_url: string }>).map(
-      (row) => row.image_url
-    );
+    const galleryImages = (
+      galleryResult.rows as Array<{ id: string; image_url: string }>
+    ).map((row) => ({
+      id: row.id,
+      url: row.image_url,
+    }));
 
     return NextResponse.json({
       ...profile,

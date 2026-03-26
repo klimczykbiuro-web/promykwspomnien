@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import styles from "../admin.module.css";
 
 export default function AdminLoginPage() {
   const [login, setLogin] = useState("");
@@ -31,49 +32,60 @@ export default function AdminLoginPage() {
       window.location.href = "/admin";
     } catch (error) {
       setStatus("error");
-      setErrorText(
-        error instanceof Error ? error.message : "Nie udało się zalogować."
-      );
+      setErrorText(error instanceof Error ? error.message : "Nie udało się zalogować.");
     }
   }
 
   return (
-    <main className="bg-stone-50 min-h-screen">
-      <div className="mx-auto max-w-md px-4 py-16">
-        <div className="rounded-[28px] border border-stone-200 bg-white p-6 shadow-sm sm:p-8">
-          <p className="text-sm text-stone-500">Panel administratora</p>
-          <h1 className="mt-2 text-3xl font-semibold text-stone-950">
-            Zaloguj się
-          </h1>
+    <main className={styles.loginPage}>
+      <div className={styles.loginContainer}>
+        <div className={styles.loginCard}>
+          <p className={styles.eyebrow}>Panel administratora</p>
+          <h1 className={styles.loginTitle}>Zaloguj się do zaplecza</h1>
+          <p className={styles.loginText}>
+            Tu sprawdzisz statystyki systemu, liczbę aktywnych profili, ruch na stronie i zgłoszone zdjęcia.
+            Po zalogowaniu od razu zobaczysz przejrzysty dashboard oraz tabelę moderacji.
+          </p>
 
-          <form onSubmit={handleSubmit} className="mt-6 space-y-4">
-            <input
-              value={login}
-              onChange={(e) => setLogin(e.target.value)}
-              placeholder="Login"
-              className="h-12 w-full rounded-2xl border border-stone-200 px-4"
-            />
+          <div className={styles.badgeRow}>
+            <span className={styles.badge}>Statystyki</span>
+            <span className={styles.badgeBlue}>Moderacja</span>
+            <span className={styles.badgeAmber}>Ruch i odsłony</span>
+          </div>
 
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Hasło"
-              className="h-12 w-full rounded-2xl border border-stone-200 px-4"
-            />
+          <form onSubmit={handleSubmit} className={styles.formGrid}>
+            <div className={styles.field}>
+              <label className={styles.label}>Login administratora</label>
+              <input
+                value={login}
+                onChange={(e) => setLogin(e.target.value)}
+                placeholder="Login"
+                className={styles.input}
+                autoComplete="username"
+              />
+            </div>
+
+            <div className={styles.field}>
+              <label className={styles.label}>Hasło</label>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Hasło"
+                className={styles.input}
+                autoComplete="current-password"
+              />
+            </div>
 
             {status === "error" ? (
-              <p className="rounded-2xl bg-red-50 px-4 py-3 text-sm text-red-700">
-                {errorText}
-              </p>
+              <div className={styles.errorBox}>{errorText}</div>
             ) : null}
 
-            <button
-              type="submit"
-              className="inline-flex h-12 items-center justify-center rounded-2xl bg-stone-900 px-5 text-sm font-medium text-white"
-            >
-              {status === "saving" ? "Logowanie..." : "Zaloguj"}
-            </button>
+            <div className={styles.loginButtonRow}>
+              <button type="submit" className={styles.primaryButton}>
+                {status === "saving" ? "Logowanie..." : "Zaloguj"}
+              </button>
+            </div>
           </form>
         </div>
       </div>

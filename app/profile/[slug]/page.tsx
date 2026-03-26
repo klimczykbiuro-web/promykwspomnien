@@ -5,9 +5,13 @@ import PhotoFlameBadge from "./photo-flame-badge";
 import GallerySection from "./gallery-section";
 import styles from "./profile.module.css";
 import { getCandleCountBySlug } from "@/lib/profile/candles";
-import { recordPageView } from "@/lib/analytics/views";
 
 type ProfileVisibilityState = "active" | "expired" | "deleted";
+
+type GalleryImage = {
+  id: string;
+  url: string;
+};
 
 type Profile = {
   id: string;
@@ -21,7 +25,7 @@ type Profile = {
   expires_at: string | null;
   grace_until: string | null;
   visibility_state: ProfileVisibilityState;
-  galleryImages: string[];
+  galleryImages: GalleryImage[];
 };
 
 async function getProfile(slug: string): Promise<Profile | null> {
@@ -128,14 +132,6 @@ export default async function ProfilePage({
 }) {
   const { slug } = await params;
   const profile = await getProfile(slug);
-if (profile) {
-  await recordPageView({
-    pageType: "profile",
-    path: `/profile/${slug}`,
-    profileId: profile.id,
-    profileSlug: slug,
-  });
-}
 
   if (!profile) {
     return (
@@ -359,9 +355,41 @@ if (profile) {
           {profile.galleryImages.length > 0 ? (
             <GallerySection
               fullName={profile.full_name}
+              profileSlug={profile.slug}
               images={profile.galleryImages}
             />
-          ) : null}
+          ) : (
+            <section className={styles.contentCard}>
+              <div className={styles.contentInner}>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    gap: "12px",
+                    alignItems: "center",
+                    flexWrap: "wrap",
+                  }}
+                >
+                  <h2 className={styles.sectionTitle}>Zdjęcia</h2>
+                  <a
+                    href={`/report?slug=${profile.slug}`}
+                    style={{
+                      fontSize: "14px",
+                      color: "#57534e",
+                      textDecoration: "underline",
+                      textUnderlineOffset: "3px",
+                    }}
+                  >
+                    Zgłoś zdjęcie lub treść
+                  </a>
+                </div>
+
+                <p className={styles.emptyText}>
+                  Galeria nie została jeszcze uzupełniona.
+                </p>
+              </div>
+            </section>
+          )}
 
           <section className={styles.renewCard}>
             <div className={styles.renewInner}>
