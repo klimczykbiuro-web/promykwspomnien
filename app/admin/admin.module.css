@@ -129,7 +129,7 @@
 .sectionHeader {
   display: flex;
   justify-content: space-between;
-  align-items: end;
+  align-items: flex-end;
   gap: 16px;
   margin-bottom: 18px;
   flex-wrap: wrap;
