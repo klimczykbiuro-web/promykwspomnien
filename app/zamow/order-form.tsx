@@ -47,7 +47,7 @@ export default function OrderForm() {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch("/api/orders/create-checkout", {
+      const response = await fetch("/api/orders", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
