@@ -42,6 +42,8 @@ export type ModerationReportRow = {
   moderation_status: string | null;
 };
 
+export type ReportAction = "keep" | "hide" | "restore" | "remove";
+
 function valueOf(result: { rows: Array<{ value: number | string | null }> }) {
   return Number(result.rows[0]?.value ?? 0);
 }
@@ -257,4 +259,108 @@ export async function getModerationReports(
   );
 
   return result.rows as ModerationReportRow[];
+}
+
+export async function applyReportAction(
+  reportId: string,
+  action: ReportAction
+) {
+  await pool.query("begin");
+
+  try {
+    const reportResult = await pool.query(
+      `
+      select id, profile_image_id, report_reason
+      from content_reports
+      where id = $1
+      limit 1
+      `,
+      [reportId]
+    );
+
+    if (reportResult.rowCount === 0) {
+      throw new Error("Nie znaleziono zgłoszenia.");
+    }
+
+    const report = reportResult.rows[0] as {
+      id: string;
+      profile_image_id: string | null;
+      report_reason: string;
+    };
+
+    if (report.profile_image_id) {
+      if (action === "keep" || action === "restore") {
+        await pool.query(
+          `
+          update profile_gallery_images
+          set
+            moderation_status = 'active',
+            moderation_reason = null,
+            hidden_at = null,
+            removed_at = null
+          where id = $1
+          `,
+          [report.profile_image_id]
+        );
+      }
+
+      if (action === "hide") {
+        await pool.query(
+          `
+          update profile_gallery_images
+          set
+            moderation_status = 'hidden_pending_review',
+            moderation_reason = $2,
+            hidden_at = now()
+          where id = $1
+          `,
+          [report.profile_image_id, report.report_reason]
+        );
+      }
+
+      if (action === "remove") {
+        await pool.query(
+          `
+          update profile_gallery_images
+          set
+            moderation_status = 'removed',
+            moderation_reason = $2,
+            hidden_at = coalesce(hidden_at, now()),
+            removed_at = now()
+          where id = $1
+          `,
+          [report.profile_image_id, report.report_reason]
+        );
+      }
+    }
+
+    const nextStatus =
+      action === "hide"
+        ? "in_review"
+        : action === "keep"
+          ? "resolved_keep"
+          : action === "restore"
+            ? "resolved_restore"
+            : "resolved_remove";
+
+    await pool.query(
+      `
+      update content_reports
+      set
+        status = $2,
+        resolution = $3,
+        reviewed_at = now(),
+        updated_at = now()
+      where id = $1
+      `,
+      [reportId, nextStatus, action]
+    );
+
+    await pool.query("commit");
+
+    return { ok: true };
+  } catch (error) {
+    await pool.query("rollback").catch(() => {});
+    throw error;
+  }
 }
