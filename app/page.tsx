@@ -1,274 +1,363 @@
 import Link from "next/link";
-import { branding } from "@/lib/domain/branding";
-import styles from "./marketing.module.css";
-import { recordPageView } from "@/lib/analytics/views";
 
-await recordPageView({
-  pageType: "home",
-  path: "/",
-});
-
-const features = [
-  {
-    title: "Zdjęcia i wspomnienia",
-    description:
-      "Na stronie pamięci można umieścić fotografię, cytat i krótki opis życia bliskiej osoby.",
-  },
-  {
-    title: "Wirtualny znicz",
-    description:
-      "Rodzina i bliscy mogą wracać do profilu w każdej chwili i zapalić symboliczny znicz online.",
-  },
-  {
-    title: "Kod QR na tabliczce",
-    description:
-      "Po zeskanowaniu kodu telefonem strona pamięci otwiera się od razu w przeglądarce, bez instalowania aplikacji.",
-  },
-  {
-    title: "Dostęp właściciela",
-    description:
-      "Właściciel uruchamia profil, ustawia hasło i może samodzielnie dodawać zdjęcia oraz treści.",
-  },
-];
-
-const steps = [
-  {
-    number: "01",
-    title: "Zamawiasz tabliczkę",
-    description:
-      "Otrzymujesz tabliczkę 60 × 60 mm ze stali nierdzewnej z indywidualnym kodem QR.",
-  },
-  {
-    number: "02",
-    title: "Aktywujesz profil",
-    description:
-      "Przy pierwszym uruchomieniu ustawiasz własne hasło, zapisujesz je i uzupełniasz podstawowe treści.",
-  },
-  {
-    number: "03",
-    title: "Bliscy wracają do wspomnień",
-    description:
-      "Każdy może zeskanować kod i wejść na stronę pamięci, aby zobaczyć zdjęcia, opis i zapalić wirtualny znicz.",
-  },
-];
-
-const packageItems = [
-  "tabliczka 60 × 60 mm ze stali nierdzewnej",
-  "indywidualny kod QR",
-  "strona pamięci dostępna na telefonie",
-  "zdjęcie, cytat i biografia",
-  "wirtualny znicz",
-  "bezpieczny dostęp właściciela",
-];
-
-const faqs = [
-  {
-    question: "Czy trzeba instalować aplikację?",
-    answer:
-      "Nie. Wystarczy zwykły telefon z aparatem. Po zeskanowaniu kodu QR profil otwiera się w przeglądarce.",
-  },
-  {
-    question: "Jak wygląda uruchomienie profilu?",
-    answer:
-      "To bardzo szybkie. Przy pierwszym wejściu ustawiasz hasło, zapisujesz je w bezpiecznym miejscu, a potem dodajesz zdjęcia i opis.",
-  },
-  {
-    question: "Czy później mogę edytować treść?",
-    answer:
-      "Tak. Właściciel profilu może w każdej chwili wrócić do edycji, logując się swoim hasłem.",
-  },
-  {
-    question: "Jak wygląda sama tabliczka?",
-    answer:
-      "Tabliczka ma wymiar 60 × 60 mm i jest wykonana ze stali nierdzewnej. Dzięki temu estetycznie komponuje się z nagrobkiem i jest wygodna do zeskanowania.",
-  },
-];
-
-function telHref(phone: string) {
-  return `tel:${phone.replace(/\s+/g, "")}`;
-}
+export const metadata = {
+  title: "Promyk Wspomnień",
+  description:
+    "Tabliczka QR z dostępem do strony pamięci. Zamów tabliczkę za 60 zł, w cenie 1 rok subskrypcji.",
+};
 
 export default function HomePage() {
   return (
-    <main className={styles.pageShell}>
-      <div className="container page">
-        <section className={styles.heroCard}>
-          <div className={styles.heroText}>
-            <span className={styles.badge}>Promyk Wspomnień</span>
-            <h1 className={styles.heroTitle}>
-              Zachowaj wspomnienia bliskiej osoby w miejscu, do którego rodzina może wracać.
-            </h1>
-            <p className={styles.heroLead}>
-              Niewielka tabliczka z kodem QR prowadzi do strony pamięci, na której zostają
-              zdjęcia, ważne słowa i historia życia. To spokojna forma zachowania pamięci
-              dostępna dla bliskich dziś i w kolejnych latach.
+    <main style={{ maxWidth: 1100, margin: "0 auto", padding: "32px 16px 64px" }}>
+      <section
+        style={{
+          padding: "40px 0 24px",
+          display: "grid",
+          gap: 20,
+        }}
+      >
+        <span
+          style={{
+            display: "inline-block",
+            width: "fit-content",
+            padding: "8px 12px",
+            borderRadius: 999,
+            background: "#f3f4f6",
+            fontSize: 14,
+            fontWeight: 600,
+          }}
+        >
+          Tabliczka QR + strona pamięci
+        </span>
+
+        <h1
+          style={{
+            fontSize: "clamp(32px, 6vw, 56px)",
+            lineHeight: 1.05,
+            margin: 0,
+            fontWeight: 800,
+          }}
+        >
+          Cyfrowa pamięć bliskich dostępna po zeskanowaniu tabliczki QR
+        </h1>
+
+        <p
+          style={{
+            fontSize: 18,
+            lineHeight: 1.7,
+            maxWidth: 760,
+            margin: 0,
+            color: "#374151",
+          }}
+        >
+          Zamów tabliczkę QR prowadzącą do indywidualnej strony pamięci. Dodaj zdjęcie,
+          cytat, biografię, galerię i możliwość zapalenia znicza online.
+        </p>
+
+        <div
+          style={{
+            display: "flex",
+            gap: 12,
+            flexWrap: "wrap",
+            marginTop: 8,
+          }}
+        >
+          <Link href="/zamow" style={primaryButton}>
+            Zamów tabliczkę
+          </Link>
+
+          <Link href="/profile/maria-kowalska" style={secondaryButton}>
+            Zobacz przykładowy profil
+          </Link>
+        </div>
+
+        <div
+          style={{
+            marginTop: 8,
+            padding: 16,
+            borderRadius: 16,
+            background: "#fafafa",
+            border: "1px solid #e5e7eb",
+            maxWidth: 760,
+          }}
+        >
+          <p style={{ margin: 0, fontSize: 16, lineHeight: 1.7 }}>
+            <strong>Cena tabliczki: 60 zł</strong>
+            <br />
+            W cenie otrzymujesz także <strong>1 rok subskrypcji</strong> profilu pamięci.
+          </p>
+        </div>
+      </section>
+
+      <section style={{ padding: "32px 0" }}>
+        <h2 style={sectionTitle}>Jak to działa</h2>
+
+        <div style={grid3}>
+          <div style={card}>
+            <div style={stepBadge}>1</div>
+            <h3 style={cardTitle}>Zamawiasz tabliczkę</h3>
+            <p style={cardText}>
+              Wypełniasz formularz, opłacasz zamówienie i przekazujesz dane potrzebne do realizacji.
             </p>
-
-            <div className={styles.heroActions}>
-              <a className="button" href={`mailto:${branding.supportEmail}`}>
-                Zamów tabliczkę
-              </a>
-              <Link className="button secondary" href="/pamiec">
-                Jak to działa
-              </Link>
-              <Link className="button outline" href="/profile/maria-kowalska">
-                Zobacz przykład
-              </Link>
-            </div>
-
-            <div className={styles.heroMeta}>
-              <span>bez aplikacji</span>
-              <span>telefon + kod QR</span>
-              <span>zdjęcia, opis i znicz</span>
-            </div>
           </div>
 
-          <div className={styles.heroVisualWrap}>
-            <div className={styles.phoneFrame}>
-              <div className={styles.profilePreview}>
-                <div className={styles.profilePhoto}>MK</div>
-                <p className={styles.previewEyebrow}>Przykładowy profil pamięci</p>
-                <h2 className={styles.previewName}>Maria Kowalska</h2>
-                <p className={styles.previewYears}>1948 — 2024</p>
-                <p className={styles.previewQuote}>
-                  „Zostawiła po sobie ciepło, dobroć i wspomnienia, do których rodzina może wracać każdego dnia.”
-                </p>
-                <div className={styles.previewPills}>
-                  <span>Zdjęcia</span>
-                  <span>Cytat</span>
-                  <span>Biografia</span>
-                  <span className={styles.previewPillAccent}>Znicz</span>
-                </div>
-              </div>
-            </div>
-            <div className={styles.plaqueCard}>
-              <div className={styles.plaqueStone}>
-                <div className={styles.plaqueTile}>
-                  <span>QR</span>
-                </div>
-              </div>
-              <p className={styles.plaqueCaption}>Tabliczka 60 × 60 mm ze stali nierdzewnej</p>
-            </div>
-          </div>
-        </section>
-
-        <section className={styles.sectionBlock}>
-          <div className={styles.sectionHeading}>
-            <p className={styles.sectionLabel}>Dlaczego to ważne</p>
-            <h2 className={styles.sectionTitle}>
-              Więcej niż tabliczka — miejsce, w którym zostaje czyjaś historia.
-            </h2>
-          </div>
-          <div className={styles.featureGrid}>
-            {features.map((feature) => (
-              <article key={feature.title} className="card card-pad">
-                <h3 className={styles.cardTitle}>{feature.title}</h3>
-                <p className={styles.cardText}>{feature.description}</p>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section className={styles.twoColumnSection}>
-          <div className="card card-pad">
-            <p className={styles.sectionLabel}>Jak to działa</p>
-            <h2 className={styles.sectionTitle}>Od zamówienia do gotowej strony pamięci w 3 prostych krokach.</h2>
-            <div className={styles.stepList}>
-              {steps.map((step) => (
-                <div key={step.number} className={styles.stepItem}>
-                  <div className={styles.stepNumber}>{step.number}</div>
-                  <div>
-                    <h3 className={styles.cardTitle}>{step.title}</h3>
-                    <p className={styles.cardText}>{step.description}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className={styles.darkPanel}>
-            <span className={styles.darkBadge}>Kompletny produkt</span>
-            <h2 className={styles.darkTitle}>Co zawiera pakiet?</h2>
-            <p className={styles.darkText}>
-              Otrzymujesz gotową tabliczkę z kodem QR i stronę pamięci, którą można szybko uruchomić.
+          <div style={card}>
+            <div style={stepBadge}>2</div>
+            <h3 style={cardTitle}>Otrzymujesz tabliczkę QR</h3>
+            <p style={cardText}>
+              Tabliczka prowadzi do indywidualnej strony pamięci dostępnej po zeskanowaniu kodu.
             </p>
-            <ul className={styles.checkList}>
-              {packageItems.map((item) => (
-                <li key={item}>{item}</li>
-              ))}
+          </div>
+
+          <div style={card}>
+            <div style={stepBadge}>3</div>
+            <h3 style={cardTitle}>Uzupełniasz wspomnienie</h3>
+            <p style={cardText}>
+              Dodajesz zdjęcie, cytat, biografię oraz galerię. Na profilu można też zapalić znicz.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section style={{ padding: "32px 0" }}>
+        <h2 style={sectionTitle}>Co zawiera wersja basic</h2>
+
+        <div style={grid2}>
+          <div style={card}>
+            <ul style={list}>
+              <li>tabliczka QR</li>
+              <li>1 rok aktywnego profilu pamięci</li>
+              <li>zdjęcie główne</li>
+              <li>cytat</li>
+              <li>biografia</li>
             </ul>
-            <div className={styles.noticeBox}>
-              Najważniejszy krok po aktywacji to ustawienie własnego hasła i zapisanie go w bezpiecznym miejscu.
-            </div>
-          </div>
-        </section>
-
-        <section className={styles.twoColumnSection}>
-          <div className="card card-pad">
-            <p className={styles.sectionLabel}>Przykładowy profil</p>
-            <h2 className={styles.sectionTitle}>Zobacz, jak wygląda gotowa strona pamięci.</h2>
-            <p className={styles.cardText}>
-              Przygotowaliśmy działający przykład profilu, abyś mógł zobaczyć efekt końcowy jeszcze przed zamówieniem.
-            </p>
-            <div className={styles.ctaInlineRow}>
-              <Link className="button" href="/profile/maria-kowalska">
-                Otwórz profil Marii Kowalskiej
-              </Link>
-              <Link className="button outline" href="/pamiec">
-                Zobacz instrukcję uruchomienia
-              </Link>
-            </div>
           </div>
 
-          <div className="card card-pad">
-            <p className={styles.sectionLabel}>Kontakt</p>
-            <h2 className={styles.sectionTitle}>Chcesz zamówić tabliczkę?</h2>
-            <p className={styles.cardText}>
-              Skontaktuj się z nami mailowo lub telefonicznie. Przeprowadzimy Cię przez zamówienie i uruchomienie profilu.
-            </p>
-            <div className={styles.contactBlock}>
-              <a href={`mailto:${branding.supportEmail}`}>{branding.supportEmail}</a>
-              <a href={telHref(branding.supportPhone)}>{branding.supportPhone}</a>
-            </div>
+          <div style={card}>
+            <ul style={list}>
+              <li>galeria zdjęć</li>
+              <li>funkcja „zapal znicz”</li>
+              <li>edycja przez właściciela po aktywacji</li>
+              <li>działanie na telefonie</li>
+              <li>prosty dostęp po zeskanowaniu kodu</li>
+            </ul>
           </div>
-        </section>
+        </div>
+      </section>
 
-        <section className={styles.sectionBlock}>
-          <div className={styles.sectionHeadingCentered}>
-            <p className={styles.sectionLabel}>Najczęstsze pytania</p>
-            <h2 className={styles.sectionTitle}>Odpowiedzi przed zamówieniem</h2>
-          </div>
-          <div className={styles.faqList}>
-            {faqs.map((faq) => (
-              <article key={faq.question} className="card card-pad">
-                <h3 className={styles.cardTitle}>{faq.question}</h3>
-                <p className={styles.cardText}>{faq.answer}</p>
-              </article>
-            ))}
-          </div>
-        </section>
+      <section style={{ padding: "32px 0" }}>
+        <h2 style={sectionTitle}>Dlaczego to ma sens</h2>
 
-        <section className={styles.footerCta}>
-          <div>
-            <p className={styles.footerLabel}>Gotowe do zamówienia</p>
-            <h2 className={styles.footerTitle}>
-              Chcesz stworzyć miejsce pamięci, do którego bliscy będą mogli wracać?
-            </h2>
-            <p className={styles.footerText}>
-              Zamów tabliczkę z kodem QR i zachowaj zdjęcia, słowa oraz wspomnienia w formie,
-              która pozostanie blisko rodziny każdego dnia.
+        <div style={grid3}>
+          <div style={card}>
+            <h3 style={cardTitle}>Proste dla rodziny</h3>
+            <p style={cardText}>
+              Bez aplikacji i bez skomplikowanej obsługi. Wystarczy zeskanować kod telefonem.
             </p>
           </div>
-          <div className={styles.footerActions}>
-            <a className="button secondary" href={`mailto:${branding.supportEmail}`}>
-              Zamów teraz
-            </a>
-            <a className="button outline" href={telHref(branding.supportPhone)}>
-              Zadzwoń
-            </a>
+
+          <div style={card}>
+            <h3 style={cardTitle}>Piękna pamiątka</h3>
+            <p style={cardText}>
+              Na profilu można zachować zdjęcia, wspomnienie i najważniejsze informacje o bliskiej osobie.
+            </p>
           </div>
-        </section>
-      </div>
+
+          <div style={card}>
+            <h3 style={cardTitle}>Bezpieczna edycja</h3>
+            <p style={cardText}>
+              Właściciel aktywuje dostęp i samodzielnie uzupełnia treść profilu.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section
+        style={{
+          padding: "32px 0",
+          display: "grid",
+          gap: 16,
+        }}
+      >
+        <h2 style={sectionTitle}>Najczęstsze pytania</h2>
+
+        <div style={faqItem}>
+          <strong>Czy trzeba instalować aplikację?</strong>
+          <p style={faqText}>Nie. Profil otwiera się w zwykłej przeglądarce w telefonie.</p>
+        </div>
+
+        <div style={faqItem}>
+          <strong>Czy działa na każdym telefonie?</strong>
+          <p style={faqText}>
+            Tak, jeśli telefon potrafi otwierać strony internetowe i skanować kody QR.
+          </p>
+        </div>
+
+        <div style={faqItem}>
+          <strong>Co zawiera cena 60 zł?</strong>
+          <p style={faqText}>
+            Cena obejmuje tabliczkę QR oraz 1 rok aktywnej strony pamięci.
+          </p>
+        </div>
+
+        <div style={faqItem}>
+          <strong>Co jeśli zapomnę hasła?</strong>
+          <p style={faqText}>
+            Dostęp właściciela można później obsłużyć przez pomoc operatora.
+          </p>
+        </div>
+      </section>
+
+      <section
+        style={{
+          marginTop: 24,
+          padding: 24,
+          borderRadius: 24,
+          background: "#111827",
+          color: "white",
+          display: "grid",
+          gap: 12,
+        }}
+      >
+        <h2 style={{ margin: 0, fontSize: 30 }}>Gotowe do zamówienia</h2>
+        <p style={{ margin: 0, fontSize: 17, lineHeight: 1.7, color: "#e5e7eb" }}>
+          Zamów tabliczkę QR za 60 zł. W tej cenie otrzymujesz również 1 rok subskrypcji profilu pamięci.
+        </p>
+
+        <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginTop: 8 }}>
+          <Link href="/zamow" style={darkButton}>
+            Przejdź do zamówienia
+          </Link>
+
+          <Link href="/pamiec" style={lightOutlineButton}>
+            Zobacz jak wygląda aktywacja
+          </Link>
+        </div>
+      </section>
     </main>
   );
 }
+
+const sectionTitle: React.CSSProperties = {
+  fontSize: 28,
+  margin: "0 0 20px",
+  fontWeight: 800,
+};
+
+const grid3: React.CSSProperties = {
+  display: "grid",
+  gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
+  gap: 16,
+};
+
+const grid2: React.CSSProperties = {
+  display: "grid",
+  gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+  gap: 16,
+};
+
+const card: React.CSSProperties = {
+  border: "1px solid #e5e7eb",
+  borderRadius: 20,
+  padding: 20,
+  background: "white",
+};
+
+const cardTitle: React.CSSProperties = {
+  margin: "0 0 10px",
+  fontSize: 20,
+  fontWeight: 700,
+};
+
+const cardText: React.CSSProperties = {
+  margin: 0,
+  fontSize: 16,
+  lineHeight: 1.7,
+  color: "#4b5563",
+};
+
+const stepBadge: React.CSSProperties = {
+  width: 36,
+  height: 36,
+  borderRadius: 999,
+  display: "grid",
+  placeItems: "center",
+  background: "#111827",
+  color: "white",
+  fontWeight: 800,
+  marginBottom: 12,
+};
+
+const list: React.CSSProperties = {
+  margin: 0,
+  paddingLeft: 20,
+  lineHeight: 2,
+  fontSize: 16,
+};
+
+const faqItem: React.CSSProperties = {
+  border: "1px solid #e5e7eb",
+  borderRadius: 16,
+  padding: 18,
+  background: "#fafafa",
+};
+
+const faqText: React.CSSProperties = {
+  margin: "8px 0 0",
+  lineHeight: 1.7,
+  color: "#4b5563",
+};
+
+const primaryButton: React.CSSProperties = {
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
+  height: 50,
+  padding: "0 18px",
+  borderRadius: 12,
+  background: "#111827",
+  color: "white",
+  textDecoration: "none",
+  fontWeight: 700,
+};
+
+const secondaryButton: React.CSSProperties = {
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
+  height: 50,
+  padding: "0 18px",
+  borderRadius: 12,
+  background: "white",
+  color: "#111827",
+  textDecoration: "none",
+  fontWeight: 700,
+  border: "1px solid #d1d5db",
+};
+
+const darkButton: React.CSSProperties = {
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
+  height: 50,
+  padding: "0 18px",
+  borderRadius: 12,
+  background: "white",
+  color: "#111827",
+  textDecoration: "none",
+  fontWeight: 700,
+};
+
+const lightOutlineButton: React.CSSProperties = {
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
+  height: 50,
+  padding: "0 18px",
+  borderRadius: 12,
+  background: "transparent",
+  color: "white",
+  textDecoration: "none",
+  fontWeight: 700,
+  border: "1px solid rgba(255,255,255,0.25)",
+};

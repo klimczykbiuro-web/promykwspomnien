@@ -6,6 +6,7 @@ import {
   markPaymentPaid,
 } from "@/lib/payments/repository";
 import { applyExtensionForPayment } from "@/lib/extensions/apply-extension";
+import { pool } from "@/lib/db";
 
 export const runtime = "nodejs";
 
@@ -48,6 +49,37 @@ export async function POST(req: Request) {
     case "checkout.session.completed":
     case "checkout.session.async_payment_succeeded": {
       const session = event.data.object as Stripe.Checkout.Session;
+
+      // 1) nowy zakup tabliczki
+      if (session.metadata?.order_type === "plaque_purchase") {
+        const orderId = session.metadata?.order_id ?? session.client_reference_id;
+
+        if (orderId) {
+          await pool.query(
+            `
+              update orders
+              set
+                status = 'paid',
+                paid_at = now(),
+                updated_at = now(),
+                stripe_session_id = $2,
+                stripe_payment_intent_id = $3
+              where id = $1
+            `,
+            [
+              orderId,
+              session.id,
+              typeof session.payment_intent === "string"
+                ? session.payment_intent
+                : null,
+            ],
+          );
+        }
+
+        break;
+      }
+
+      // 2) stara logika przedłużeń zostaje bez zmian
       const paymentId = session.metadata?.payment_id ?? session.client_reference_id;
 
       if (paymentId) {
@@ -57,6 +89,7 @@ export async function POST(req: Request) {
 
       break;
     }
+
     default:
       break;
   }
