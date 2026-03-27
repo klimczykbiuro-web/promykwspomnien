@@ -4,7 +4,7 @@ import { pool } from "@/lib/db";
 
 export const runtime = "nodejs";
 
-const ORDER_AMOUNT = 6000; // 60.00 PLN
+const ORDER_AMOUNT = 6000;
 const ORDER_YEARS = 1;
 
 type Payload = {
@@ -22,12 +22,31 @@ function clean(value: unknown) {
   return String(value ?? "").trim();
 }
 
+export async function GET() {
+  return NextResponse.json({
+    ok: true,
+    route: "/api/orders",
+    hasStripe: Boolean(process.env.STRIPE_SECRET_KEY),
+    hasSiteUrl: Boolean(process.env.NEXT_PUBLIC_SITE_URL),
+    hasDatabase:
+      Boolean(process.env.DATABASE_URL) ||
+      Boolean(process.env.DATABASE_URL_UNPOOLED),
+  });
+}
+
 export async function POST(req: Request) {
   try {
-    if (!stripe || !process.env.NEXT_PUBLIC_SITE_URL) {
+    if (!stripe) {
       return NextResponse.json(
-        { error: "Stripe albo NEXT_PUBLIC_SITE_URL nie są skonfigurowane." },
-        { status: 500 },
+        { error: "Brakuje STRIPE_SECRET_KEY." },
+        { status: 500 }
+      );
+    }
+
+    if (!process.env.NEXT_PUBLIC_SITE_URL) {
+      return NextResponse.json(
+        { error: "Brakuje NEXT_PUBLIC_SITE_URL." },
+        { status: 500 }
       );
     }
 
@@ -53,7 +72,7 @@ export async function POST(req: Request) {
     ) {
       return NextResponse.json(
         { error: "Wypełnij wszystkie wymagane pola." },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -93,7 +112,7 @@ export async function POST(req: Request) {
         notes || null,
         ORDER_AMOUNT,
         ORDER_YEARS,
-      ],
+      ]
     );
 
     const order = insertResult.rows[0] as {
@@ -134,7 +153,7 @@ export async function POST(req: Request) {
         set stripe_session_id = $2, updated_at = now()
         where id = $1
       `,
-      [order.id, session.id],
+      [order.id, session.id]
     );
 
     return NextResponse.json({
@@ -145,9 +164,15 @@ export async function POST(req: Request) {
   } catch (error) {
     console.error("create-checkout error", error);
 
+    const detail =
+      error instanceof Error ? error.message : "Nieznany błąd serwera";
+
     return NextResponse.json(
-      { error: "Nie udało się utworzyć płatności." },
-      { status: 500 },
+      {
+        error: "Nie udało się utworzyć płatności.",
+        detail,
+      },
+      { status: 500 }
     );
   }
 }

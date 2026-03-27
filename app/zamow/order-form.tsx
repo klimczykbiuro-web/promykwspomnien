@@ -53,13 +53,26 @@ export default function OrderForm() {
         body: JSON.stringify(form),
       });
 
-      const data = await response.json();
+      const raw = await response.text();
 
-      if (!response.ok) {
-        throw new Error(data.error || "Nie udało się utworzyć płatności.");
+      let data: any = null;
+      try {
+        data = raw ? JSON.parse(raw) : null;
+      } catch {
+        throw new Error(
+          `API /api/orders zwróciło HTML zamiast JSON. Status: ${response.status}. Sprawdź logi Vercel dla /api/orders.`
+        );
       }
 
-      if (!data.redirectUrl) {
+      if (!response.ok) {
+        throw new Error(
+          data?.detail ||
+            data?.error ||
+            `Nie udało się utworzyć płatności. Status: ${response.status}`
+        );
+      }
+
+      if (!data?.redirectUrl) {
         throw new Error("Brakuje adresu przekierowania do płatności.");
       }
 
