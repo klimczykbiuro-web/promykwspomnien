@@ -1,42 +1,50 @@
 import { NextRequest, NextResponse } from "next/server";
+import { isAdminAuthenticated } from "@/lib/admin/auth";
 import { applyReportAction } from "@/lib/admin/repository";
 
 export const runtime = "nodejs";
 
-export async function POST(
+type ActionType = "keep" | "hide" | "restore" | "remove";
+
+function isValidAction(value: string): value is ActionType {
+  return (
+    value === "keep" ||
+    value === "hide" ||
+    value === "restore" ||
+    value === "remove"
+  );
+}
+
+export async function PATCH(
   request: NextRequest,
   context: { params: Promise<{ id: string }> }
 ) {
+  const authenticated = await isAdminAuthenticated();
+
+  if (!authenticated) {
+    return NextResponse.json({ error: "Brak autoryzacji." }, { status: 401 });
+  }
+
+  const { id } = await context.params;
+
   try {
-    const { id } = await context.params;
-    const contentType = request.headers.get("content-type") || "";
+    const body = await request.json();
+    const action = String(body.action || "");
 
-    let action = "";
-
-    if (contentType.includes("application/json")) {
-      const body = await request.json();
-      action = String(body.action || "").trim();
-    } else {
-      const form = await request.formData();
-      action = String(form.get("action") || "").trim();
+    if (!isValidAction(action)) {
+      return NextResponse.json(
+        { error: "Nieprawidłowa akcja." },
+        { status: 400 }
+      );
     }
 
-    if (!["keep", "hide", "remove", "restore"].includes(action)) {
-      return NextResponse.json({ error: "Nieprawidłowa akcja." }, { status: 400 });
-    }
-
-    await applyReportAction({
-      reportId: id,
-      action: action as "keep" | "hide" | "remove" | "restore",
-    });
-
-    if (!contentType.includes("application/json")) {
-      return NextResponse.redirect(new URL("/admin", request.url), { status: 303 });
-    }
+    await applyReportAction(id, action);
 
     return NextResponse.json({ ok: true });
   } catch (error) {
-    const message = error instanceof Error ? error.message : "Unknown error";
+    const message =
+      error instanceof Error ? error.message : "Nie udało się wykonać akcji.";
+
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }
