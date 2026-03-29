@@ -20,8 +20,8 @@ export default function HomePage() {
 
           <p style={styles.lead}>
             Po zeskanowaniu kodu QR otwiera się strona pamięci z fotografią,
-            wspomnieniem i galerią zdjęć. Wszystko działa zwyczajnie w telefonie,
-            bez instalowania aplikacji.
+            wspomnieniem, galerią zdjęć, księgą gości i lokalizacją nagrobka.
+            Wszystko działa zwyczajnie w telefonie, bez instalowania aplikacji.
           </p>
 
           <div style={styles.ctaRow}>
@@ -44,8 +44,8 @@ export default function HomePage() {
 
           <p style={styles.smallInfo}>
             Profil może przedłużyć także każda osoba, która zeskanuje kod QR.
-            Dzięki temu pamięć może pozostać aktywna także wtedy, gdy chce o nią
-            zadbać ktoś z rodziny lub bliskich.
+            Dzięki temu pamięć może pozostać aktywna również wtedy, gdy chce o
+            nią zadbać ktoś z rodziny lub bliskich.
           </p>
         </div>
 
@@ -69,7 +69,7 @@ export default function HomePage() {
             <div style={styles.step}>1</div>
             <h3 style={styles.h3}>Zamawiasz tabliczkę</h3>
             <p style={styles.text}>
-              Otrzymujesz estetyczną tabliczkę z kodem QR.
+              Otrzymujesz estetyczną tabliczkę z kodem QR gotową do użycia.
             </p>
           </article>
 
@@ -83,9 +83,9 @@ export default function HomePage() {
 
           <article style={styles.card}>
             <div style={styles.step}>3</div>
-            <h3 style={styles.h3}>Widzisz wspomnienie</h3>
+            <h3 style={styles.h3}>Tworzysz pamięć</h3>
             <p style={styles.text}>
-              Na stronie można dodać zdjęcie, opis i galerię fotografii.
+              Dodajesz zdjęcia, opis, księgę gości i lokalizację nagrobka.
             </p>
           </article>
         </div>
@@ -103,6 +103,8 @@ export default function HomePage() {
               <li>biografię bliskiej osoby</li>
               <li>galerię zdjęć</li>
               <li>możliwość zapalenia znicza online</li>
+              <li>księgę gości</li>
+              <li>lokalizację nagrobka</li>
               <li>prostą obsługę na telefonie</li>
             </ul>
 
@@ -215,6 +217,21 @@ export default function HomePage() {
             <p style={styles.faqText}>
               Profil może przedłużyć każda osoba, która zeskanuje kod QR i
               wejdzie na stronę pamięci.
+            </p>
+          </div>
+
+          <div style={styles.faqItem}>
+            <strong>Czy profil ma księgę gości?</strong>
+            <p style={styles.faqText}>
+              Tak. Bliscy mogą zostawiać wpisy i wspomnienia na stronie pamięci.
+            </p>
+          </div>
+
+          <div style={styles.faqItem}>
+            <strong>Czy można dodać lokalizację nagrobka?</strong>
+            <p style={styles.faqText}>
+              Tak. Na profilu można umieścić lokalizację nagrobka, aby ułatwić
+              odnalezienie miejsca.
             </p>
           </div>
 
