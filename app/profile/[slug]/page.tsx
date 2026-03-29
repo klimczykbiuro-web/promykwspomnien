@@ -401,30 +401,73 @@ export default async function ProfilePage({
             initialLongitude={profile.grave_longitude}
           />
 
-          <section className={styles.renewCard}>
-            <div className={styles.renewInner}>
-              <p className={styles.renewEyebrow}>Przedłużenie profilu</p>
-              <h2 className={styles.renewTitle}>
-                Chcesz zachować profil aktywny?
-              </h2>
-              <p className={styles.renewText}>
-                Każda osoba może opłacić przedłużenie ważności tego profilu.
-              </p>
+<section className={styles.renewCard}>
+  <div className={styles.renewInner}>
+    <p className={styles.renewEyebrow}>Przedłużenie profilu</p>
+    <h2 className={styles.renewTitle}>
+      Chcesz zachować profil aktywny?
+    </h2>
+    <p className={styles.renewText}>
+      Każda osoba może opłacić przedłużenie ważności tego profilu.
+    </p>
 
-              <Link
-                href={`/przedluz/${profile.slug}`}
-                className={renewButtonClassName}
-              >
-                <span className={styles.renewButtonMain}>Przedłuż profil</span>
-                <span className={styles.renewButtonMeta}>
-                  {renewBadge.text}
-                </span>
-                <span className={styles.renewButtonSubMeta}>
-                  {renewBadge.detail}
-                </span>
-              </Link>
-            </div>
-          </section>
+    <div
+      style={{
+        display: "flex",
+        flexWrap: "wrap",
+        gap: "12px",
+        alignItems: "stretch",
+      }}
+    >
+      <Link
+        href={`/przedluz/${profile.slug}`}
+        className={renewButtonClassName}
+        style={{ flex: "1 1 320px" }}
+      >
+        <span className={styles.renewButtonMain}>Przedłuż profil</span>
+        <span className={styles.renewButtonMeta}>
+          {renewBadge.text}
+        </span>
+        <span className={styles.renewButtonSubMeta}>
+          {renewBadge.detail}
+        </span>
+      </Link>
+
+      <Link
+        href={`/owner/login?next=/owner`}
+        style={{
+          display: "inline-flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "flex-start",
+          gap: "4px",
+          minHeight: "88px",
+          padding: "18px 22px",
+          borderRadius: "20px",
+          background: "#ffffff",
+          border: "1px solid #d6c7b6",
+          color: "#2f241d",
+          textDecoration: "none",
+          fontWeight: 700,
+          fontSize: "18px",
+          lineHeight: 1.3,
+          flex: "1 1 240px",
+        }}
+      >
+        <span>Zaloguj się</span>
+        <span
+          style={{
+            fontSize: "14px",
+            fontWeight: 500,
+            color: "#6b625b",
+          }}
+        >
+          edytuj profil i zarządzaj treścią
+        </span>
+      </Link>
+    </div>
+  </div>
+</section>
         </div>
       </div>
     </main>
