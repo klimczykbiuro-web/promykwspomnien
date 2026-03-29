@@ -3,6 +3,7 @@ import Link from "next/link";
 import CandleSection from "./candle-section";
 import PhotoFlameBadge from "./photo-flame-badge";
 import GallerySection from "./gallery-section";
+import GraveLocationSection from "./grave-location-section";
 import styles from "./profile.module.css";
 import { getCandleCountBySlug } from "@/lib/profile/candles";
 
@@ -25,6 +26,8 @@ type Profile = {
   expires_at: string | null;
   grace_until: string | null;
   visibility_state: ProfileVisibilityState;
+  grave_latitude: number | null;
+  grave_longitude: number | null;
   galleryImages: GalleryImage[];
 };
 
@@ -390,6 +393,13 @@ export default async function ProfilePage({
               </div>
             </section>
           )}
+
+          <GraveLocationSection
+            slug={profile.slug}
+            fullName={profile.full_name}
+            initialLatitude={profile.grave_latitude}
+            initialLongitude={profile.grave_longitude}
+          />
 
           <section className={styles.renewCard}>
             <div className={styles.renewInner}>

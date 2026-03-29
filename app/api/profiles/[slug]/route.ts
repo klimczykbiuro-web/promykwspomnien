@@ -13,6 +13,8 @@ type ProfileRow = {
   biography: string | null;
   hero_image_url: string | null;
   expires_at: string | null;
+  grave_latitude: number | null;
+  grave_longitude: number | null;
 };
 
 function addMonths(date: Date, months: number) {
@@ -79,7 +81,9 @@ export async function GET(
         quote,
         biography,
         hero_image_url,
-        expires_at
+        expires_at,
+        grave_latitude,
+        grave_longitude
       FROM profiles
       WHERE slug = $1
       LIMIT 1
@@ -107,6 +111,8 @@ export async function GET(
         expires_at: profile.expires_at,
         grace_until: profileState.graceUntil,
         visibility_state: "deleted",
+        grave_latitude: null,
+        grave_longitude: null,
         galleryImages: [],
       });
     }
@@ -124,6 +130,8 @@ export async function GET(
         expires_at: profile.expires_at,
         grace_until: profileState.graceUntil,
         visibility_state: "expired",
+        grave_latitude: profile.grave_latitude,
+        grave_longitude: profile.grave_longitude,
         galleryImages: [],
       });
     }
