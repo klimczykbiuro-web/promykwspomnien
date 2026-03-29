@@ -41,6 +41,12 @@ export default function HomePage() {
             <br />
             Każdy kolejny rok kosztuje <strong>maksymalnie 10 zł</strong>.
           </div>
+
+          <p style={styles.smallInfo}>
+            Profil może przedłużyć także każda osoba, która zeskanuje kod QR.
+            Dzięki temu pamięć może pozostać aktywna także wtedy, gdy chce o nią
+            zadbać ktoś z rodziny lub bliskich.
+          </p>
         </div>
 
         <div style={styles.heroImageWrap}>
@@ -205,6 +211,14 @@ export default function HomePage() {
           </div>
 
           <div style={styles.faqItem}>
+            <strong>Kto może przedłużyć profil?</strong>
+            <p style={styles.faqText}>
+              Profil może przedłużyć każda osoba, która zeskanuje kod QR i
+              wejdzie na stronę pamięci.
+            </p>
+          </div>
+
+          <div style={styles.faqItem}>
             <strong>Czy później można dodać zdjęcia i opis?</strong>
             <p style={styles.faqText}>
               Tak. Profil można uzupełniać po aktywacji.
@@ -353,6 +367,14 @@ const styles: Record<string, React.CSSProperties> = {
     color: "#2f241d",
     width: "fit-content",
     maxWidth: "100%",
+  },
+
+  smallInfo: {
+    margin: "4px 0 0",
+    fontSize: 16,
+    lineHeight: 1.7,
+    color: "#5a524b",
+    maxWidth: 680,
   },
 
   heroImageWrap: {
