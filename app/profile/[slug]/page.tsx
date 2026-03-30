@@ -6,6 +6,7 @@ import GallerySection from "./gallery-section";
 import GraveLocationSection from "./grave-location-section";
 import styles from "./profile.module.css";
 import { getCandleCountBySlug } from "@/lib/profile/candles";
+import GuestbookSection from "./guestbook-section";
 
 type ProfileVisibilityState = "active" | "expired" | "deleted";
 
@@ -354,6 +355,8 @@ export default async function ProfilePage({
               )}
             </div>
           </section>
+   
+          <GuestbookSection slug={profile.slug} />
 
           {profile.galleryImages.length > 0 ? (
             <GallerySection
