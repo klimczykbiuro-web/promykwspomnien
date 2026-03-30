@@ -29,6 +29,7 @@ function formatDatePl(value: string) {
 
 export default function GuestbookSection({ slug }: Props) {
   const [entries, setEntries] = useState<GuestbookEntry[]>([]);
+  const [enabled, setEnabled] = useState<boolean | null>(null);
   const [authorName, setAuthorName] = useState("");
   const [message, setMessage] = useState("");
   const [isLoading, setIsLoading] = useState(true);
@@ -53,6 +54,7 @@ export default function GuestbookSection({ slug }: Props) {
         }
 
         if (!cancelled) {
+          setEnabled(Boolean(data.enabled));
           setEntries(Array.isArray(data.entries) ? data.entries : []);
         }
       } catch (err) {
@@ -133,6 +135,10 @@ export default function GuestbookSection({ slug }: Props) {
     return `${count} wpisów`;
   }, [entries]);
 
+  if (!isLoading && enabled === false) {
+    return null;
+  }
+
   return (
     <section style={sectionStyle}>
       <div style={headerStyle}>
@@ -185,7 +191,7 @@ export default function GuestbookSection({ slug }: Props) {
           <div style={actionsStyle}>
             <button
               type="submit"
-              disabled={isSubmitting}
+              disabled={isSubmitting || enabled === false}
               style={buttonStyle}
             >
               {isSubmitting ? "Dodawanie wpisu..." : "Dodaj wpis do księgi gości"}

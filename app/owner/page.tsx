@@ -6,8 +6,10 @@ import {
   getOwnerDashboard,
   getOwnerSessionByToken,
 } from "@/lib/owner/repository";
+import { getOwnerGuestbookDashboard } from "@/lib/owner/guestbook";
 import ExtendProfileForm from "./extend-profile-form";
 import OwnerProfileForm from "./owner-profile-form";
+import OwnerGuestbookManager from "./owner-guestbook-manager";
 import styles from "./owner.module.css";
 
 function formatDate(dateString: string | null) {
@@ -38,9 +40,12 @@ export default async function OwnerDashboardPage() {
     redirect("/owner/login");
   }
 
-  const dashboard = await getOwnerDashboard(session.profile_id);
+  const [dashboard, guestbookDashboard] = await Promise.all([
+    getOwnerDashboard(session.profile_id),
+    getOwnerGuestbookDashboard(session.profile_id),
+  ]);
 
-  if (!dashboard) {
+  if (!dashboard || !guestbookDashboard) {
     redirect("/owner/login");
   }
 
@@ -114,6 +119,22 @@ export default async function OwnerDashboardPage() {
                 initialQuote={dashboard.profile.quote}
                 initialBiography={dashboard.profile.biography}
                 initialGalleryImages={gallerySlots}
+              />
+            </div>
+          </section>
+
+          <section className={styles.card}>
+            <p className={styles.sectionLabel}>Księga gości</p>
+            <h2 className={styles.sectionTitle}>Zarządzaj wpisami</h2>
+            <p className={styles.sectionIntro}>
+              Tutaj możesz wyłączyć całą księgę gości, ponownie ją włączyć,
+              poprawiać wpisy albo je usuwać.
+            </p>
+
+            <div className={styles.formWrap}>
+              <OwnerGuestbookManager
+                initialEnabled={guestbookDashboard.guestbookEnabled}
+                initialEntries={guestbookDashboard.entries}
               />
             </div>
           </section>

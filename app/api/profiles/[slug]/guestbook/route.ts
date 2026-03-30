@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import {
   createGuestbookEntryBySlug,
-  getGuestbookEntriesBySlug,
+  getPublicGuestbookStateBySlug,
 } from "@/lib/profile/guestbook";
 
 export const runtime = "nodejs";
@@ -16,15 +16,13 @@ export async function GET(
 ) {
   try {
     const { slug } = await context.params;
-    const entries = await getGuestbookEntriesBySlug(slug, 20);
+    const state = await getPublicGuestbookStateBySlug(slug, 20);
 
-    if (entries === null) {
+    if (state === null) {
       return NextResponse.json({ error: "Profile not found." }, { status: 404 });
     }
 
-    return NextResponse.json({
-      entries,
-    });
+    return NextResponse.json(state);
   } catch (error) {
     return NextResponse.json(
       {
@@ -80,14 +78,21 @@ export async function POST(
       message,
     });
 
-    if (!created) {
+    if (created.kind === "not_found") {
       return NextResponse.json({ error: "Profile not found." }, { status: 404 });
+    }
+
+    if (created.kind === "disabled") {
+      return NextResponse.json(
+        { error: "Księga gości jest wyłączona." },
+        { status: 403 }
+      );
     }
 
     return NextResponse.json(
       {
         ok: true,
-        entry: created,
+        entry: created.entry,
       },
       { status: 201 }
     );

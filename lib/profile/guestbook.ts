@@ -8,70 +8,83 @@ export type GuestbookEntry = {
   created_at: string;
 };
 
-type GuestbookRow = {
-  id: string | null;
-  author_name: string | null;
-  message: string | null;
-  created_at: string | null;
+type ProfileGuestbookRow = {
+  id: string;
+  guestbook_enabled: boolean;
 };
 
-export async function getGuestbookEntriesBySlug(
+type GuestbookEntryRow = {
+  id: string;
+  author_name: string;
+  message: string;
+  created_at: string;
+};
+
+export async function getPublicGuestbookStateBySlug(
   slug: string,
   limit = 20
-): Promise<GuestbookEntry[] | null> {
-  const result = await pool.query(
+): Promise<{ enabled: boolean; entries: GuestbookEntry[] } | null> {
+  const profileResult = await pool.query(
     `
-    SELECT
-      g.id,
-      g.author_name,
-      g.message,
-      g.created_at
-    FROM profiles p
-    LEFT JOIN profile_guestbook_entries g
-      ON g.profile_id = p.id
-     AND g.moderation_status = 'active'
-    WHERE p.slug = $1
-    ORDER BY g.created_at DESC NULLS LAST
-    LIMIT $2
+    SELECT id, guestbook_enabled
+    FROM profiles
+    WHERE slug = $1
+    LIMIT 1
     `,
-    [slug, limit]
+    [slug]
   );
 
-  if (result.rowCount === 0) {
-    const profileResult = await pool.query(
-      `
-      SELECT id
-      FROM profiles
-      WHERE slug = $1
-      LIMIT 1
-      `,
-      [slug]
-    );
-
-    if (profileResult.rowCount === 0) {
-      return null;
-    }
-
-    return [];
+  if (profileResult.rowCount === 0) {
+    return null;
   }
 
-  const rows = result.rows as GuestbookRow[];
+  const profile = profileResult.rows[0] as ProfileGuestbookRow;
 
-  const filteredRows = rows.filter((row: GuestbookRow) => row.id);
+  if (!profile.guestbook_enabled) {
+    return {
+      enabled: false,
+      entries: [],
+    };
+  }
 
-  return filteredRows.map((row: GuestbookRow) => ({
-    id: row.id as string,
-    author_name: row.author_name as string,
-    message: row.message as string,
-    created_at: row.created_at as string,
-  }));
+  const entriesResult = await pool.query(
+    `
+    SELECT
+      id,
+      author_name,
+      message,
+      created_at
+    FROM profile_guestbook_entries
+    WHERE profile_id = $1
+      AND moderation_status = 'active'
+    ORDER BY created_at DESC
+    LIMIT $2
+    `,
+    [profile.id, limit]
+  );
+
+  const rows = entriesResult.rows as GuestbookEntryRow[];
+
+  return {
+    enabled: true,
+    entries: rows.map((row) => ({
+      id: row.id,
+      author_name: row.author_name,
+      message: row.message,
+      created_at: row.created_at,
+    })),
+  };
 }
 
 export async function createGuestbookEntryBySlug(input: {
   slug: string;
   authorName: string;
   message: string;
-}): Promise<GuestbookEntry | null> {
+}): Promise<
+  | { kind: "created"; entry: GuestbookEntry }
+  | { kind: "not_found" }
+  | { kind: "disabled" }
+> {
   const client = await pool.connect();
 
   try {
@@ -79,9 +92,10 @@ export async function createGuestbookEntryBySlug(input: {
 
     const profileResult = await client.query(
       `
-      SELECT id
+      SELECT id, guestbook_enabled
       FROM profiles
       WHERE slug = $1
+      LIMIT 1
       FOR UPDATE
       `,
       [input.slug]
@@ -89,10 +103,16 @@ export async function createGuestbookEntryBySlug(input: {
 
     if (profileResult.rowCount === 0) {
       await client.query("ROLLBACK");
-      return null;
+      return { kind: "not_found" };
     }
 
-    const profileId = profileResult.rows[0].id as string;
+    const profile = profileResult.rows[0] as ProfileGuestbookRow;
+
+    if (!profile.guestbook_enabled) {
+      await client.query("ROLLBACK");
+      return { kind: "disabled" };
+    }
+
     const entryId = randomUUID();
 
     const insertResult = await client.query(
@@ -112,18 +132,21 @@ export async function createGuestbookEntryBySlug(input: {
         message,
         created_at
       `,
-      [entryId, profileId, input.authorName, input.message]
+      [entryId, profile.id, input.authorName, input.message]
     );
 
     await client.query("COMMIT");
 
-    const row = insertResult.rows[0] as GuestbookEntry;
+    const row = insertResult.rows[0] as GuestbookEntryRow;
 
     return {
-      id: row.id,
-      author_name: row.author_name,
-      message: row.message,
-      created_at: row.created_at,
+      kind: "created",
+      entry: {
+        id: row.id,
+        author_name: row.author_name,
+        message: row.message,
+        created_at: row.created_at,
+      },
     };
   } catch (error) {
     await client.query("ROLLBACK");
