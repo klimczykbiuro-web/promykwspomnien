@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import Link from "next/link";
 import { isAdminAuthenticated } from "@/lib/admin/auth";
 import {
   getAdminStats,
@@ -211,7 +212,27 @@ export default async function AdminPage() {
                 przedłużeń, ruchu w serwisie oraz zgłoszeń zdjęć i treści.
               </p>
 
-              <div className={styles.headerStats}>
+              <div style={{ display: "grid", gap: 10 }}>
+                <Link
+                  href="/admin/orders"
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    minHeight: 46,
+                    padding: "0 18px",
+                    borderRadius: 999,
+                    border: "1px solid #d6d3d1",
+                    background: "#ffffff",
+                    color: "#111827",
+                    fontWeight: 700,
+                    fontSize: 14,
+                    textDecoration: "none",
+                  }}
+                >
+                  Panel zamówień
+                </Link>
+                <div className={styles.headerStats}>
                 <div className={styles.headerStat}>
                   <span className={styles.headerStatLabel}>Wszystkie profile</span>
                   <span className={styles.headerStatValue}>{stats.totalProfiles}</span>
@@ -227,6 +248,7 @@ export default async function AdminPage() {
                   <span className={styles.headerStatValue}>
                     {formatMoney(stats.revenue30dGross)}
                   </span>
+                </div>
                 </div>
               </div>
             </div>
