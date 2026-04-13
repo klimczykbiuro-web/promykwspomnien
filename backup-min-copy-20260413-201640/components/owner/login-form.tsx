@@ -60,13 +60,12 @@ export default function OwnerLoginForm({
       <h1 className="mt-2 text-3xl font-semibold text-stone-900">
         Zaloguj się
       </h1>
-      <p className="mt-2 text-sm text-stone-600">
-        Wpisz hasło, aby przejść do panelu.
-      </p>
 
       <form onSubmit={handleSubmit} className="mt-6 space-y-4">
         {hasPresetSlug ? (
-          <input type="hidden" value={slug} readOnly />
+          <div className="rounded-2xl border border-stone-200 bg-stone-50 px-4 py-3 text-sm text-stone-600">
+            Logowanie do profilu: <strong>{slug}</strong>
+          </div>
         ) : (
           <div className="space-y-2">
             <label className="block text-sm font-medium text-stone-700">

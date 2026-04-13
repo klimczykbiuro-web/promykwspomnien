@@ -437,7 +437,7 @@ export default async function ProfilePage({
       </Link>
 
       <Link
-        href={`/owner/login?next=/owner`}
+        href={`/owner/login?slug=${profile.slug}&next=/owner`}
         style={{
           display: "inline-flex",
           flexDirection: "column",

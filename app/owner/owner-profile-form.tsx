@@ -86,6 +86,7 @@ export default function OwnerProfileForm({
   >(null);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const [isSettingLocation, setIsSettingLocation] = useState(false);
 
   const heroInputRef = useRef<HTMLInputElement | null>(null);
   const galleryInputRefs = useRef<Array<HTMLInputElement | null>>([]);
@@ -192,6 +193,63 @@ export default function OwnerProfileForm({
     } finally {
       setUploadingGalleryIndex(null);
       event.target.value = "";
+    }
+  }
+
+
+  async function handleSetGraveLocation() {
+    setError("");
+    setMessage("");
+
+    const confirmed = window.confirm(
+      "Jeśli teraz naciśniesz OK, oznacza to, że jesteś przy nagrobku i chcesz zapisać to miejsce jako lokalizację profilu."
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    if (!navigator.geolocation) {
+      setError("Ta przeglądarka nie obsługuje lokalizacji.");
+      return;
+    }
+
+    try {
+      setIsSettingLocation(true);
+
+      const position = await new Promise<GeolocationPosition>((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(resolve, reject, {
+          enableHighAccuracy: true,
+          timeout: 15000,
+          maximumAge: 0,
+        });
+      });
+
+      const response = await fetch("/api/owner/profile/location", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+          accuracy: position.coords.accuracy,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data?.error || "Nie udało się zapisać lokalizacji.");
+      }
+
+      setMessage(data?.message || "Lokalizacja nagrobka została zapisana.");
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "Nie udało się ustawić lokalizacji."
+      );
+    } finally {
+      setIsSettingLocation(false);
     }
   }
 
@@ -473,6 +531,46 @@ Pozostawiła po sobie miłość, wdzięczność i wspomnienia, które zostaną z
               </div>
             );
           })}
+        </div>
+      </section>
+
+
+      <section className={styles.editorSection}>
+        <div className={styles.editorSectionHeader}>
+          <div>
+            <h3 className={styles.editorSectionTitle}>Lokalizacja nagrobka</h3>
+            <p className={styles.editorSectionText}>
+              Będąc przy nagrobku możesz zapisać lokalizację z telefonu. Potem
+              rodzina dostanie ją dopiero po wejściu na profil pamięci.
+            </p>
+          </div>
+        </div>
+
+        <div className={styles.editorField}>
+          <div
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              gap: 12,
+              alignItems: "center",
+            }}
+          >
+            <button
+              type="button"
+              className="button"
+              onClick={handleSetGraveLocation}
+              disabled={isSettingLocation || isSaving}
+            >
+              {isSettingLocation
+                ? "Ustawianie lokalizacji..."
+                : "Ustaw lokalizację z telefonu"}
+            </button>
+          </div>
+
+          <p className={styles.editorHint}>
+            Kliknij ten przycisk tylko wtedy, gdy jesteś fizycznie przy
+            nagrobku. Ta operacja zapisuje aktualne położenie telefonu.
+          </p>
         </div>
       </section>
 
