@@ -1,11 +1,11 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { OWNER_SESSION_COOKIE } from "@/lib/owner/auth";
 import { deleteOwnerSession } from "@/lib/owner/repository";
 
 export const runtime = "nodejs";
 
-export async function POST() {
+export async function POST(request: NextRequest) {
   const cookieStore = await cookies();
   const rawToken = cookieStore.get(OWNER_SESSION_COOKIE)?.value;
 
@@ -13,7 +13,7 @@ export async function POST() {
     await deleteOwnerSession(rawToken);
   }
 
-  const response = NextResponse.json({ ok: true });
+  const response = NextResponse.redirect(new URL("/", request.url), 303);
 
   response.cookies.set(OWNER_SESSION_COOKIE, "", {
     httpOnly: true,
