@@ -21,8 +21,8 @@ type Profile = {
   full_name: string;
   birth_year: number | null;
   death_year: number | null;
-  birth_date: string | null;
-  death_date: string | null;
+  birth_date?: string | null;
+  death_date?: string | null;
   quote: string | null;
   biography: string | null;
   hero_image_url: string | null;
@@ -47,47 +47,43 @@ async function getProfile(slug: string): Promise<Profile | null> {
   return res.json();
 }
 
-function formatMemorialDate(dateValue: string | null) {
-  if (!dateValue) return null;
-
-  const [year, month, day] = dateValue.split("-");
-
-  if (!year || !month || !day) {
-    return null;
-  }
-
-  return `${day}.${month}.${year}`;
-}
-
-function getYearsLabel(profile: Profile) {
-  const birthDate = formatMemorialDate(profile.birth_date);
-  const deathDate = formatMemorialDate(profile.death_date);
-
-  if (birthDate || deathDate) {
-    return `${birthDate ?? "—"} — ${deathDate ?? "—"}`;
-  }
-
-  const birth = profile.birth_year ?? "—";
-  const death = profile.death_year ?? "—";
-  return `${birth} — ${death}`;
-}
-
 function formatDatePl(dateValue: string | null) {
   if (!dateValue) {
     return "termin nieustalony";
   }
 
-  const date = new Date(dateValue);
-
-  if (Number.isNaN(date.getTime())) {
-    return "termin nieustalony";
+  const isoDateOnlyMatch = dateValue.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (isoDateOnlyMatch) {
+    const [, year, month, day] = isoDateOnlyMatch;
+    return `${day}.${month}.${year}`;
   }
 
-  return new Intl.DateTimeFormat("pl-PL", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-  }).format(date);
+  const isoDateTimeMatch = dateValue.match(/^(\d{4})-(\d{2})-(\d{2})T/);
+  if (isoDateTimeMatch) {
+    const [, year, month, day] = isoDateTimeMatch;
+    return `${day}.${month}.${year}`;
+  }
+
+  const fallbackDate = new Date(dateValue);
+  if (!Number.isNaN(fallbackDate.getTime())) {
+    return new Intl.DateTimeFormat("pl-PL", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    }).format(fallbackDate);
+  }
+
+  return dateValue;
+}
+
+function getYearsLabel(profile: Profile) {
+  if (profile.birth_date || profile.death_date) {
+    return `${formatDatePl(profile.birth_date ?? null)} — ${formatDatePl(profile.death_date ?? null)}`;
+  }
+
+  const birth = profile.birth_year ?? "—";
+  const death = profile.death_year ?? "—";
+  return `${birth} — ${death}`;
 }
 
 function pluralizeMonths(count: number) {
@@ -275,7 +271,7 @@ export default async function ProfilePage({
                   Pełna zawartość profilu jest obecnie wyłączona
                 </h2>
                 <p className={styles.expiredText}>
-                  Dane tego profilu przechowujemy jeszcze przez{" "}
+                  Dane tego profilu przechowujemy jeszcze przez{' '}
                   <strong>3 {pluralizeMonths(3)}</strong> od daty wygaśnięcia.
                   Aby przywrócić pełną zawartość profilu, opłać przedłużenie
                   przed terminem <strong>{formatDatePl(profile.grace_until)}</strong>.
@@ -376,7 +372,7 @@ export default async function ProfilePage({
               )}
             </div>
           </section>
-   
+
           <GuestbookSection slug={profile.slug} />
 
           {profile.galleryImages.length > 0 ? (
@@ -425,73 +421,73 @@ export default async function ProfilePage({
             initialLongitude={profile.grave_longitude}
           />
 
-<section className={styles.renewCard}>
-  <div className={styles.renewInner}>
-    <p className={styles.renewEyebrow}>Przedłużenie profilu</p>
-    <h2 className={styles.renewTitle}>
-      Chcesz zachować profil aktywny?
-    </h2>
-    <p className={styles.renewText}>
-      Każda osoba może opłacić przedłużenie ważności tego profilu.
-    </p>
+          <section className={styles.renewCard}>
+            <div className={styles.renewInner}>
+              <p className={styles.renewEyebrow}>Przedłużenie profilu</p>
+              <h2 className={styles.renewTitle}>
+                Chcesz zachować profil aktywny?
+              </h2>
+              <p className={styles.renewText}>
+                Każda osoba może opłacić przedłużenie ważności tego profilu.
+              </p>
 
-    <div
-      style={{
-        display: "flex",
-        flexWrap: "wrap",
-        gap: "12px",
-        alignItems: "stretch",
-      }}
-    >
-      <Link
-        href={`/przedluz/${profile.slug}`}
-        className={renewButtonClassName}
-        style={{ flex: "1 1 320px" }}
-      >
-        <span className={styles.renewButtonMain}>Przedłuż profil</span>
-        <span className={styles.renewButtonMeta}>
-          {renewBadge.text}
-        </span>
-        <span className={styles.renewButtonSubMeta}>
-          {renewBadge.detail}
-        </span>
-      </Link>
+              <div
+                style={{
+                  display: "flex",
+                  flexWrap: "wrap",
+                  gap: "12px",
+                  alignItems: "stretch",
+                }}
+              >
+                <Link
+                  href={`/przedluz/${profile.slug}`}
+                  className={renewButtonClassName}
+                  style={{ flex: "1 1 320px" }}
+                >
+                  <span className={styles.renewButtonMain}>Przedłuż profil</span>
+                  <span className={styles.renewButtonMeta}>
+                    {renewBadge.text}
+                  </span>
+                  <span className={styles.renewButtonSubMeta}>
+                    {renewBadge.detail}
+                  </span>
+                </Link>
 
-      <Link
-        href={`/owner/login?slug=${profile.slug}&next=/owner`}
-        style={{
-          display: "inline-flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "flex-start",
-          gap: "4px",
-          minHeight: "88px",
-          padding: "18px 22px",
-          borderRadius: "20px",
-          background: "#ffffff",
-          border: "1px solid #d6c7b6",
-          color: "#2f241d",
-          textDecoration: "none",
-          fontWeight: 700,
-          fontSize: "18px",
-          lineHeight: 1.3,
-          flex: "1 1 240px",
-        }}
-      >
-        <span>Zaloguj się</span>
-        <span
-          style={{
-            fontSize: "14px",
-            fontWeight: 500,
-            color: "#6b625b",
-          }}
-        >
-          edytuj profil i zarządzaj treścią
-        </span>
-      </Link>
-    </div>
-  </div>
-</section>
+                <Link
+                  href={`/owner/login?slug=${profile.slug}&next=/owner`}
+                  style={{
+                    display: "inline-flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "flex-start",
+                    gap: "4px",
+                    minHeight: "88px",
+                    padding: "18px 22px",
+                    borderRadius: "20px",
+                    background: "#ffffff",
+                    border: "1px solid #d6c7b6",
+                    color: "#2f241d",
+                    textDecoration: "none",
+                    fontWeight: 700,
+                    fontSize: "18px",
+                    lineHeight: 1.3,
+                    flex: "1 1 240px",
+                  }}
+                >
+                  <span>Zaloguj się</span>
+                  <span
+                    style={{
+                      fontSize: "14px",
+                      fontWeight: 500,
+                      color: "#6b625b",
+                    }}
+                  >
+                    edytuj profil i zarządzaj treścią
+                  </span>
+                </Link>
+              </div>
+            </div>
+          </section>
         </div>
       </div>
     </main>

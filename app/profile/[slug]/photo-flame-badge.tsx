@@ -45,20 +45,17 @@ export default function PhotoFlameBadge({ initialAlreadyLit }: Props) {
       ) : null}
 
       {isLit ? (
-        <>
-          <div className={styles.photoFlameState} aria-hidden="true">
-            <span className={styles.photoFlameStateDot}></span>
-            Znicz płonie
+        <div className={styles.photoFlameBadge} aria-hidden="true">
+          <div className={styles.photoFlameBadgeGlow}></div>
+          <div className={styles.photoFlameLabelWrap}>
+            <span className={styles.photoFlameDot}></span>
+            <span className={styles.photoFlameLabel}>Znicz płonie</span>
           </div>
-
-          <div className={styles.photoFlameBadge} aria-hidden="true">
-            <div className={styles.photoFlameHalo}></div>
-            <div className={styles.photoFlameIcon}>
-              <span className={styles.photoFlameOuter}></span>
-              <span className={styles.photoFlameInner}></span>
-            </div>
+          <div className={styles.photoFlameIcon}>
+            <span className={styles.photoFlameOuter}></span>
+            <span className={styles.photoFlameInner}></span>
           </div>
-        </>
+        </div>
       ) : null}
     </>
   );
