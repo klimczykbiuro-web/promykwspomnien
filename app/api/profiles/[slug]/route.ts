@@ -9,6 +9,8 @@ type ProfileRow = {
   full_name: string;
   birth_year: number | null;
   death_year: number | null;
+  birth_date: string | null;
+  death_date: string | null;
   quote: string | null;
   biography: string | null;
   hero_image_url: string | null;
@@ -78,6 +80,8 @@ export async function GET(
         full_name,
         birth_year,
         death_year,
+        birth_date,
+        death_date,
         quote,
         biography,
         hero_image_url,
@@ -105,6 +109,8 @@ export async function GET(
         full_name: profile.full_name,
         birth_year: profile.birth_year,
         death_year: profile.death_year,
+        birth_date: profile.birth_date,
+        death_date: profile.death_date,
         quote: null,
         biography: null,
         hero_image_url: null,
@@ -124,6 +130,8 @@ export async function GET(
         full_name: profile.full_name,
         birth_year: profile.birth_year,
         death_year: profile.death_year,
+        birth_date: profile.birth_date,
+        death_date: profile.death_date,
         quote: null,
         biography: null,
         hero_image_url: profile.hero_image_url,

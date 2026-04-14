@@ -167,10 +167,10 @@
 
 .photoFlameBadge {
   position: absolute;
-  right: 20px;
-  bottom: 22px;
-  width: 28px;
-  height: 28px;
+  right: 18px;
+  bottom: 18px;
+  width: 44px;
+  height: 44px;
   z-index: 2;
   pointer-events: none;
 }
@@ -192,8 +192,8 @@
   position: absolute;
   left: 50%;
   top: 50%;
-  width: 11px;
-  height: 16px;
+  width: 18px;
+  height: 26px;
   transform: translate(-50%, -50%);
 }
 
@@ -201,8 +201,8 @@
   position: absolute;
   left: 50%;
   bottom: 0;
-  width: 11px;
-  height: 16px;
+  width: 18px;
+  height: 26px;
   transform: translateX(-50%);
   border-radius: 60% 60% 58% 58% / 80% 80% 26% 26%;
   background: linear-gradient(180deg, #ffe3a0 0%, #ffab37 56%, #d9651b 100%);
@@ -213,12 +213,55 @@
   position: absolute;
   left: 50%;
   bottom: 2px;
-  width: 5px;
-  height: 9px;
+  width: 8px;
+  height: 14px;
   transform: translateX(-50%);
   border-radius: 60% 60% 52% 52% / 84% 84% 24% 24%;
   background: linear-gradient(180deg, #fffdf0 0%, #fff3b3 50%, #ffd25a 100%);
   animation: flameFlickerInner 0.55s ease-in-out infinite alternate;
+}
+
+
+.photoWarmOverlay {
+  position: absolute;
+  inset: 0;
+  border-radius: 28px;
+  pointer-events: none;
+  z-index: 1;
+  background:
+    radial-gradient(circle at 50% 82%, rgba(255, 201, 108, 0.24) 0%, rgba(255, 164, 71, 0.12) 28%, transparent 58%),
+    linear-gradient(180deg, rgba(255, 247, 230, 0.04) 0%, rgba(255, 211, 135, 0.10) 100%);
+  box-shadow:
+    inset 0 0 42px rgba(255, 191, 94, 0.12),
+    0 0 26px rgba(255, 170, 70, 0.14);
+}
+
+.photoFlameState {
+  position: absolute;
+  left: 18px;
+  bottom: 18px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 38px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: rgba(72, 45, 17, 0.72);
+  color: #fff7eb;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  box-shadow: 0 12px 24px rgba(39, 23, 8, 0.18);
+  backdrop-filter: blur(3px);
+}
+
+.photoFlameStateDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: radial-gradient(circle, #fff7cf 0%, #ffd76c 55%, #e28d22 100%);
+  box-shadow: 0 0 12px rgba(255, 190, 67, 0.55);
 }
 
 /* CANDLE */

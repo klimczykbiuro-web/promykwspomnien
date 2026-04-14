@@ -8,6 +8,8 @@ type Props = {
   initialQuote: string | null;
   initialBiography: string | null;
   initialGalleryImages: string[];
+  initialBirthDate: string | null;
+  initialDeathDate: string | null;
 };
 
 type UploadKind = "hero" | "gallery";
@@ -72,10 +74,14 @@ export default function OwnerProfileForm({
   initialQuote,
   initialBiography,
   initialGalleryImages,
+  initialBirthDate,
+  initialDeathDate,
 }: Props) {
   const [heroImageUrl, setHeroImageUrl] = useState(initialHeroImageUrl ?? "");
   const [quote, setQuote] = useState(initialQuote ?? "");
   const [biography, setBiography] = useState(initialBiography ?? "");
+  const [birthDate, setBirthDate] = useState(initialBirthDate ?? "");
+  const [deathDate, setDeathDate] = useState(initialDeathDate ?? "");
   const [galleryImages, setGalleryImages] = useState(
     createGallerySlots(initialGalleryImages)
   );
@@ -270,6 +276,8 @@ export default function OwnerProfileForm({
           quote,
           biography,
           galleryImages,
+          birthDate,
+          deathDate,
         }),
       });
 
@@ -399,6 +407,42 @@ export default function OwnerProfileForm({
             onChange={(e) => setQuote(e.target.value)}
             placeholder="Np. Pozostaje po nas dobro, które daliśmy innym."
           />
+        </div>
+      </section>
+
+
+      <section className={styles.editorSection}>
+        <div className={styles.editorSectionHeader}>
+          <div>
+            <h3 className={styles.editorSectionTitle}>Daty</h3>
+            <p className={styles.editorSectionText}>
+              Możesz uzupełnić pełną datę urodzenia i datę śmierci.
+            </p>
+          </div>
+        </div>
+
+        <div className={styles.editorHeroGrid}>
+          <div className={styles.editorField}>
+            <label className={styles.editorLabel}>Data urodzenia</label>
+            <input
+              type="date"
+              value={birthDate}
+              onChange={(e) => setBirthDate(e.target.value)}
+              className="input"
+              max={deathDate || undefined}
+            />
+          </div>
+
+          <div className={styles.editorField}>
+            <label className={styles.editorLabel}>Data śmierci</label>
+            <input
+              type="date"
+              value={deathDate}
+              onChange={(e) => setDeathDate(e.target.value)}
+              className="input"
+              min={birthDate || undefined}
+            />
+          </div>
         </div>
       </section>
 

@@ -119,6 +119,8 @@ export default async function OwnerDashboardPage() {
                 initialQuote={dashboard.profile.quote}
                 initialBiography={dashboard.profile.biography}
                 initialGalleryImages={gallerySlots}
+                initialBirthDate={dashboard.profile.birth_date}
+                initialDeathDate={dashboard.profile.death_date}
               />
             </div>
           </section>

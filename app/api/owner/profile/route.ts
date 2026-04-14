@@ -20,12 +20,33 @@ const imageField = z
     "Adres zdjęcia musi zaczynać się od http:// lub https://"
   );
 
-const schema = z.object({
-  heroImageUrl: imageField,
-  quote: z.string().trim().max(240),
-  biography: z.string().trim().max(6000),
-  galleryImages: z.array(imageField).max(10),
-});
+const dateField = z
+  .string()
+  .trim()
+  .refine(
+    (value) => value === "" || /^\d{4}-\d{2}-\d{2}$/.test(value),
+    "Data musi mieć format RRRR-MM-DD"
+  );
+
+const schema = z
+  .object({
+    heroImageUrl: imageField,
+    quote: z.string().trim().max(240),
+    biography: z.string().trim().max(6000),
+    galleryImages: z.array(imageField).max(10),
+    birthDate: dateField.optional().default(""),
+    deathDate: dateField.optional().default(""),
+  })
+  .refine(
+    (value) => {
+      if (!value.birthDate || !value.deathDate) return true;
+      return value.birthDate <= value.deathDate;
+    },
+    {
+      message: "Data śmierci nie może być wcześniejsza niż data urodzenia.",
+      path: ["deathDate"],
+    }
+  );
 
 function normalizeOptional(value: string) {
   const trimmed = value.trim();
@@ -61,6 +82,8 @@ export async function POST(request: NextRequest) {
       quote: normalizeOptional(payload.quote),
       biography: normalizeOptional(payload.biography),
       galleryImages: normalizeGallery(payload.galleryImages),
+      birthDate: normalizeOptional(payload.birthDate),
+      deathDate: normalizeOptional(payload.deathDate),
     });
 
     if (!updated) {

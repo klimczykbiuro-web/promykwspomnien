@@ -70,7 +70,7 @@ export default function CandleSection({
           <p className={styles.candleEyebrow}>Pamięć</p>
           <h2 className={styles.candleTitle}>Zapal znicz</h2>
           <p className={styles.candleDescription}>
-            Kliknij przycisk, aby zapalić wirtualny znicz pamięci.
+            Zapalenie znicza delikatnie rozświetla zdjęcie i pozostawia ślad pamięci na profilu.
           </p>
         </div>
 
@@ -92,7 +92,7 @@ export default function CandleSection({
           ? "Trwa zapalanie..."
           : alreadyLit
           ? "Znicz płonie"
-          : "🕯️ Zapal znicz"}
+          : "Zapal znicz"}
       </button>
 
       {message ? <p className={styles.candleMessage}>{message}</p> : null}

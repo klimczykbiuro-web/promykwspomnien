@@ -342,7 +342,9 @@ export async function getOwnerDashboard(profileId: string) {
         owner_claimed_at,
         hero_image_url,
         quote,
-        biography
+        biography,
+        birth_date,
+        death_date
       FROM profiles
       WHERE id = $1
       LIMIT 1
@@ -394,6 +396,8 @@ export async function getOwnerDashboard(profileId: string) {
       hero_image_url: string | null;
       quote: string | null;
       biography: string | null;
+      birth_date: string | null;
+      death_date: string | null;
     },
     payments: paymentsResult.rows as Array<{
       id: string;
@@ -426,6 +430,8 @@ type UpdateOwnerProfileInput = {
   quote: string | null;
   biography: string | null;
   galleryImages: string[];
+  birthDate: string | null;
+  deathDate: string | null;
 };
 
 export async function updateOwnerProfileContent(
@@ -443,7 +449,9 @@ export async function updateOwnerProfileContent(
       SET
         hero_image_url = $2,
         quote = $3,
-        biography = $4
+        biography = $4,
+        birth_date = $5,
+        death_date = $6
       WHERE id = $1
       RETURNING
         id,
@@ -451,9 +459,11 @@ export async function updateOwnerProfileContent(
         full_name,
         hero_image_url,
         quote,
-        biography
+        biography,
+        birth_date,
+        death_date
       `,
-      [profileId, input.heroImageUrl, input.quote, input.biography]
+      [profileId, input.heroImageUrl, input.quote, input.biography, input.birthDate, input.deathDate]
     );
 
     if (profileResult.rowCount === 0) {
@@ -505,6 +515,8 @@ export async function updateOwnerProfileContent(
         hero_image_url: string | null;
         quote: string | null;
         biography: string | null;
+        birth_date: string | null;
+        death_date: string | null;
       },
       galleryImages: galleryResult.rows as Array<{
         id: string;

@@ -21,6 +21,8 @@ type Profile = {
   full_name: string;
   birth_year: number | null;
   death_year: number | null;
+  birth_date: string | null;
+  death_date: string | null;
   quote: string | null;
   biography: string | null;
   hero_image_url: string | null;
@@ -45,7 +47,26 @@ async function getProfile(slug: string): Promise<Profile | null> {
   return res.json();
 }
 
+function formatMemorialDate(dateValue: string | null) {
+  if (!dateValue) return null;
+
+  const [year, month, day] = dateValue.split("-");
+
+  if (!year || !month || !day) {
+    return null;
+  }
+
+  return `${day}.${month}.${year}`;
+}
+
 function getYearsLabel(profile: Profile) {
+  const birthDate = formatMemorialDate(profile.birth_date);
+  const deathDate = formatMemorialDate(profile.death_date);
+
+  if (birthDate || deathDate) {
+    return `${birthDate ?? "—"} — ${deathDate ?? "—"}`;
+  }
+
   const birth = profile.birth_year ?? "—";
   const death = profile.death_year ?? "—";
   return `${birth} — ${death}`;

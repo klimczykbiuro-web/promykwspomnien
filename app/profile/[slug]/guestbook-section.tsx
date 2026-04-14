@@ -153,7 +153,26 @@ export default function GuestbookSection({ slug }: Props) {
         <div style={countBadgeStyle}>{countLabel}</div>
       </div>
 
-      <div style={formCardStyle}>
+      <div style={entriesWrapStyle}>
+        {isLoading ? (
+          <div style={emptyCardStyle}>Ładowanie wpisów...</div>
+        ) : entries.length === 0 ? (
+          <div style={emptyCardStyle}>
+            Księga gości jest jeszcze pusta. Możesz dodać pierwszy wpis.
+          </div>
+        ) : (
+          entries.map((entry) => (
+            <article key={entry.id} style={entryCardStyle}>
+              <div style={entryTopStyle}>
+                <strong style={entryAuthorStyle}>{entry.author_name}</strong>
+                <span style={entryDateStyle}>{formatDatePl(entry.created_at)}</span>
+              </div>
+
+              <p style={entryMessageStyle}>{entry.message}</p>
+            </article>
+          ))
+        )}
+      </div>      <div style={formCardStyle}>
         <form onSubmit={handleSubmit} style={formStyle}>
           <div style={fieldStyle}>
             <label htmlFor="guestbook-author" style={labelStyle}>
@@ -200,26 +219,7 @@ export default function GuestbookSection({ slug }: Props) {
         </form>
       </div>
 
-      <div style={entriesWrapStyle}>
-        {isLoading ? (
-          <div style={emptyCardStyle}>Ładowanie wpisów...</div>
-        ) : entries.length === 0 ? (
-          <div style={emptyCardStyle}>
-            Księga gości jest jeszcze pusta. Możesz dodać pierwszy wpis.
-          </div>
-        ) : (
-          entries.map((entry) => (
-            <article key={entry.id} style={entryCardStyle}>
-              <div style={entryTopStyle}>
-                <strong style={entryAuthorStyle}>{entry.author_name}</strong>
-                <span style={entryDateStyle}>{formatDatePl(entry.created_at)}</span>
-              </div>
 
-              <p style={entryMessageStyle}>{entry.message}</p>
-            </article>
-          ))
-        )}
-      </div>
     </section>
   );
 }
