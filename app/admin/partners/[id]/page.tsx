@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { PartnerKpiBlock } from "./PartnerKpiBlock";
 import {
   createPartnerAssignment,
   getPartnerById,
@@ -94,6 +95,8 @@ export default async function AdminPartnerDetailsPage({ params }: PageProps) {
             jego QR.
           </p>
         </section>
+
+        <PartnerKpiBlock partnerId={partner.id} />
 
         <section style={cardStyle}>
           <h2 style={cardTitleStyle}>Dane partnera</h2>
