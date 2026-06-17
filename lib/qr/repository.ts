@@ -317,9 +317,10 @@ export async function activateQrCodeAndCreateProfile(input: {
         owner_claim_token_hash,
         owner_claimed_at,
         owner_access_enabled,
-        source_qr_code_id
+        source_qr_code_id,
+        qr_code_id
       )
-      VALUES ($1, $2, $3, NOW() + INTERVAL '1 year', $4, $5, NULL, NOW(), TRUE, $6)
+      VALUES ($1, $2, $3, NOW() + INTERVAL '1 year', $4, $5, NULL, NOW(), TRUE, $6, $7)
       `,
       [
         profileId,
@@ -327,6 +328,7 @@ export async function activateQrCodeAndCreateProfile(input: {
         input.fullName.trim(),
         legacyQrToken,
         passwordHash,
+        qr.id,
         qr.id,
       ]
     );
