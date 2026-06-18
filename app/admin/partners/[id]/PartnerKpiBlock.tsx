@@ -58,6 +58,12 @@ export async function PartnerKpiBlock({ partnerId }: { partnerId: string }) {
           />
 
           <KpiCard
+            label="Przychód z tabliczek"
+            value={formatMoneyFromZloty(kpis.plaques_revenue_gross)}
+            note="Ilość × cena brutto za szt."
+          />
+
+          <KpiCard
             label="Aktywne profile"
             value={formatNumber(kpis.activated_profiles_count)}
             note="Profile utworzone z QR partnera"
@@ -278,6 +284,18 @@ function formatPercent(value: number | string | null | undefined) {
   return `${Number(value ?? 0).toFixed(2)}%`;
 }
 
+// Przychód z tabliczek liczymy z partner_lot_assignments.unit_price_gross.
+// To jest cena brutto wpisywana w formularzu, czyli zakładamy złotówki, np. 45.00 = 45 zł.
+function formatMoneyFromZloty(value: number | string | null | undefined) {
+  const amount = Number(value ?? 0);
+
+  return new Intl.NumberFormat("pl-PL", {
+    style: "currency",
+    currency: "PLN",
+  }).format(amount);
+}
+
+// Przychód z przedłużeń liczymy z payments.amount.
 // Zakładamy, że payments.amount jest w groszach, np. 1000 = 10 zł.
 function formatMoneyFromGrosze(value: number | string | null | undefined) {
   const amount = Number(value ?? 0) / 100;

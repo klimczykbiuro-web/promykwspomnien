@@ -9,6 +9,7 @@ export type AdminPartnerKpis = {
   name: string;
   assigned_lots_count: number;
   assigned_quantity: number;
+  plaques_revenue_gross: string;
   activated_profiles_count: number;
   unactivated_quantity: number;
   extended_profiles_count: number;
@@ -89,6 +90,7 @@ export async function getAdminPartnerKpis(
         name,
         assigned_lots_count,
         assigned_quantity,
+        plaques_revenue_gross::text AS plaques_revenue_gross,
         activated_profiles_count,
         unactivated_quantity,
         extended_profiles_count,
