@@ -310,3 +310,20 @@ export async function createPartnerAssignment(
 
   return (result.rows[0] as PartnerAssignment) ?? null;
 }
+
+export async function deletePartnerAssignment(
+  partnerId: string,
+  assignmentId: string
+): Promise<boolean> {
+  const result = await pool.query(
+    `
+    DELETE FROM partner_lot_assignments
+    WHERE id = $1
+      AND partner_id = $2
+    RETURNING id
+    `,
+    [assignmentId, partnerId]
+  );
+
+  return result.rowCount > 0;
+}

@@ -1,7 +1,10 @@
+import { revalidatePath } from "next/cache";
 import { notFound } from "next/navigation";
 import { PartnerKpiBlock } from "./PartnerKpiBlock";
+import { DeleteAssignmentButton } from "./DeleteAssignmentButton";
 import {
   createPartnerAssignment,
+  deletePartnerAssignment,
   getPartnerById,
   listAvailableLots,
   listPartnerActivations,
@@ -10,6 +13,7 @@ import {
 } from "@/lib/admin/partners/repository";
 import {
   createPartnerAssignmentSchema,
+  deletePartnerAssignmentSchema,
   updatePartnerSchema,
 } from "@/lib/admin/partners/schema";
 
@@ -33,6 +37,7 @@ async function updatePartnerAction(formData: FormData) {
   });
 
   await updatePartner(id, payload);
+  revalidatePath(`/admin/partners/${id}`);
 }
 
 async function createAssignmentAction(formData: FormData) {
@@ -48,6 +53,19 @@ async function createAssignmentAction(formData: FormData) {
   });
 
   await createPartnerAssignment(partnerId, payload);
+  revalidatePath(`/admin/partners/${partnerId}`);
+}
+
+async function deleteAssignmentAction(formData: FormData) {
+  "use server";
+
+  const payload = deletePartnerAssignmentSchema.parse({
+    partnerId: formData.get("partnerId"),
+    assignmentId: formData.get("assignmentId"),
+  });
+
+  await deletePartnerAssignment(payload.partnerId, payload.assignmentId);
+  revalidatePath(`/admin/partners/${payload.partnerId}`);
 }
 
 function formatDate(value: string) {
@@ -242,6 +260,7 @@ export default async function AdminPartnerDetailsPage({ params }: PageProps) {
                     <th style={thStyle}>Typ</th>
                     <th style={thStyle}>Data</th>
                     <th style={thStyle}>Notatki</th>
+                    <th style={thStyle}>Akcje</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -253,12 +272,24 @@ export default async function AdminPartnerDetailsPage({ params }: PageProps) {
                       <td style={tdStyle}>{assignmentTypeLabel(assignment.assignment_type)}</td>
                       <td style={tdStyle}>{formatDate(assignment.assigned_at)}</td>
                       <td style={tdStyle}>{assignment.notes ?? "—"}</td>
+                      <td style={tdStyle}>
+                        <form action={deleteAssignmentAction}>
+                          <input type="hidden" name="partnerId" value={partner.id} />
+                          <input type="hidden" name="assignmentId" value={assignment.id} />
+                          <DeleteAssignmentButton lotCode={assignment.lot_code} />
+                        </form>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
           )}
+
+          <p style={{ margin: "12px 0 0", color: "#78716c", fontSize: 13 }}>
+            Usunięcie przypisania nie usuwa QR, profili ani płatności. Lot wróci na listę
+            dostępnych partii do przypisania.
+          </p>
         </section>
 
         <section style={cardStyle}>

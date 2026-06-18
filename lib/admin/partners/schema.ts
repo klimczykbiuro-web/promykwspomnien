@@ -29,10 +29,19 @@ export const createPartnerAssignmentSchema = z.object({
   notes: z.string().trim().max(2000).optional().default(""),
 });
 
+export const deletePartnerAssignmentSchema = z.object({
+  partnerId: z.string().uuid(),
+  assignmentId: z.string().uuid(),
+});
+
 export type PartnerStatus = z.infer<typeof partnerStatusSchema>;
 export type PartnerAssignmentType = z.infer<typeof partnerAssignmentTypeSchema>;
 export type CreatePartnerInput = z.infer<typeof createPartnerSchema>;
 export type UpdatePartnerInput = z.infer<typeof updatePartnerSchema>;
 export type CreatePartnerAssignmentInput = z.infer<
   typeof createPartnerAssignmentSchema
+>;
+
+export type DeletePartnerAssignmentInput = z.infer<
+  typeof deletePartnerAssignmentSchema
 >;
