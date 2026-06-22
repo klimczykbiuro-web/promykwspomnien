@@ -1,6 +1,7 @@
 import { revalidatePath } from "next/cache";
 import { notFound } from "next/navigation";
 import { PartnerKpiBlock } from "./PartnerKpiBlock";
+import { PartnerSettlementBlock } from "./PartnerSettlementBlock";
 import { DeleteAssignmentButton } from "./DeleteAssignmentButton";
 import {
   createPartnerAssignment,
@@ -115,6 +116,8 @@ export default async function AdminPartnerDetailsPage({ params }: PageProps) {
         </section>
 
         <PartnerKpiBlock partnerId={partner.id} />
+
+        <PartnerSettlementBlock partnerId={partner.id} />
 
         <section style={cardStyle}>
           <h2 style={cardTitleStyle}>Dane partnera</h2>
