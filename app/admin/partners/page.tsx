@@ -1,9 +1,13 @@
+import { revalidatePath } from "next/cache";
 import Link from "next/link";
 import {
   createPartner,
   listPartnersSummary,
 } from "@/lib/admin/partners/repository";
 import { createPartnerSchema } from "@/lib/admin/partners/schema";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 async function createPartnerAction(formData: FormData) {
   "use server";
@@ -19,6 +23,7 @@ async function createPartnerAction(formData: FormData) {
   });
 
   await createPartner(payload);
+  revalidatePath("/admin/partners");
 }
 
 function formatDate(value: string) {
