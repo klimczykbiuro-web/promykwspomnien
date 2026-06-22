@@ -232,6 +232,25 @@ export default async function AdminPage() {
                 >
                   Panel zamówień
                 </Link>
+                <Link
+                  href="/admin/partners"
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    minHeight: 46,
+                    padding: "0 18px",
+                    borderRadius: 999,
+                    border: "1px solid #d6d3d1",
+                    background: "#ffffff",
+                    color: "#111827",
+                    fontWeight: 700,
+                    fontSize: 14,
+                    textDecoration: "none",
+                  }}
+                >
+                  Panel partnerów
+                </Link>
                 <div className={styles.headerStats}>
                 <div className={styles.headerStat}>
                   <span className={styles.headerStatLabel}>Wszystkie profile</span>
