@@ -1,6 +1,8 @@
 import { revalidatePath } from "next/cache";
-import type { CSSProperties, ReactNode } from "react";
+import type { CSSProperties } from "react";
+import { CancelPayoutButton } from "./CancelPayoutButton";
 import {
+  cancelPartnerPayout,
   createPartnerPayout,
   getPartnerSettlement,
   listPartnerPayouts,
@@ -62,6 +64,25 @@ async function createPayoutAction(formData: FormData) {
     payoutDate,
     notes,
   });
+
+  revalidatePath(`/admin/partners/${partnerId}`);
+}
+
+async function cancelPayoutAction(formData: FormData) {
+  "use server";
+
+  const partnerId = String(formData.get("partnerId") ?? "");
+  const payoutId = String(formData.get("payoutId") ?? "");
+
+  if (!partnerId) {
+    throw new Error("Brak ID partnera.");
+  }
+
+  if (!payoutId) {
+    throw new Error("Brak ID wypłaty.");
+  }
+
+  await cancelPartnerPayout(partnerId, payoutId);
 
   revalidatePath(`/admin/partners/${partnerId}`);
 }
@@ -136,7 +157,7 @@ export async function PartnerSettlementBlock({
         <SettlementCard
           label="Wypłacono"
           value={formatMoney(settlement.paid_out_gross)}
-          note="Suma zapisanych wypłat"
+          note="Tylko wypłaty ze statusem wypłacono"
         />
 
         <SettlementCard
@@ -234,12 +255,18 @@ export async function PartnerSettlementBlock({
         </form>
       </div>
 
-      <PayoutHistory payouts={payouts} />
+      <PayoutHistory partnerId={partnerId} payouts={payouts} />
     </section>
   );
 }
 
-function PayoutHistory({ payouts }: { payouts: PartnerPayout[] }) {
+function PayoutHistory({
+  partnerId,
+  payouts,
+}: {
+  partnerId: string;
+  payouts: PartnerPayout[];
+}) {
   return (
     <div style={{ marginTop: 24 }}>
       <h3 style={smallTitleStyle}>Historia wypłat</h3>
@@ -256,18 +283,38 @@ function PayoutHistory({ payouts }: { payouts: PartnerPayout[] }) {
                 <th style={thStyle}>Status</th>
                 <th style={thStyle}>Notatka</th>
                 <th style={thStyle}>Dodano</th>
+                <th style={thStyle}>Akcje</th>
               </tr>
             </thead>
             <tbody>
-              {payouts.map((payout) => (
-                <tr key={payout.id} style={{ borderBottom: "1px solid #f5f5f4" }}>
-                  <td style={tdStyle}>{formatDateOnly(payout.payout_date)}</td>
-                  <td style={tdStyle}>{formatMoney(payout.amount_gross)}</td>
-                  <td style={tdStyle}>{payoutStatusLabel(payout.status)}</td>
-                  <td style={tdStyle}>{payout.notes ?? "—"}</td>
-                  <td style={tdStyle}>{formatDateTime(payout.created_at)}</td>
-                </tr>
-              ))}
+              {payouts.map((payout) => {
+                const formattedAmount = formatMoney(payout.amount_gross);
+                const formattedDate = formatDateOnly(payout.payout_date);
+
+                return (
+                  <tr key={payout.id} style={{ borderBottom: "1px solid #f5f5f4" }}>
+                    <td style={tdStyle}>{formattedDate}</td>
+                    <td style={tdStyle}>{formattedAmount}</td>
+                    <td style={tdStyle}>{payoutStatusLabel(payout.status)}</td>
+                    <td style={tdStyle}>{payout.notes ?? "—"}</td>
+                    <td style={tdStyle}>{formatDateTime(payout.created_at)}</td>
+                    <td style={tdStyle}>
+                      {payout.status === "paid" ? (
+                        <form action={cancelPayoutAction}>
+                          <input type="hidden" name="partnerId" value={partnerId} />
+                          <input type="hidden" name="payoutId" value={payout.id} />
+                          <CancelPayoutButton
+                            amount={formattedAmount}
+                            payoutDate={formattedDate}
+                          />
+                        </form>
+                      ) : (
+                        <span style={{ color: "#78716c" }}>—</span>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>

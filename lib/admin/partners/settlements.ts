@@ -110,6 +110,25 @@ export async function createPartnerPayout(input: {
   return (result.rows[0] as PartnerPayout) ?? null;
 }
 
+export async function cancelPartnerPayout(
+  partnerId: string,
+  payoutId: string
+): Promise<boolean> {
+  const result = await pool.query(
+    `
+    UPDATE partner_payouts
+    SET status = 'cancelled'
+    WHERE id = $1
+      AND partner_id = $2
+      AND status = 'paid'
+    RETURNING id
+    `,
+    [payoutId, partnerId]
+  );
+
+  return (result.rowCount ?? 0) > 0;
+}
+
 export async function listPartnerPayouts(
   partnerId: string
 ): Promise<PartnerPayout[]> {
