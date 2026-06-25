@@ -1,3 +1,4 @@
+import Link from "next/link";
 import OrderForm from "./order-form";
 
 export const metadata = {
@@ -32,6 +33,48 @@ export default function OrderPage() {
           <li>możliwość dodania zdjęcia, cytatu, biografii i galerii</li>
           <li>funkcję „zapal znicz”</li>
         </ul>
+      </div>
+
+      <div
+        style={{
+          border: "1px solid #d6c7b6",
+          borderRadius: 16,
+          padding: 18,
+          marginBottom: 24,
+          background: "#fffaf3",
+          color: "#3b2f26",
+          fontSize: 15,
+          lineHeight: 1.6,
+        }}
+      >
+        <strong>Przed złożeniem zamówienia zapoznaj się z dokumentami:</strong>
+        <p style={{ margin: "8px 0 0" }}>
+          Składając zamówienie, akceptujesz{" "}
+          <Link
+            href="/regulamin"
+            style={{
+              color: "#2f241d",
+              fontWeight: 700,
+              textDecoration: "underline",
+              textUnderlineOffset: 3,
+            }}
+          >
+            Regulamin sklepu
+          </Link>{" "}
+          oraz{" "}
+          <Link
+            href="/polityka-prywatnosci"
+            style={{
+              color: "#2f241d",
+              fontWeight: 700,
+              textDecoration: "underline",
+              textUnderlineOffset: 3,
+            }}
+          >
+            Politykę prywatności
+          </Link>
+          .
+        </p>
       </div>
 
       <OrderForm />

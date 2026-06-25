@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { stripe } from "@/lib/payments/stripe";
+import { createPrzelewy24Transaction } from "@/lib/payments/przelewy24";
 import { plans, type PlanId } from "@/lib/payments/plans";
 import {
   attachProviderPaymentId,
@@ -19,10 +19,6 @@ const schema = z.object({
 
 export async function POST(request: NextRequest) {
   try {
-    if (!stripe) {
-      return NextResponse.json({ error: "Stripe is not configured." }, { status: 500 });
-    }
-
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
     if (!siteUrl) {
       return NextResponse.json({ error: "Missing NEXT_PUBLIC_SITE_URL." }, { status: 500 });
@@ -43,47 +39,25 @@ export async function POST(request: NextRequest) {
       amount: plan.amount,
       currency: plan.currency,
       yearsToAdd: plan.years,
+      provider: "przelewy24",
     });
 
-    const lineItem = plan.stripePriceId
-      ? { price: plan.stripePriceId, quantity: 1 }
-      : {
-          price_data: {
-            currency: plan.currency,
-            unit_amount: plan.amount,
-            product_data: {
-              name: `Przedłużenie profilu – ${plan.label}`,
-            },
-          },
-          quantity: 1,
-        };
+    const transaction = await createPrzelewy24Transaction({
+      sessionId: payment.id,
+      amount: plan.amount,
+      email: payload.buyerEmail,
+      client: payload.buyerName,
+      description: `Przedłużenie profilu – ${plan.label}`,
+      urlReturn: `${siteUrl}/profile/${payload.slug}?payment=success&p24_session_id=${payment.id}`,
+      urlStatus: `${siteUrl}/api/webhooks/przelewy24`,
+    });
 
-    const session = await stripe.checkout.sessions.create(
-      {
-        mode: "payment",
-        client_reference_id: payment.id,
-        customer_email: payload.buyerEmail,
-        metadata: {
-          payment_id: payment.id,
-          profile_id: profileId,
-          profile_slug: payload.slug,
-          years_to_add: String(plan.years),
-        },
-        line_items: [lineItem],
-        success_url: `${siteUrl}/profile/${payload.slug}?payment=success&session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `${siteUrl}/profile/${payload.slug}?payment=canceled`,
-      },
-      {
-        idempotencyKey: `checkout_session:${payment.id}`,
-      },
-    );
-
-    await attachProviderPaymentId(payment.id, session.id);
+    await attachProviderPaymentId(payment.id, transaction.token);
 
     return NextResponse.json({
-      redirectUrl: session.url,
+      redirectUrl: transaction.redirectUrl,
       paymentId: payment.id,
-      provider: "stripe",
+      provider: "przelewy24",
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown error";

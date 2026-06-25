@@ -11,6 +11,7 @@ import {
   generateRunCode,
   getQrTokenPrefix,
   hashQrToken,
+  type QrTokenPreset,
 } from "@/lib/qr/tokens";
 
 type DbClient = Awaited<ReturnType<typeof pool.connect>>;
@@ -19,6 +20,7 @@ type CreateQrRunInput = {
   runName: string;
   count: number;
   notes?: string | null;
+  tokenPreset?: QrTokenPreset;
 };
 
 type MarkLotsSoldInput = {
@@ -32,6 +34,7 @@ export async function createQrRunWithLots(input: CreateQrRunInput) {
     throw new Error("Count must be between 1 and 10000.");
   }
 
+  const tokenPreset = input.tokenPreset ?? "standard";
   const client = await pool.connect();
 
   try {
@@ -89,7 +92,7 @@ export async function createQrRunWithLots(input: CreateQrRunInput) {
 
     for (const lot of lots) {
       for (let i = 0; i < lot.quantity; i += 1) {
-        const rawToken = generateQrRawToken();
+        const rawToken = generateQrRawToken(tokenPreset);
 
         qrRecords.push({
           id: randomUUID(),
@@ -141,6 +144,7 @@ export async function createQrRunWithLots(input: CreateQrRunInput) {
         JSON.stringify({
           runName: input.runName,
           count: input.count,
+          tokenPreset,
           lots: lots.map((lot) => ({
             lotCode: lot.lotCode,
             quantity: lot.quantity,

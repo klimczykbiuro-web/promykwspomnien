@@ -8,6 +8,7 @@ type CreatePendingPaymentInput = {
   amount: number;
   currency: string;
   yearsToAdd: number;
+  provider?: "stripe" | "przelewy24";
 };
 
 export async function getProfileIdBySlug(slug: string): Promise<string | null> {
@@ -27,6 +28,7 @@ export async function getProfileIdBySlug(slug: string): Promise<string | null> {
 
 export async function createPendingPayment(input: CreatePendingPaymentInput) {
   const id = randomUUID();
+  const provider = input.provider ?? "przelewy24";
 
   const result = await pool.query(
     `
@@ -43,12 +45,13 @@ export async function createPendingPayment(input: CreatePendingPaymentInput) {
       created_at,
       updated_at
     )
-    VALUES ($1, $2, 'stripe', $3, $4, 'pending', $5, $6, $7, NOW(), NOW())
+    VALUES ($1, $2, $3, $4, $5, 'pending', $6, $7, $8, NOW(), NOW())
     RETURNING id, profile_id, status, amount, currency, years_to_add
     `,
     [
       id,
       input.profileId,
+      provider,
       input.buyerName,
       input.buyerEmail,
       input.amount,

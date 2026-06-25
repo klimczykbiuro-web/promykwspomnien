@@ -2,12 +2,21 @@ import { createHash, randomBytes } from "node:crypto";
 
 const LOT_ALPHABET = "ABCDEFGHJKMNPQRSTUVWXYZ23456789";
 const RUN_ALPHABET = "ABCDEFGHJKMNPQRSTUVWXYZ23456789";
+const QR_TOKEN_ALPHABET = "ABCDEFGHJKMNPQRSTUVWXYZ23456789";
+
+export type QrTokenPreset = "standard" | "gloss";
 
 export function hashQrToken(rawToken: string) {
   return createHash("sha256").update(rawToken).digest("hex");
 }
 
-export function generateQrRawToken() {
+export function generateQrRawToken(preset: QrTokenPreset = "standard") {
+  if (preset === "gloss") {
+    // Krótszy token = krótszy link = prostszy QR = większe pola na tej samej tabliczce.
+    // 12 znaków z alfabetu 32-symbolowego daje ok. 60 bitów losowości.
+    return randomFromAlphabet(12, QR_TOKEN_ALPHABET);
+  }
+
   return randomBytes(24)
     .toString("base64")
     .replace(/\+/g, "-")
