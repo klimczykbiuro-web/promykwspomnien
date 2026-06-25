@@ -1,162 +1,139 @@
-import Link from "next/link";
-
 export const metadata = {
   title: "Regulamin sklepu internetowego | Promyk Wspomnień",
-  description:
-    "Regulamin sklepu internetowego Promyk Wspomnień, sprzedaży tabliczek QR i świadczenia usług profilu pamięci.",
+  description: "Regulamin sklepu internetowego Promyk Wspomnień tabliczek pamięci Promyk Wspomnień.",
 };
 
 const company = {
-  name: "Clima Patryk Klimczyk",
-  address: "Jaskrów ul.Częstochowska 70 42-244",
+  name: '"CLIMA" Patryk Klimczyk',
+  address: "ul. Częstochowska 70, 42-244 Jaskrów",
   nip: "9492195438",
   regon: "243379681",
-  email: "klimczykbiuro@gmail.com",
+  email: "kontakt@promykwspomnien.pl",
   phone: "533178176",
 };
-
-const lastUpdated = "25.06.2026";
 
 const sections = [
   {
     title: "§ 1. Postanowienia ogólne",
     body: [
-      `Niniejszy regulamin określa zasady składania zamówień, sprzedaży produktów oraz świadczenia usług drogą elektroniczną za pośrednictwem sklepu internetowego Promyk Wspomnień dostępnego pod adresem https://promykwspomnien.pl.`,
-      `Sprzedawcą i usługodawcą jest ${company.name}, z siedzibą pod adresem: ${company.address}, NIP: ${company.nip}, REGON: ${company.regon}, adres e-mail: ${company.email}, telefon: ${company.phone}.`,
-      `Kontakt ze Sprzedawcą jest możliwy pod adresem e-mail: ${company.email} oraz telefonicznie pod numerem: ${company.phone}.`,
-      `Regulamin jest dostępny nieodpłatnie na stronie sklepu w sposób umożliwiający jego pozyskanie, odtwarzanie i utrwalanie.`,
-      `Klient przed złożeniem zamówienia jest zobowiązany zapoznać się z Regulaminem oraz Polityką prywatności.`,
+      `Niniejszy Regulamin określa zasady korzystania z serwisu internetowego Promyk Wspomnień, dostępnego pod domeną promykwspomnien.pl, w tym zasady świadczenia usług drogą elektroniczną, składania zamówień, aktywacji profili pamięci, dodawania treści oraz składania reklamacji.`,
+      `Właścicielem i administratorem serwisu jest ${company.name}, ${company.address}, NIP: ${company.nip}, REGON: ${company.regon}, e-mail: ${company.email}, telefon: ${company.phone}.`,
+      `Regulamin jest udostępniany nieodpłatnie w Serwisie w sposób umożliwiający jego pozyskanie, odtwarzanie i utrwalanie.`,
     ],
   },
   {
     title: "§ 2. Definicje",
     body: [
-      `Sklep – sklep internetowy i serwis Promyk Wspomnień dostępny pod adresem https://promykwspomnien.pl.`,
-      `Sprzedawca – podmiot wskazany w § 1 ust. 2 Regulaminu.`,
-      `Klient – osoba fizyczna, osoba prawna albo jednostka organizacyjna składająca zamówienie lub korzystająca ze Sklepu.`,
-      `Konsument – osoba fizyczna dokonująca ze Sprzedawcą czynności prawnej niezwiązanej bezpośrednio z jej działalnością gospodarczą lub zawodową.`,
-      `Produkt – fizyczna tabliczka z kodem QR prowadzącym do profilu pamięci w serwisie Promyk Wspomnień.`,
-      `Profil pamięci – cyfrowa strona pamięci dostępna online po zeskanowaniu kodu QR lub wejściu na odpowiedni adres internetowy.`,
-      `Usługa cyfrowa – usługa polegająca na udostępnieniu, aktywacji, edycji, przechowywaniu i przedłużaniu profilu pamięci.`,
-      `Właściciel profilu – osoba, która aktywowała profil pamięci i ustawiła hasło do zarządzania profilem.`,
+      `Serwis – serwis internetowy Promyk Wspomnień dostępny pod adresem promykwspomnien.pl.`,
+      `Administrator / Sprzedawca – ${company.name}.`,
+      `Klient – osoba fizyczna, osoba prawna albo jednostka organizacyjna korzystająca z Serwisu lub składająca zamówienie.`,
+      `Konsument – osoba fizyczna dokonująca z Administratorem czynności prawnej niezwiązanej bezpośrednio z jej działalnością gospodarczą lub zawodową.`,
+      `Profil pamięci – indywidualna strona poświęcona upamiętnieniu osoby zmarłej, prowadzona w ramach Serwisu.`,
+      `Tabliczka – fizyczna tabliczka z kodem QR kierującym do profilu pamięci.`,
+      `Właściciel profilu – osoba, która aktywowała dostęp do profilu i zarządza jego treścią.`,
+      `Treści użytkownika – zdjęcia, opisy, cytaty, wpisy oraz inne materiały dodawane do profilu.`,
     ],
   },
   {
-    title: "§ 3. Produkty i usługi",
+    title: "§ 3. Zakres usług",
     body: [
-      `Sklep umożliwia zakup tabliczki z kodem QR, która prowadzi do profilu pamięci osoby zmarłej.`,
-      `Cena produktu obejmuje tabliczkę z kodem QR oraz dostęp do podstawowego profilu pamięci przez okres wskazany w opisie produktu.`,
-      `Profil pamięci może zawierać w szczególności imię i nazwisko osoby upamiętnianej, zdjęcie, cytat, wspomnienie, galerię zdjęć, wirtualny znicz, księgę gości oraz lokalizację grobu, zależnie od aktualnie dostępnych funkcji.`,
-      `Klient lub Właściciel profilu może uzupełniać i edytować treści profilu po jego aktywacji.`,
-      `Dostęp do profilu pamięci może zostać przedłużony poprzez zakup przedłużenia ważności profilu na okres wskazany w ofercie.`,
+      `Administrator świadczy drogą elektroniczną usługi polegające w szczególności na: umożliwieniu przeglądania treści Serwisu, złożeniu zamówienia na tabliczkę, aktywacji profilu pamięci, prowadzeniu profilu pamięci, dodawaniu zdjęć i opisów oraz obsłudze kontaktu z Klientem.`,
+      `Administrator może oferować zarówno produkt fizyczny w postaci tabliczki, jak i usługi cyfrowe związane z uruchomieniem oraz utrzymaniem profilu pamięci.`,
+      `Szczegółowy zakres świadczenia, ceny, terminy realizacji i warunki zamówienia są wskazywane w Serwisie lub w indywidualnej ofercie przedstawionej Klientowi.`,
     ],
   },
   {
-    title: "§ 4. Składanie zamówień",
+    title: "§ 4. Wymagania techniczne",
     body: [
-      `Zamówienia można składać za pośrednictwem formularza dostępnego na stronie Sklepu.`,
-      `W celu złożenia zamówienia Klient powinien podać dane wymagane w formularzu zamówienia, zaakceptować Regulamin oraz Politykę prywatności i dokonać płatności.`,
-      `Przed złożeniem zamówienia Klient otrzymuje informację o głównych cechach produktu, cenie, kosztach dostawy, sposobie płatności oraz sposobie realizacji zamówienia.`,
-      `Złożenie zamówienia oznacza obowiązek zapłaty.`,
-      `Sprzedawca może skontaktować się z Klientem w celu doprecyzowania danych potrzebnych do realizacji zamówienia.`,
+      `Do korzystania z Serwisu niezbędne są: urządzenie z dostępem do internetu, aktualna przeglądarka internetowa oraz aktywny adres e-mail, jeżeli jest on wymagany do kontaktu.`,
+      `Administrator dokłada starań, aby Serwis działał w sposób ciągły, jednak zastrzega możliwość przerw technicznych, aktualizacji i prac serwisowych.`,
+      `Klient zobowiązany jest korzystać z Serwisu w sposób zgodny z prawem, Regulaminem i dobrymi obyczajami.`,
     ],
   },
   {
-    title: "§ 5. Ceny i płatności",
+    title: "§ 5. Zamówienia i zawarcie umowy",
     body: [
-      `Wszystkie ceny podane w Sklepie są cenami brutto i są wyrażone w złotych polskich.`,
-      `Dostępne metody płatności są prezentowane Klientowi podczas składania zamówienia.`,
-      `Płatności elektroniczne w Sklepie obsługiwane są za pośrednictwem systemu Przelewy24.`,
-      `Operatorem płatności jest PayPro S.A. z siedzibą w Poznaniu przy ul. Pastelowej 8, 60-198 Poznań, wpisana do rejestru przedsiębiorców Krajowego Rejestru Sądowego pod numerem KRS 0000347935, NIP 7792369887, REGON 301345068.`,
-      `W przypadku aktywacji płatności kartami operatorem kart płatniczych jest PayPro S.A. Agent Rozliczeniowy, ul. Pastelowa 8, 60-198 Poznań, wpisany do Rejestru Przedsiębiorców Krajowego Rejestru Sądowego prowadzonego przez Sąd Rejonowy Poznań Nowe Miasto i Wilda w Poznaniu, VIII Wydział Gospodarczy Krajowego Rejestru Sądowego pod numerem KRS 0000347935, NIP 7792369887, REGON 301345068.`,
-      `Zamówienie jest realizowane po otrzymaniu potwierdzenia płatności.`,
+      `Zamówienie może zostać złożone za pośrednictwem formularza, poczty elektronicznej, telefonu lub innego kanału wskazanego przez Administratora.`,
+      `Zawarcie umowy następuje z chwilą potwierdzenia przyjęcia zamówienia przez Administratora lub z chwilą skutecznego opłacenia zamówienia – w zależności od przyjętego modelu sprzedaży.`,
+      `Klient jest zobowiązany do podania prawdziwych i kompletnych danych niezbędnych do realizacji zamówienia.`,
+      `Administrator może skontaktować się z Klientem w celu doprecyzowania danych lub zakresu zamówienia.`,
     ],
   },
   {
-    title: "§ 6. Realizacja zamówienia i dostawa",
+    title: "§ 6. Płatności i realizacja",
     body: [
-      `Produkt fizyczny jest przygotowywany i wysyłany na adres podany przez Klienta w formularzu zamówienia.`,
+      `Dostępne metody płatności są wskazywane w Serwisie lub podczas składania zamówienia. Płatności elektroniczne w Sklepie obsługiwane są za pośrednictwem systemu Przelewy24.`,
+      `Ceny podawane w Serwisie są cenami brutto, chyba że wyraźnie wskazano inaczej. Operatorem płatności jest PayPro S.A. z siedzibą w Poznaniu przy ul. Pastelowej 8, 60-198 Poznań, KRS 0000347935, NIP 7792369887, REGON 301345068.`,
       `Termin realizacji zamówienia wynosi do 7 dni roboczych od potwierdzenia płatności, chyba że w opisie produktu lub w kontakcie z Klientem wskazano inny termin.`,
-      `Dostępne formy dostawy oraz ich koszty są prezentowane Klientowi przed złożeniem zamówienia.`,
-      `W przypadku braku możliwości realizacji zamówienia Sprzedawca skontaktuje się z Klientem w celu ustalenia dalszego sposobu postępowania.`,
-      `Sprzedawca nie ponosi odpowiedzialności za opóźnienia wynikające z podania przez Klienta nieprawidłowych lub niepełnych danych do wysyłki.`,
+      `W przypadku tabliczek przygotowywanych według indywidualnej specyfikacji Klienta czas realizacji może obejmować etap produkcji, przygotowania kodu QR oraz konfiguracji profilu.`,
     ],
   },
   {
-    title: "§ 7. Aktywacja profilu pamięci",
+    title: "§ 7. Aktywacja profilu i dostęp właściciela",
     body: [
-      `Po otrzymaniu tabliczki z kodem QR Klient lub osoba uprawniona może aktywować profil pamięci poprzez zeskanowanie kodu QR.`,
-      `Przy pierwszej aktywacji profilu użytkownik ustawia hasło właściciela profilu.`,
-      `Osoba, która ustawi hasło właściciela profilu, odpowiada za zachowanie hasła w poufności.`,
-      `Sprzedawca nie odpowiada za skutki udostępnienia hasła osobom trzecim przez Właściciela profilu.`,
-      `Sprzedawca może usuwać, ukrywać lub blokować treści bezprawne, naruszające dobra osobiste, prawa osób trzecich, dobre obyczaje albo charakter serwisu.`,
+      `Aktywacja profilu następuje przy pierwszym uruchomieniu dostępu właściciela lub w inny sposób wskazany przez Administratora.`,
+      `Właściciel profilu ustawia własne hasło dostępu. Hasło powinno zostać zapisane w bezpiecznym miejscu.`,
+      `Właściciel profilu ponosi odpowiedzialność za zachowanie poufności hasła oraz za działania podejmowane z użyciem jego dostępu.`,
+      `Administrator nie ponosi odpowiedzialności za skutki udostępnienia hasła osobom trzecim przez Właściciela profilu.`,
     ],
   },
   {
-    title: "§ 8. Przedłużenie ważności profilu",
+    title: "§ 8. Treści użytkownika, zdjęcia i odpowiedzialność",
     body: [
-      `Profil pamięci jest aktywny przez okres wskazany przy zakupie lub przedłużeniu.`,
-      `Każda osoba posiadająca link do profilu może opłacić przedłużenie ważności profilu.`,
-      `Przedłużenie profilu jest usługą cyfrową i zostaje wykonane po potwierdzeniu płatności.`,
-      `Ceny i okresy przedłużenia są wskazane na stronie przed dokonaniem płatności.`,
-      `Po upływie okresu ważności profilu jego pełna zawartość może zostać ograniczona zgodnie z informacjami prezentowanymi w serwisie.`,
-    ],
-  },
-  {
-    title: "§ 9. Treści dodawane przez użytkowników",
-    body: [
-      `Właściciel profilu lub inny użytkownik dodający treści oświadcza, że posiada prawo do korzystania z zamieszczanych materiałów i ich publikacji w serwisie.`,
+      `Właściciel profilu lub inny użytkownik dodający treści oświadcza, że posiada prawo do korzystania z zamieszczanych materiałów i ich publikacji w Serwisie.`,
       `Zakazane jest dodawanie treści niezgodnych z prawem, naruszających dobra osobiste, prywatność, wizerunek, prawa autorskie, prawa osób trzecich, a także treści obraźliwych, wulgarnych, nawołujących do nienawiści lub przemocy.`,
       `Zakazane jest dodawanie treści pornograficznych, nielegalnych lub przedstawiających seksualne wykorzystywanie małoletnich oraz innych materiałów zabronionych przez prawo.`,
-      `W przypadku zdjęć przedstawiających osoby żyjące użytkownik oświadcza, że posiada wymaganą zgodę na ich publikację, o ile taka zgoda jest wymagana.`,
-      `Sprzedawca może usunąć, ukryć lub zablokować treści naruszające Regulamin, prawo lub prawa osób trzecich.`,
+      `W przypadku zdjęć przedstawiających osoby żyjące użytkownik oświadcza, że posiada wymaganą zgodę na ich publikację, o ile jest ona wymagana.`,
+      `Administrator może usunąć lub ukryć treści naruszające Regulamin, prawo lub prawa osób trzecich.`,
     ],
   },
   {
-    title: "§ 10. Zgłaszanie naruszeń i moderacja",
+    title: "§ 9. Zgłaszanie naruszeń i moderacja",
     body: [
-      `Każda osoba może zgłosić Sprzedawcy zdjęcie, opis lub inną treść, która narusza prawo, prawa osób trzecich, prywatność, wizerunek albo jest treścią nielegalną lub nieodpowiednią.`,
+      `Każda osoba może zgłosić Administratorowi zdjęcie, opis lub inną treść, która narusza prawo, prawa osób trzecich, prywatność, wizerunek albo jest treścią nielegalną lub nieodpowiednią.`,
       `Zgłoszenie powinno zawierać możliwie dokładne wskazanie treści, opis naruszenia oraz dane kontaktowe zgłaszającego, jeśli oczekuje odpowiedzi.`,
-      `Sprzedawca może tymczasowo ukryć treść do czasu wyjaśnienia sprawy, usunąć treść lub zablokować możliwość dalszego dodawania treści.`,
-      `W przypadku uzasadnionego podejrzenia popełnienia przestępstwa Sprzedawca może zabezpieczyć niezbędne informacje i przekazać sprawę właściwym organom.`,
+      `Administrator może tymczasowo ukryć treść do czasu wyjaśnienia sprawy, usunąć treść lub zablokować możliwość dalszego dodawania treści.`,
+      `W przypadku uzasadnionego podejrzenia popełnienia przestępstwa Administrator może zabezpieczyć niezbędne informacje i przekazać sprawę właściwym organom.`,
+      `W przypadku powtarzających się zgłoszeń potwierdzających naruszenie Regulaminu lub w przypadku poważnego naruszenia prawa, praw osób trzecich, prywatności, wizerunku albo dobrych obyczajów, Administrator może: czasowo ukryć treści, czasowo zablokować możliwość edycji profilu, ograniczyć dostęp do wybranych funkcji, trwale usunąć treści, a także zablokować profil lub zakończyć jego dalsze utrzymywanie w Serwisie.`,
     ],
   },
   {
-    title: "§ 11. Reklamacje",
+    title: "§ 10. Reklamacje",
     body: [
-      `Klient ma prawo złożyć reklamację dotyczącą produktu, usługi lub działania Sklepu.`,
-      `Reklamację można złożyć mailowo na adres: ${company.email}.`,
-      `Reklamacja powinna zawierać dane umożliwiające identyfikację zamówienia, opis problemu oraz oczekiwany sposób rozwiązania sprawy.`,
-      `Sprzedawca rozpatruje reklamację w terminie 14 dni od dnia jej otrzymania.`,
-      `Jeśli reklamacja wymaga uzupełnienia informacji, Sprzedawca może poprosić Klienta o dodatkowe dane niezbędne do jej rozpatrzenia.`,
-      `Reklamacje dotyczące działania płatności elektronicznych mogą być również rozpatrywane zgodnie z zasadami operatora płatności Przelewy24.`,
+      `Reklamacje dotyczące działania Serwisu, realizacji zamówienia lub świadczonych usług można składać na adres e-mail: ${company.email}.`,
+      `Reklamacja powinna zawierać dane umożliwiające identyfikację sprawy oraz opis zgłaszanych zastrzeżeń.`,
+      `Administrator rozpatruje reklamację w terminie 14 dni od dnia jej otrzymania, chyba że do rozpatrzenia sprawy konieczne będzie uzyskanie dodatkowych informacji.`,
     ],
   },
   {
-    title: "§ 12. Odstąpienie od umowy",
+    title: "§ 11. Prawo odstąpienia od umowy",
     body: [
-      `Konsument ma co do zasady prawo odstąpić od umowy zawartej na odległość w terminie 14 dni od dnia otrzymania produktu.`,
-      `Aby odstąpić od umowy, Klient powinien poinformować Sprzedawcę o swojej decyzji poprzez wiadomość e-mail wysłaną na adres: ${company.email}.`,
-      `Prawo odstąpienia od umowy może nie przysługiwać w przypadkach określonych przez przepisy prawa, w szczególności gdy produkt jest rzeczą nieprefabrykowaną, wyprodukowaną według specyfikacji konsumenta lub służącą zaspokojeniu jego zindywidualizowanych potrzeb.`,
-      `Prawo odstąpienia może również nie przysługiwać w odniesieniu do treści lub usług cyfrowych, jeżeli spełnianie świadczenia rozpoczęło się za wyraźną zgodą konsumenta przed upływem terminu do odstąpienia, a konsument został poinformowany o utracie prawa odstąpienia.`,
-      `W przypadku skutecznego odstąpienia od umowy Sprzedawca zwraca Klientowi otrzymane płatności zgodnie z obowiązującymi przepisami prawa.`,
+      `Konsument, który zawarł umowę na odległość, co do zasady ma prawo odstąpić od umowy w terminie 14 dni bez podawania przyczyny, z zastrzeżeniem wyjątków przewidzianych przez przepisy prawa.`,
+      `Prawo odstąpienia może nie przysługiwać w przypadku rzeczy nieprefabrykowanych, wyprodukowanych według specyfikacji konsumenta lub służących zaspokojeniu jego zindywidualizowanych potrzeb, w szczególności w przypadku spersonalizowanej tabliczki przygotowanej dla konkretnego profilu pamięci.`,
+      `Jeżeli przedmiotem świadczenia są również usługi cyfrowe lub usługi świadczone drogą elektroniczną, szczegółowe warunki rozpoczęcia świadczenia oraz ewentualnej utraty prawa odstąpienia są wskazywane Klientowi przed zawarciem umowy.`,
+      `Szczegółowe informacje o sposobie wykonania prawa odstąpienia Klient otrzymuje przed zawarciem umowy lub wraz z potwierdzeniem zamówienia.`,
     ],
   },
   {
-    title: "§ 13. Dane osobowe",
+    title: "§ 12. Dane osobowe i prywatność",
     body: [
-      `Administratorem danych osobowych jest Sprzedawca wskazany w § 1 ust. 2 Regulaminu.`,
-      `Dane osobowe są przetwarzane w celu obsługi zamówień, płatności, realizacji usług, kontaktu z Klientem oraz wykonania obowiązków prawnych.`,
-      `Szczegółowe zasady przetwarzania danych osobowych opisuje Polityka prywatności dostępna na stronie https://promykwspomnien.pl/polityka-prywatnosci.`,
+      `Zasady przetwarzania danych osobowych określa Polityka prywatności dostępna w Serwisie.`,
+      `RODO co do zasady nie ma zastosowania do danych osób zmarłych, jednak Serwis może przetwarzać dane osób żyjących, w szczególności Właścicieli profili, osób kontaktujących się z Administratorem, płatników, zgłaszających oraz osób pojawiających się na zdjęciach lub w treściach dodawanych do Serwisu.`,
+    ],
+  },
+  {
+    title: "§ 13. Prawa własności intelektualnej",
+    body: [
+      `Treści, układ Serwisu, elementy graficzne, oznaczenia i materiały udostępniane przez Administratora są chronione prawem i nie mogą być wykorzystywane bez podstawy prawnej.`,
+      `Użytkownik ponosi odpowiedzialność za naruszenie praw autorskich lub pokrewnych w związku z dodawanymi treściami.`,
     ],
   },
   {
     title: "§ 14. Postanowienia końcowe",
     body: [
-      `Regulamin jest dostępny nieodpłatnie na stronie internetowej Sklepu.`,
-      `Sprzedawca może zmienić Regulamin z ważnych przyczyn, w szczególności w przypadku zmiany przepisów prawa, zmiany funkcjonalności serwisu lub zmiany sposobu świadczenia usług.`,
-      `Do umów zawieranych za pośrednictwem Sklepu stosuje się prawo polskie.`,
-      `W sprawach nieuregulowanych Regulaminem zastosowanie mają powszechnie obowiązujące przepisy prawa polskiego.`,
+      `Administrator może zmienić Regulamin z ważnych przyczyn, w szczególności w razie zmiany prawa, zmiany modelu działania Serwisu lub wprowadzenia nowych funkcjonalności.`,
+      `Do umów zawieranych z Konsumentami stosuje się przepisy prawa polskiego, z uwzględnieniem bezwzględnie obowiązujących przepisów chroniących konsumentów.`,
+      `W sprawach nieuregulowanych w Regulaminie zastosowanie mają odpowiednie przepisy prawa polskiego.`,
     ],
   },
 ];
@@ -165,47 +142,14 @@ export default function RegulaminPage() {
   return (
     <main className="bg-stone-50">
       <div className="mx-auto max-w-4xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
-        <article className="rounded-[28px] border border-stone-200 bg-white p-6 shadow-sm sm:p-8 md:p-10">
-          <p className="text-sm font-medium text-stone-500">
-            Ostatnia aktualizacja: {lastUpdated}
-          </p>
-
+        <div className="rounded-[28px] border border-stone-200 bg-white p-6 shadow-sm sm:p-8 md:p-10">
+          <p className="text-sm text-stone-500">Ostatnia aktualizacja: 25.06.2026</p>
           <h1 className="mt-2 text-3xl font-semibold tracking-tight text-stone-950 sm:text-4xl">
             Regulamin sklepu internetowego Promyk Wspomnień
           </h1>
-
           <p className="mt-4 text-sm leading-7 text-stone-700 sm:text-base">
-            Regulamin określa zasady sprzedaży tabliczek QR, korzystania z
-            profili pamięci oraz dokonywania płatności w serwisie
-            promykwspomnien.pl.
+            Regulamin określa zasady sprzedaży tabliczek QR, korzystania z profili pamięci oraz dokonywania płatności w serwisie promykwspomnien.pl.
           </p>
-
-          <div className="mt-6 grid gap-3 rounded-2xl border border-stone-200 bg-stone-50 p-4 text-sm leading-6 text-stone-700 sm:grid-cols-2">
-            <div>
-              <strong className="block text-stone-950">Sprzedawca</strong>
-              {company.name}
-            </div>
-            <div>
-              <strong className="block text-stone-950">Kontakt</strong>
-              {company.email}
-              <br />
-              {company.phone}
-            </div>
-            <div>
-              <strong className="block text-stone-950">Adres</strong>
-              {company.address}
-            </div>
-            <div>
-              <strong className="block text-stone-950">NIP / REGON</strong>
-              {company.nip} / {company.regon}
-            </div>
-          </div>
-
-          <div className="mt-6 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm leading-6 text-red-900">
-            Przed wysłaniem strony do ponownej weryfikacji Przelewy24 uzupełnij
-            prawdziwe dane firmy w pliku regulaminu. Nie zostawiaj tekstów
-            zaczynających się od „TU WPISZ”.
-          </div>
 
           <div className="mt-8 space-y-8">
             {sections.map((section) => (
@@ -213,7 +157,6 @@ export default function RegulaminPage() {
                 <h2 className="text-xl font-semibold text-stone-900 sm:text-2xl">
                   {section.title}
                 </h2>
-
                 <div className="mt-4 space-y-4">
                   {section.body.map((paragraph, index) => (
                     <p
@@ -227,20 +170,7 @@ export default function RegulaminPage() {
               </section>
             ))}
           </div>
-
-          <div className="mt-10 rounded-2xl bg-stone-100 p-4 text-sm leading-6 text-stone-700">
-            <p>
-              Polityka prywatności jest dostępna tutaj:{" "}
-              <Link
-                href="/polityka-prywatnosci"
-                className="font-semibold text-stone-950 underline underline-offset-4"
-              >
-                Polityka prywatności
-              </Link>
-              .
-            </p>
-          </div>
-        </article>
+        </div>
       </div>
     </main>
   );

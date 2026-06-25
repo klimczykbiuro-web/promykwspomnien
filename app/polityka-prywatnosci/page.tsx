@@ -5,18 +5,19 @@ export const metadata = {
 };
 
 const company = {
-  name: "TU WPISZ PEŁNĄ NAZWĘ FIRMY",
-  address: "TU WPISZ ADRES FIRMY",
-  nip: "TU WPISZ NIP",
-  email: "TU WPISZ E-MAIL",
-  phone: "TU WPISZ TELEFON",
+  name: '"CLIMA" Patryk Klimczyk',
+  address: "ul. Częstochowska 70, 42-244 Jaskrów",
+  nip: "9492195438",
+  regon: "243379681",
+  email: "kontakt@promykwspomnien.pl",
+  phone: "533178176",
 };
 
 const sections = [
   {
     title: "1. Administrator danych",
     body: [
-      `Administratorem danych osobowych jest ${company.name}, ${company.address}, NIP: ${company.nip}, e-mail: ${company.email}, telefon: ${company.phone}.`,
+      `Administratorem danych osobowych jest ${company.name}, ${company.address}, NIP: ${company.nip}, REGON: ${company.regon}, e-mail: ${company.email}, telefon: ${company.phone}.`,
       `W sprawach dotyczących przetwarzania danych osobowych można skontaktować się z Administratorem pod adresem e-mail: ${company.email}.`,
     ],
   },
@@ -58,7 +59,7 @@ const sections = [
   {
     title: "6. Odbiorcy danych",
     body: [
-      `Dane mogą być przekazywane podmiotom wspierającym Administratora w utrzymaniu Serwisu i realizacji usług, w szczególności dostawcom hostingu, infrastruktury chmurowej, poczty elektronicznej, systemów płatności, analityki, obsługi technicznej oraz księgowości.`,
+      `Dane mogą być przekazywane podmiotom wspierającym Administratora w utrzymaniu Serwisu i realizacji usług, w szczególności dostawcom hostingu, infrastruktury chmurowej, poczty elektronicznej, systemów płatności, analityki, obsługi technicznej oraz księgowości. Płatności elektroniczne obsługiwane są przez Przelewy24, którego operatorem jest PayPro S.A.`,
       `Dane mogą być ujawnione organom publicznym, jeśli obowiązek taki wynika z przepisów prawa albo jest niezbędny do ochrony praw Administratora lub innych osób.`,
     ],
   },
@@ -83,15 +84,15 @@ const sections = [
     title: "9. Cookies i podobne technologie",
     body: [
       `Serwis może wykorzystywać pliki cookies lub podobne technologie w celach technicznych, bezpieczeństwa, utrzymania sesji, statystycznych lub marketingowych.`,
-      `Szczegółowe zasady stosowania cookies powinny zostać doprecyzowane po ustaleniu, z jakich narzędzi analitycznych i marketingowych korzysta Serwis.`,
-      `Jeżeli w Serwisie będą wykorzystywane niekonieczne cookies, należy wdrożyć odpowiedni mechanizm zgód i baner cookies.`,
+      `Serwis wykorzystuje pliki cookies niezbędne do prawidłowego działania strony, utrzymania sesji, bezpieczeństwa oraz obsługi podstawowych funkcji serwisu.`,
+      `Jeżeli w przyszłości Serwis będzie wykorzystywał niekonieczne cookies, w szczególności analityczne lub marketingowe, zostanie wdrożony odpowiedni mechanizm zgód użytkownika.`,
     ],
   },
   {
     title: "10. Przekazywanie danych poza EOG",
     body: [
       `Jeżeli Administrator korzysta z dostawców technologicznych mających siedzibę poza Europejskim Obszarem Gospodarczym, dane mogą być przekazywane poza EOG na podstawie odpowiednich mechanizmów prawnych przewidzianych przez przepisy.`,
-      `Przed publikacją dokumentu warto uzupełnić ten punkt zgodnie z rzeczywistą listą dostawców wykorzystywanych w projekcie.`,
+      `W takim przypadku przekazywanie danych odbywa się na podstawie odpowiednich mechanizmów prawnych przewidzianych przez przepisy, w szczególności standardowych klauzul umownych lub decyzji stwierdzających odpowiedni stopień ochrony.`,
     ],
   },
   {
@@ -115,21 +116,14 @@ export default function PrivacyPolicyPage() {
     <main className="bg-stone-50">
       <div className="mx-auto max-w-4xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
         <div className="rounded-[28px] border border-stone-200 bg-white p-6 shadow-sm sm:p-8 md:p-10">
-          <p className="text-sm text-stone-500">Dokument informacyjny</p>
+          <p className="text-sm text-stone-500">Ostatnia aktualizacja: 25.06.2026</p>
           <h1 className="mt-2 text-3xl font-semibold tracking-tight text-stone-950 sm:text-4xl">
             Polityka prywatności
           </h1>
           <p className="mt-4 text-sm leading-7 text-stone-700 sm:text-base">
-            Poniższy dokument stanowi roboczą wersję polityki prywatności dla
-            serwisu Promyk Wspomnień. Uzupełnij dane firmy oraz dopasuj go do
-            faktycznie używanych narzędzi i procesów.
+            Dokument opisuje zasady przetwarzania danych osobowych w serwisie
+            Promyk Wspomnień oraz przy sprzedaży tabliczek QR i obsłudze profili pamięci.
           </p>
-
-          <div className="mt-6 rounded-2xl bg-amber-50 px-4 py-3 text-sm leading-6 text-amber-900">
-            Uzupełnij przed publikacją: dane firmy, listę dostawców, zasady
-            cookies, ewentualne narzędzia analityczne i marketingowe oraz
-            informacje o przekazywaniu danych poza EOG.
-          </div>
 
           <div className="mt-8 space-y-8">
             {sections.map((section) => (

@@ -244,6 +244,63 @@ export default function HomePage() {
         </div>
       </section>
 
+
+      <section style={styles.sectionAlt} id="kontakt">
+        <h2 style={styles.h2}>Dane kontaktowe</h2>
+
+        <div style={styles.contactCard}>
+          <p style={styles.contactLead}>
+            Sprzedawcą i administratorem serwisu Promyk Wspomnień jest:
+          </p>
+
+          <div style={styles.contactGrid}>
+            <div style={styles.contactItem}>
+              <strong>Pełna nazwa firmy</strong>
+              <span>"CLIMA" Patryk Klimczyk</span>
+            </div>
+
+            <div style={styles.contactItem}>
+              <strong>NIP</strong>
+              <span>9492195438</span>
+            </div>
+
+            <div style={styles.contactItem}>
+              <strong>REGON</strong>
+              <span>243379681</span>
+            </div>
+
+            <div style={styles.contactItem}>
+              <strong>Adres</strong>
+              <span>ul. Częstochowska 70, 42-244 Jaskrów</span>
+            </div>
+
+            <div style={styles.contactItem}>
+              <strong>E-mail</strong>
+              <a href="mailto:kontakt@promykwspomnien.pl" style={styles.contactLink}>
+                kontakt@promykwspomnien.pl
+              </a>
+            </div>
+
+            <div style={styles.contactItem}>
+              <strong>Telefon</strong>
+              <span>533178176</span>
+            </div>
+          </div>
+
+          <p style={styles.contactSmall}>
+            Dokumenty sklepu: 
+            <Link href="/regulamin" style={styles.contactLink}>
+              Regulamin sklepu
+            </Link> 
+            oraz 
+            <Link href="/polityka-prywatnosci" style={styles.contactLink}>
+              Polityka prywatności
+            </Link>
+            .
+          </p>
+        </div>
+      </section>
+
       <section style={styles.finalCta}>
         <h2 style={styles.finalTitle}>
           Prosty sposób, aby zachować pamięć o bliskiej osobie
@@ -530,6 +587,53 @@ const styles: Record<string, React.CSSProperties> = {
     fontSize: 17,
     lineHeight: 1.7,
     color: "#4a4a4a",
+  },
+
+
+  contactCard: {
+    background: "#ffffff",
+    border: "1px solid #eadfce",
+    borderRadius: 22,
+    padding: 22,
+  },
+
+  contactLead: {
+    margin: "0 0 18px",
+    fontSize: 18,
+    lineHeight: 1.7,
+    color: "#4a4a4a",
+  },
+
+  contactGrid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
+    gap: 14,
+  },
+
+  contactItem: {
+    display: "grid",
+    gap: 4,
+    padding: 14,
+    borderRadius: 16,
+    background: "#faf7f2",
+    border: "1px solid #eee2d4",
+    fontSize: 16,
+    lineHeight: 1.5,
+    color: "#2f241d",
+  },
+
+  contactLink: {
+    color: "#2f241d",
+    fontWeight: 700,
+    textDecoration: "underline",
+    textUnderlineOffset: 3,
+  },
+
+  contactSmall: {
+    margin: "18px 0 0",
+    fontSize: 15,
+    lineHeight: 1.7,
+    color: "#5a524b",
   },
 
   finalCta: {
