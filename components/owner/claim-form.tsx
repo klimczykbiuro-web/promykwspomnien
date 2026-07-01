@@ -18,6 +18,7 @@ export default function ClaimForm({
   const [acceptedContentRights, setAcceptedContentRights] = useState(false);
   const [status, setStatus] = useState<"idle" | "saving" | "error">("idle");
   const [errorText, setErrorText] = useState("");
+  const [showPasswords, setShowPasswords] = useState(true);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -103,29 +104,57 @@ export default function ClaimForm({
 
       <form onSubmit={handleSubmit} className="mt-6 space-y-4">
         <div className="space-y-2">
-          <label className="block text-sm font-medium text-stone-700">
+          <label htmlFor="password" className="block text-sm font-medium text-stone-700">
             Hasło
           </label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="h-12 w-full rounded-2xl border border-stone-200 px-4 outline-none focus:border-stone-400"
-            placeholder="Minimum 8 znaków"
-          />
+          <div className="relative">
+            <input
+              id="password"
+              type={showPasswords ? "text" : "password"}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="h-12 w-full rounded-2xl border border-stone-200 px-4 pr-24 outline-none focus:border-stone-400"
+              placeholder="Minimum 8 znaków"
+              autoComplete="new-password"
+              required
+              minLength={8}
+            />
+            <button
+              type="button"
+              onClick={() => setShowPasswords((value) => !value)}
+              className="absolute right-2 top-1/2 -translate-y-1/2 rounded-xl px-3 py-2 text-sm font-medium text-stone-700 hover:bg-stone-100"
+              aria-label={showPasswords ? "Ukryj hasło" : "Pokaż hasło"}
+            >
+              {showPasswords ? "Ukryj" : "Pokaż"}
+            </button>
+          </div>
         </div>
 
         <div className="space-y-2">
-          <label className="block text-sm font-medium text-stone-700">
+          <label htmlFor="passwordRepeat" className="block text-sm font-medium text-stone-700">
             Powtórz hasło
           </label>
-          <input
-            type="password"
-            value={passwordRepeat}
-            onChange={(e) => setPasswordRepeat(e.target.value)}
-            className="h-12 w-full rounded-2xl border border-stone-200 px-4 outline-none focus:border-stone-400"
-            placeholder="Wpisz to samo hasło ponownie"
-          />
+          <div className="relative">
+            <input
+              id="passwordRepeat"
+              type={showPasswords ? "text" : "password"}
+              value={passwordRepeat}
+              onChange={(e) => setPasswordRepeat(e.target.value)}
+              className="h-12 w-full rounded-2xl border border-stone-200 px-4 pr-24 outline-none focus:border-stone-400"
+              placeholder="Wpisz to samo hasło ponownie"
+              autoComplete="new-password"
+              required
+              minLength={8}
+            />
+            <button
+              type="button"
+              onClick={() => setShowPasswords((value) => !value)}
+              className="absolute right-2 top-1/2 -translate-y-1/2 rounded-xl px-3 py-2 text-sm font-medium text-stone-700 hover:bg-stone-100"
+              aria-label={showPasswords ? "Ukryj hasło" : "Pokaż hasło"}
+            >
+              {showPasswords ? "Ukryj" : "Pokaż"}
+            </button>
+          </div>
         </div>
 
         <div className="space-y-3 rounded-2xl border border-stone-200 bg-stone-50 p-4">
@@ -138,11 +167,21 @@ export default function ClaimForm({
             />
             <span>
               Oświadczam, że zapoznałem/am się z{" "}
-              <Link href="/regulamin" className="underline">
+              <Link
+                href="/regulamin"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-medium underline underline-offset-2"
+              >
                 Regulaminem
               </Link>{" "}
               i{" "}
-              <Link href="/polityka-prywatnosci" className="underline">
+              <Link
+                href="/polityka-prywatnosci"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-medium underline underline-offset-2"
+              >
                 Polityką prywatności
               </Link>{" "}
               oraz akceptuję ich treść.
