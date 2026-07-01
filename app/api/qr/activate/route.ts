@@ -6,7 +6,7 @@ import { activateQrCodeAndCreateProfile } from "@/lib/qr/repository";
 export const runtime = "nodejs";
 
 const schema = z.object({
-  token: z.string().min(16),
+  token: z.string().trim().min(8).max(128),
   fullName: z.string().trim().min(2).max(120),
   password: z.string().min(8).max(200),
 });
@@ -47,7 +47,14 @@ export async function POST(request: NextRequest) {
     });
 
     return response;
-  } catch (error) {
+    } catch (error) {
+    if (error instanceof z.ZodError) {
+      return NextResponse.json(
+        { error: "Nieprawidłowe dane aktywacji. Zeskanuj kod QR ponownie i spróbuj jeszcze raz." },
+        { status: 400 }
+      );
+    }
+
     const message = error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json({ error: message }, { status: 400 });
   }
